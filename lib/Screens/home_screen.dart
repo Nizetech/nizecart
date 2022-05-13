@@ -269,21 +269,31 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    const ShopListView(
-                      sHeight: 130,
-                      height: 70,
-                      width: 90,
-                      image: 'assets/headset.png',
-                      title: "Alexa Home",
-                      subtitle: "\$ 999 ",
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(ProductScreen());
+                      },
+                      child: const ShopListView(
+                        sHeight: 130,
+                        height: 70,
+                        width: 90,
+                        image: 'assets/headset.png',
+                        title: "Alexa Home",
+                        subtitle: "\$ 999 ",
+                      ),
                     ),
-                    const ShopListView(
-                      sHeight: 130,
-                      height: 70,
-                      width: 90,
-                      image: 'assets/bt.png',
-                      title: "Alexa Home",
-                      subtitle: "\$ 999 ",
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(ProductScreen());
+                      },
+                      child: const ShopListView(
+                        sHeight: 130,
+                        height: 70,
+                        width: 90,
+                        image: 'assets/bt.png',
+                        title: "Alexa Home",
+                        subtitle: "\$ 999 ",
+                      ),
                     ),
                   ],
                 ),

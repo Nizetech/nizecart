@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/Auth/signInScreen.dart';
 import 'package:nizecart/Widget/component.dart';
-
-import 'Auth/signInScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +16,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NizeCart',
-      theme: ThemeData(primarySwatch: Colors.blue, backgroundColor: white),
+      theme: ThemeData(
+          appBarTheme: AppBarTheme(
+              elevation: 0, color: secColor, foregroundColor: white),
+          primarySwatch: Colors.blue,
+          backgroundColor: white),
       home: SignInSCreen(),
     );
   }

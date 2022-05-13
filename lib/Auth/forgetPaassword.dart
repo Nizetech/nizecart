@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nizecart/Widget/bottonNav.dart';
 import '../Widget/component.dart';
 
 class ForgetPassword extends StatefulWidget {
@@ -65,7 +66,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             SizedBox(height: 30),
             CustomButton(
               text: 'Submit',
-              onPressed: () {},
+              onPressed: () => Get.to(BottomNav()),
             ),
             Spacer(),
           ],

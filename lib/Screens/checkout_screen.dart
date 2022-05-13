@@ -15,15 +15,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        foregroundColor: white,
-        backgroundColor: secColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Get.back(),
-        ),
-        title: Text(
-          'Checkout',
+        centerTitle: true,
+        title: const Text(
+          'Category',
           style: TextStyle(fontSize: 20),
         ),
       ),
@@ -276,32 +270,44 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
-                          'Shipping',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Text(
-                          '\$3, 109',
-                          style: TextStyle(fontSize: 16),
-                        )
+                      children: [
+                        enable == 0
+                            ? Text(
+                                'Shipping',
+                                style: TextStyle(fontSize: 16),
+                              )
+                            : SizedBox(),
+                        enable == 0
+                            ? const Text(
+                                '\$3, 109',
+                                style: TextStyle(fontSize: 16),
+                              )
+                            : SizedBox(),
                       ],
                     ),
                     Divider(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           'Total',
                           style: TextStyle(fontSize: 16),
                         ),
-                        Text(
-                          '\$13, 118',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: mainColor,
-                              fontWeight: FontWeight.w500),
-                        )
+                        enable == 0
+                            ? const Text(
+                                '\$13, 118',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: mainColor,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            : const Text(
+                                '\$10, 109',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: mainColor,
+                                    fontWeight: FontWeight.bold),
+                              )
                       ],
                     ),
                     SizedBox(height: 10),

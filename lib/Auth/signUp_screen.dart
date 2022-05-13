@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/Widget/bottonNav.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
@@ -14,7 +15,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   int selected = 1;
-  int selected2 = 1;
+
   bool enable2 = false;
 
   TextEditingController fname = TextEditingController();
@@ -109,10 +110,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: RadioListTile(
                       contentPadding: EdgeInsets.zero,
                       value: 1,
-                      groupValue: selected2,
+                      groupValue: selected,
                       title: Text("Female"),
                       onChanged: (value) => setState(
-                        () => selected2 = value,
+                        () => selected = value,
                       ),
                       activeColor: Colors.red,
                       selected: false,

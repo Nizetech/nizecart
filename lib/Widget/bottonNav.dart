@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Widget/component.dart';
 
-import '../Screens/homeScreen.dart';
+import '../Screens/category_screen.dart';
+import '../Screens/favourite_screen.dart';
+import '../Screens/home_screen.dart';
 
 class BottomNav extends StatefulWidget {
   BottomNav({Key key}) : super(key: key);
@@ -16,8 +18,8 @@ class _BottomNavState extends State<BottomNav> {
   int currentIndex = 0;
   List body = [
     HomeScreen(),
-    Container(),
-    Container(),
+    CategoryScreen(),
+    FavouriteScreen(),
     Container(),
     Container(),
     // Container()
@@ -49,7 +51,7 @@ class _BottomNavState extends State<BottomNav> {
               label: 'Category'),
           BottomNavigationBarItem(
             icon: Icon(Iconsax.heart),
-            label: 'Favorite',
+            label: 'Favourite',
           ),
           // BottomNavigationBarItem(
           //   icon: Icon(Iconsax.message),

@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:nizecart/Auth/signUpScreen.dart';
+import 'package:nizecart/Auth/signUp_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';

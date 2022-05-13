@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nizecart/Screens/cartScreen.dart';
+import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -146,5 +146,3 @@ class Cart extends StatelessWidget {
     );
   }
 }
-
-
