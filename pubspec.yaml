@@ -25,7 +25,7 @@ dev_dependencies:
   iconsax: ^0.0.8
   flutter_carousel_slider: ^1.0.8
   flutter_rating_bar: ^4.0.0
-
+  
  
   flutter_lints: ^1.0.0
 

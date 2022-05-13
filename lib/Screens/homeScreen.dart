@@ -122,36 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderSide: BorderSide.none),
                           )),
                     ),
-                    Stack(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(top: 7, right: 5),
-                          child: Icon(
-                            Iconsax.shopping_cart,
-                            color: white,
-                            size: 25,
-                          ),
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: Container(
-                            height: 16,
-                            width: 16,
-                            alignment: Alignment.center,
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: mainColor),
-                            child: const Text(
-                              '2',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
+                    Cart(),
                   ],
                 ),
               ],

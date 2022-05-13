@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/Screens/cartScreen.dart';
 import 'package:nizecart/Screens/search_screen.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
@@ -15,126 +16,200 @@ class ProductScreen extends StatefulWidget {
 TextEditingController search = TextEditingController();
 
 class _ProductScreenState extends State<ProductScreen> {
+  int counter = 0;
+  bool fav = false;
+  int quantity = 1;
+  List<Map> items = [
+    {
+      'title': 'HeadSet Stereo with strong bazz',
+      'image': 'assets/headset.png',
+      'price': '\$ 1,499'
+    },
+    {
+      'title': 'HeadSet Stereo with strong bazz',
+      'image': 'assets/airpod.png',
+      'price': '\$ 1,499'
+    },
+    {
+      'title': 'HeadSet Stereo with strong bazz',
+      'image': 'assets/bt.png',
+      'price': '\$ 2,499'
+    },
+    {
+      'title': 'HeadSet Stereo with strong bazz',
+      'image': 'assets/macbook.png',
+      'price': '\$ 2,499'
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          foregroundColor: white,
-          backgroundColor: secColor,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () => Get.back(),
-          ),
-          title: Text(
-            'Airpods',
-            style: TextStyle(fontSize: 20),
-          ),
-          centerTitle: true,
-          actions: [
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Iconsax.search_normal,
-                    size: 20,
-                  ),
-                  onPressed: (() => Get.to(SearchScreen())),
-                ),
-                SizedBox(width: 5),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(right: 20, top: 10, bottom: 10),
-                  child: Stack(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 7, right: 5),
-                        child: Icon(
-                          Iconsax.shopping_cart,
-                          color: white,
-                          size: 25,
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: Container(
-                          height: 16,
-                          width: 16,
-                          alignment: Alignment.center,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: mainColor),
-                          child: const Text(
-                            '2',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            )
-          ],
+      appBar: AppBar(
+        elevation: 0,
+        foregroundColor: white,
+        backgroundColor: secColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () => Get.back(),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                padding: EdgeInsets.all(15),
-                children: List.generate(
-                    20,
-                    (index) => Container(
-                          height: 400,
-                          width: double.infinity,
-                          decoration: BoxDecoration(color: white, boxShadow: [
-                            BoxShadow(
-                              offset: Offset(0, 3),
-                              blurRadius: 5,
-                              color: Colors.grey.withOpacity(.5),
-                            ),
-                          ]),
-                          padding: EdgeInsets.all(15),
-                          child: Column(
+        title: const Text(
+          'Airpods',
+          style: TextStyle(fontSize: 20),
+        ),
+        centerTitle: true,
+        actions: [
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Iconsax.search_normal,
+                  size: 20,
+                ),
+                onPressed: (() => Get.to(SearchScreen())),
+              ),
+              SizedBox(width: 5),
+              Padding(
+                padding: const EdgeInsets.only(right: 20, top: 10, bottom: 10),
+                child: Cart(),
+              ),
+            ],
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          Wrap(
+              children: items
+                  .map(
+                    (item) => Stack(children: [
+                      Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width * .43,
+                        margin: EdgeInsets.only(left: 10, top: 15, right: 10),
+                        decoration: BoxDecoration(color: white, boxShadow: [
+                          BoxShadow(
+                            offset: Offset(0, 3),
+                            blurRadius: 5,
+                            color: Colors.grey.withOpacity(.5),
+                          ),
+                        ]),
+                        padding: EdgeInsets.all(15),
+                        child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Image(
-                                image: AssetImage('assets/headset.png'),
+                                image: AssetImage(item['image']),
                                 width: 140,
                                 height: 120,
                                 fit: BoxFit.contain,
                               ),
-                              // IconButton(
-                              //     onPressed: () {},
-                              //     icon:
                               Icon(
                                 Iconsax.heart,
                                 color: mainColor,
                               ),
-                              //),
+                              SizedBox(height: 3),
+                              Text(
+                                item['title'],
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              SizedBox(height: 3),
+                              Text(
+                                item['price'].toString(),
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 3),
                               RatingBarIndicator(
                                 rating: 2.75,
-                                itemBuilder: (context, index) => Icon(
+                                itemBuilder: (context, index) => const Icon(
                                   Icons.star,
                                   color: Colors.amber,
                                 ),
                                 itemCount: 5,
-                                itemSize: 50.0,
+                                itemSize: 15,
                                 direction: Axis.horizontal,
                               ),
-                            ],
-                          ),
-                        )),
-              ),
-            )
-          ],
-        ));
+                              SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (quantity > 1) {
+                                          quantity--;
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          color: mainColor),
+                                      child: Icon(
+                                        Icons.remove,
+                                        size: 18,
+                                        color: white,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(quantity.toString()),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        quantity++;
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(6),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          color: mainColor),
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 18,
+                                        color: white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ]),
+                      ),
+                      Positioned(
+                        top: 14,
+                        right: 10,
+                        child: Container(
+                            height: 20,
+                            width: 55,
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(0),
+                                    bottomLeft: Radius.circular(10)),
+                                color: priColor),
+                            child: const Text(
+                              'Express',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500),
+                            )),
+                      ),
+                    ]),
+                  )
+                  .toList()),
+        ],
+      ),
+    );
   }
 }
