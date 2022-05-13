@@ -13,7 +13,8 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  int enable = 1;
+  int selected = 1;
+  int selected2 = 1;
   bool enable2 = false;
 
   TextEditingController fname = TextEditingController();
@@ -96,9 +97,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: RadioListTile(
                       contentPadding: EdgeInsets.zero,
                       value: 0,
-                      groupValue: enable,
+                      groupValue: selected,
                       title: Text("Male"),
-                      onChanged: (value) => setState(() => enable = value),
+                      onChanged: (value) => setState(() => selected = value),
                       activeColor: Colors.red,
                       selected: false,
                     ),
@@ -108,10 +109,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: RadioListTile(
                       contentPadding: EdgeInsets.zero,
                       value: 1,
-                      groupValue: enable,
+                      groupValue: selected2,
                       title: Text("Female"),
                       onChanged: (value) => setState(
-                        () => enable = value,
+                        () => selected2 = value,
                       ),
                       activeColor: Colors.red,
                       selected: false,

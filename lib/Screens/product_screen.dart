@@ -77,6 +77,7 @@ class _ProductScreenState extends State<ProductScreen> {
           )
         ],
       ),
+      backgroundColor: white,
       body: Column(
         children: [
           Wrap(

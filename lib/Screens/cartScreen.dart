@@ -52,6 +52,7 @@ class _CartScreenState extends State<CartScreen> {
           style: TextStyle(fontSize: 20),
         ),
       ),
+      backgroundColor: white,
       body: Column(
         children: [
           Container(
