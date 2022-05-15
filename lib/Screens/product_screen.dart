@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:nizecart/Screens/cart_screen.dart';
+// import 'package:nizecart/Screensscreen.dart';
 import 'package:nizecart/Screens/search_screen.dart';
+import '../Models/product.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -20,64 +21,118 @@ class _ProductScreenState extends State<ProductScreen> {
   // bool fav = false;
   // int quantity = 1;
   // int price = 0;
-  List<Map<String, dynamic>> items = [
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/headset.png',
-      'price': 1.499,
-      'isFav': false,
-      'quantity': 1,
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/airpod.png',
-      'price': 1.499,
-      'isFav': false,
-      'quantity': 1,
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/bt.png',
-      'price': 1.499,
-      'isFav': false,
-      'quantity': 1,
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/macbook.png',
-      'price': 1.499,
-      'isFav': false,
-      'quantity': 1,
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/headset.png',
-      'price': 1.499,
-      'isFav': false,
-      'quantity': 1,
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/airpod.png',
-      'price': 1.499,
-      'isFav': false,
-      'quantity': 1,
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/bt.png',
-      'price': 1.499,
-      'isFav': false,
-      'quantity': 1,
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/macbook.png',
-      'price': 1.499,
-      'isFav': false,
-      'quantity': 1,
-    },
+  final List<Product> loadedProducts = [
+    Product(
+      id: 'p1',
+      title: 'HeadSet Stereo with strong bazz',
+      // imageUrl: 'assets/headset.png',
+      price: 1.499,
+      isFav: false,
+
+      // rating: 4.5,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    ),
+    Product(
+      id: 'p2',
+      title: 'HeadSet Stereo with strong bazz',
+      // imageUrl: 'assets/airpod.png',
+      price: 1.499,
+      isFav: false,
+      // rating: 4.5,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    ),
+    Product(
+      id: 'p3',
+      title: 'HeadSet Stereo with strong bazz',
+      // imageUrl: 'assets/bt.png',
+      price: 1.499,
+      isFav: false,
+
+      // rating: 4.5,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    ),
+    Product(
+      id: 'p4',
+      title: 'HeadSet Stereo with strong bazz',
+      isFav: false,
+
+      price: 1.499,
+      // rating: 4.5,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    ),
+    Product(
+      id: 'p5',
+      title: 'HeadSet Stereo with strong bazz',
+      // imageUrl: 'assets/headset.png',
+      price: 1.499,
+      isFav: false,
+      // rating: 4.5,
+      description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    ),
   ];
+  // List<Map<String, dynamic>> items = [
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/headset.png',
+  //     'price': 1.499,
+  //     'isFav': false,
+  //     'quantity': 1,
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/airpod.png',
+  //     'price': 1.499,
+  //     'isFav': false,
+  //     'quantity': 1,
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/bt.png',
+  //     'price': 1.499,
+  //     'isFav': false,
+  //     'quantity': 1,
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/macbook.png',
+  //     'price': 1.499,
+  //     'isFav': false,
+  //     'quantity': 1,
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/headset.png',
+  //     'price': 1.499,
+  //     'isFav': false,
+  //     'quantity': 1,
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/airpod.png',
+  //     'price': 1.499,
+  //     'isFav': false,
+  //     'quantity': 1,
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/bt.png',
+  //     'price': 1.499,
+  //     'isFav': false,
+  //     'quantity': 1,
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/macbook.png',
+  //     'price': 1.499,
+  //     'isFav': false,
+  //     'quantity': 1,
+  //   },
+  // ];
 
   String value;
 
@@ -199,7 +254,7 @@ class _ProductScreenState extends State<ProductScreen> {
               child: Column(
                 children: [
                   Wrap(
-                      children: items
+                      children: loadedProducts
                           .map(
                             (item) => Stack(children: [
                               Container(
@@ -223,32 +278,40 @@ class _ProductScreenState extends State<ProductScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Image(
-                                        image: AssetImage(item['image']),
+                                        image: AssetImage(
+                                          // loadedProducts[0].id,
+                                          loadedProducts[0].image,
+                                          // loadedProducts[0].price,
+                                          // loadedProducts[0].isFav,
+                                          // loadedProducts[0].quantity
+                                        ),
                                         width: 140,
                                         height: 120,
                                         fit: BoxFit.contain,
                                       ),
                                       IconButton(
-                                        icon: item['isFav']
+                                        icon: loadedProducts[0].isFav
                                             ? Icon(Iconsax.heart5)
                                             : const Icon(Iconsax.heart),
                                         onPressed: () {
                                           setState(() {
-                                            item['isFav'] = !item['isFav'];
+                                            loadedProducts[0].isFav =
+                                                !loadedProducts[0].isFav;
                                           });
                                         },
                                         color: mainColor,
                                       ),
                                       SizedBox(height: 3),
                                       Text(
-                                        item['title'],
+                                        loadedProducts[0].title,
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(color: Colors.grey),
                                       ),
                                       SizedBox(height: 3),
                                       Text(
-                                        '\$${item['price']}'.toString(),
+                                        '\$${loadedProducts[0].price}'
+                                            .toString(),
                                         style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 16,
@@ -274,8 +337,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                if (item['quantity'] > 1) {
-                                                  item['quantity']--;
+                                                if (loadedProducts[0].quantity >
+                                                    1) {
+                                                  loadedProducts[0].quantity--;
                                                   showErrorToast(
                                                       'Removed from Cart');
                                                 }
@@ -295,12 +359,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                               ),
                                             ),
                                           ),
-                                          Text(item['quantity'].toString()),
+                                          Text(loadedProducts[0]
+                                              .quantity
+                                              .toString()),
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                if (item['quantity'] < 10) {
-                                                  item['quantity']++;
+                                                if (loadedProducts[0].quantity <
+                                                    10) {
+                                                  loadedProducts[0].quantity++;
                                                   showToast('Added to cart');
                                                 }
                                               });

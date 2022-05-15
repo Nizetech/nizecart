@@ -3,7 +3,8 @@ class Product {
   final String title;
   final String image;
   final double price;
-  final int quantity;
+  int quantity;
+  final String description;
   bool isFav;
 
   Product(
@@ -11,6 +12,7 @@ class Product {
       this.image,
       this.title,
       this.price,
+      this.description,
       this.isFav = false,
       this.quantity});
 }
