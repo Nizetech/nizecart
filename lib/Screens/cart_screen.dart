@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/Models/cart.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
+import 'package:nizecart/Screens/product_screen.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -14,28 +16,36 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   int quantity = 0;
 
-  List<Map> items = [
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/headset.png',
-      'price': '\$ 1,499',
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/airpod.png',
-      'price': '\$ 1,499',
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/bt.png',
-      'price': '\$ 2,499',
-    },
-    {
-      'title': 'HeadSet Stereo with strong bazz',
-      'image': 'assets/macbook.png',
-      'price': '\$ 2,499',
-    },
-  ];
+  List<Map<String, dynamic>> items;
+  // List<Map<String, dynamic>> items = [];
+
+  // List<Map> items = [
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/headset.png',
+  //     'price': '\$ 1,499',
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/airpod.png',
+  //     'price': '\$ 1,499',
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/bt.png',
+  //     'price': '\$ 2,499',
+  //   },
+  //   {
+  //     'title': 'HeadSet Stereo with strong bazz',
+  //     'image': 'assets/macbook.png',
+  //     'price': '\$ 2,499',
+  //   },
+  // ];
+
+  final cart = Get.find<Cart>();
+  // final cart = Get.to<Cart>();
+  Carting cart1 = Carting();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +57,7 @@ class _CartScreenState extends State<CartScreen> {
           icon: Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Get.back(),
         ),
-        title: Text(
+        title: const Text(
           'Cart',
           style: TextStyle(fontSize: 20),
         ),
@@ -92,7 +102,7 @@ class _CartScreenState extends State<CartScreen> {
               children: [
                 Text('Subtotal', style: TextStyle(fontSize: 16)),
                 Spacer(),
-                Text('\$ 10,199',
+                Text('\$${cart1.totalAmount}',
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ],

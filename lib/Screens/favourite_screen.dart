@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/Widget/component.dart';
 
 class FavouriteScreen extends StatefulWidget {
   FavouriteScreen({Key key}) : super(key: key);
@@ -14,12 +15,13 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     return Scaffold(
         appBar: AppBar(
           leading: SizedBox(),
-          title: Text(
+          title: const Text(
             'Favourite',
             style: TextStyle(fontSize: 20),
           ),
           centerTitle: true,
         ),
+        backgroundColor: white,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

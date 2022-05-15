@@ -15,17 +15,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  get: ^4.6.1
+  iconsax: ^0.0.8
+  flutter_carousel_slider: ^1.0.8
+  flutter_rating_bar: ^4.0.0
+  country_state_city_picker: ^1.2.8
+  fluttertoast: ^8.0.9
+  provider: ^6.0.2
 
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  get: ^4.6.1
-  iconsax: ^0.0.8
-  flutter_carousel_slider: ^1.0.8
-  flutter_rating_bar: ^4.0.0
-  country_state_city_picker: ^1.2.8
   
  
   flutter_lints: ^1.0.0

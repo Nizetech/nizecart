@@ -6,6 +6,8 @@ import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter/src/material/radio_list_tile.dart';
 
+enum AuthMode { signup, login }
+
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key key}) : super(key: key);
 
@@ -13,7 +15,8 @@ class SignUpScreen extends StatefulWidget {
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen>
+    with SingleTickerProviderStateMixin {
   int selected = 1;
 
   bool enable2 = false;
@@ -23,6 +26,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController pwd = TextEditingController();
   TextEditingController num = TextEditingController();
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  final AuthMode authMode = AuthMode.signup;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           icon: Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Get.back(),
         ),
-        title: Text(
+        title: const Text(
           'Create Account',
           style: TextStyle(fontSize: 20),
         ),
@@ -46,29 +54,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Create a new Account',
                 style: TextStyle(color: Colors.grey),
               ),
               SizedBox(height: 20),
-              TextField(
-                  controller: fname,
-                  cursorColor: mainColor,
-                  decoration: InputDecoration(
-                    hintText: 'First Name',
-                    // labelStyle: TextStyle(fontSize: 18),
-                    filled: true,
-                    isDense: true,
-                    prefixIcon: Icon(Iconsax.user),
-                    prefixIconColor: mainColor,
-                    iconColor: mainColor,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none),
-                  )),
+              TextFormField(
+                controller: fname,
+                cursorColor: mainColor,
+                decoration: InputDecoration(
+                  hintText: 'First Name',
+                  // labelStyle: TextStyle(fontSize: 18),
+                  filled: true,
+                  isDense: true,
+                  prefixIcon: Icon(Iconsax.user),
+                  prefixIconColor: mainColor,
+                  iconColor: mainColor,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none),
+                ),
+                // onFieldSubmitted: (_) {
+                //   FocusScope.of(context).requestFocus(_);
+                // },
+              ),
               SizedBox(height: 15),
               TextField(
                 controller: lname,
@@ -122,43 +134,57 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ],
               ),
               SizedBox(height: 15),
-              TextField(
-                  controller: email,
-                  cursorColor: mainColor,
-                  decoration: InputDecoration(
-                    hintText: 'Email address..',
-                    // labelStyle: TextStyle(fontSize: 18),
-                    filled: true,
-                    isDense: true,
-                    prefixIcon: Icon(Iconsax.sms),
-                    prefixIconColor: mainColor,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none),
-                  )),
+              TextFormField(
+                controller: email,
+                cursorColor: mainColor,
+                decoration: InputDecoration(
+                  hintText: 'Email address..',
+                  // labelStyle: TextStyle(fontSize: 18),
+                  filled: true,
+                  isDense: true,
+                  prefixIcon: Icon(Iconsax.sms),
+                  prefixIconColor: mainColor,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none),
+                ),
+                validator: (value) {
+                  if (value.isEmpty || !value.contains('@')) {
+                    return 'Invalid email';
+                  }
+                  return null;
+                },
+              ),
               SizedBox(height: 15),
-              TextField(
-                  controller: pwd,
-                  obscureText: true,
-                  obscuringCharacter: '*',
-                  cursorColor: mainColor,
-                  decoration: InputDecoration(
-                    hintText: 'Password',
-                    // labelStyle: TextStyle(fontSize: 18),
-                    filled: true,
-                    isDense: true,
-                    prefixIcon: Icon(Iconsax.lock),
-                    prefixIconColor: mainColor,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none),
-                  )),
+              TextFormField(
+                controller: pwd,
+                obscureText: true,
+                obscuringCharacter: '*',
+                cursorColor: mainColor,
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  // labelStyle: TextStyle(fontSize: 18),
+                  filled: true,
+                  isDense: true,
+                  prefixIcon: Icon(Iconsax.lock),
+                  prefixIconColor: mainColor,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none),
+                ),
+                validator: (value) {
+                  if (value.isEmpty || value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
+              ),
               SizedBox(height: 15),
               TextField(
                   controller: num,

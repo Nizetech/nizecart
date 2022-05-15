@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Widget/component.dart';
 
+import '../Screens/account_screen.dart';
 import '../Screens/category_screen.dart';
 import '../Screens/favourite_screen.dart';
 import '../Screens/home_screen.dart';
@@ -20,8 +21,8 @@ class _BottomNavState extends State<BottomNav> {
     HomeScreen(),
     CategoryScreen(),
     FavouriteScreen(),
-    Container(),
-    Container(),
+    ProfileScreen(),
+    // Container(),
     // Container()
   ];
 
@@ -59,7 +60,7 @@ class _BottomNavState extends State<BottomNav> {
           // ),
           BottomNavigationBarItem(
             icon: Icon(Iconsax.user),
-            label: 'Profile',
+            label: 'Account',
           ),
         ],
       ),

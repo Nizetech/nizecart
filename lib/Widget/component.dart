@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -146,3 +147,28 @@ class Cart extends StatelessWidget {
     );
   }
 }
+
+Widget loader() {
+  return const Center(
+    child: CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation(mainColor),
+    ),
+  );
+}
+
+void showToast(String label) {
+  Fluttertoast.showToast(
+    msg: label,
+    backgroundColor: Colors.green,
+    gravity: ToastGravity.BOTTOM,
+  );
+}
+
+void showErrorToast(String label) {
+  Fluttertoast.showToast(
+      msg: label, backgroundColor: Colors.red, gravity: ToastGravity.BOTTOM);
+}
+
+// String formatDate(Timestamp str) {
+//   return DateFormat().add_yMMMEd().format(str.toDate());
+// }

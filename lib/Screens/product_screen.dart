@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nizecart/Screens/cart_screen.dart';
+// import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/Screens/search_screen.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
@@ -16,49 +16,66 @@ class ProductScreen extends StatefulWidget {
 TextEditingController search = TextEditingController();
 
 class _ProductScreenState extends State<ProductScreen> {
-  int counter = 0;
-  bool fav = false;
-  int quantity = 1;
-  List<Map> items = [
+  // int counter = 0;
+  // bool fav = false;
+  // int quantity = 1;
+  // int price = 0;
+  List<Map<String, dynamic>> items = [
     {
       'title': 'HeadSet Stereo with strong bazz',
       'image': 'assets/headset.png',
-      'price': '\$ 1,499'
+      'price': 1.499,
+      'isFav': false,
+      'quantity': 1,
     },
     {
       'title': 'HeadSet Stereo with strong bazz',
       'image': 'assets/airpod.png',
-      'price': '\$ 1,499'
+      'price': 1.499,
+      'isFav': false,
+      'quantity': 1,
     },
     {
       'title': 'HeadSet Stereo with strong bazz',
       'image': 'assets/bt.png',
-      'price': '\$ 2,499'
+      'price': 1.499,
+      'isFav': false,
+      'quantity': 1,
     },
     {
       'title': 'HeadSet Stereo with strong bazz',
       'image': 'assets/macbook.png',
-      'price': '\$ 2,499'
+      'price': 1.499,
+      'isFav': false,
+      'quantity': 1,
     },
     {
       'title': 'HeadSet Stereo with strong bazz',
       'image': 'assets/headset.png',
-      'price': '\$ 1,499'
+      'price': 1.499,
+      'isFav': false,
+      'quantity': 1,
     },
     {
       'title': 'HeadSet Stereo with strong bazz',
       'image': 'assets/airpod.png',
-      'price': '\$ 1,499'
+      'price': 1.499,
+      'isFav': false,
+      'quantity': 1,
     },
     {
       'title': 'HeadSet Stereo with strong bazz',
       'image': 'assets/bt.png',
-      'price': '\$ 2,499'
+      'price': 1.499,
+      'isFav': false,
+      'quantity': 1,
     },
     {
       'title': 'HeadSet Stereo with strong bazz',
       'image': 'assets/macbook.png',
-      'price': '\$ 2,499'
+      'price': 1.499,
+      'isFav': false,
+      'quantity': 1,
     },
   ];
 
@@ -108,10 +125,10 @@ class _ProductScreenState extends State<ProductScreen> {
               child: DropdownButton(
                 isDense: true,
                 isExpanded: true,
-                icon: Icon(Icons.keyboard_arrow_down_sharp),
+                icon: const Icon(Icons.keyboard_arrow_down_sharp),
                 alignment: Alignment.bottomCenter,
                 value: value,
-                hint: Text(' Sort by'),
+                hint: const Text(' Sort by'),
                 onChanged: (String val) {
                   setState(() {
                     value = val;
@@ -211,8 +228,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                         height: 120,
                                         fit: BoxFit.contain,
                                       ),
-                                      const Icon(
-                                        Iconsax.heart,
+                                      IconButton(
+                                        icon: item['isFav']
+                                            ? Icon(Iconsax.heart5)
+                                            : const Icon(Iconsax.heart),
+                                        onPressed: () {
+                                          setState(() {
+                                            item['isFav'] = !item['isFav'];
+                                          });
+                                        },
                                         color: mainColor,
                                       ),
                                       SizedBox(height: 3),
@@ -224,7 +248,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       ),
                                       SizedBox(height: 3),
                                       Text(
-                                        item['price'].toString(),
+                                        '\$${item['price']}'.toString(),
                                         style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 16,
@@ -250,8 +274,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                if (quantity > 1) {
-                                                  quantity--;
+                                                if (item['quantity'] > 1) {
+                                                  item['quantity']--;
+                                                  showErrorToast(
+                                                      'Removed from Cart');
                                                 }
                                               });
                                             },
@@ -269,11 +295,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                               ),
                                             ),
                                           ),
-                                          Text(quantity.toString()),
+                                          Text(item['quantity'].toString()),
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                quantity++;
+                                                if (item['quantity'] < 10) {
+                                                  item['quantity']++;
+                                                  showToast('Added to cart');
+                                                }
                                               });
                                             },
                                             child: Container(

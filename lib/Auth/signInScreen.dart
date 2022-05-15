@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import '../Widget/bottonNav.dart';
 import 'forgetPaassword.dart';
 
+enum AuthMode { signup, login }
+
 class SignInSCreen extends StatefulWidget {
   SignInSCreen({Key key}) : super(key: key);
 
@@ -15,10 +17,14 @@ class SignInSCreen extends StatefulWidget {
   State<SignInSCreen> createState() => _SignInSCreenState();
 }
 
-TextEditingController email = TextEditingController();
-TextEditingController pwd = TextEditingController();
-
-class _SignInSCreenState extends State<SignInSCreen> {
+class _SignInSCreenState extends State<SignInSCreen>
+    with SingleTickerProviderStateMixin {
+  TextEditingController email = TextEditingController();
+  TextEditingController pwd = TextEditingController();
+  AuthMode authMode = AuthMode.login;
+  // final Map<String, String>
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode pwdFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,23 +49,32 @@ class _SignInSCreenState extends State<SignInSCreen> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 30),
-                TextField(
-                    controller: email,
-                    cursorColor: mainColor,
-                    decoration: InputDecoration(
-                      hintText: 'Email address..',
-                      // labelStyle: TextStyle(fontSize: 18),
-                      filled: true,
-                      isDense: true,
-                      prefixIcon: Icon(Iconsax.sms),
-                      prefixIconColor: mainColor,
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none),
-                    )),
+                TextFormField(
+                  controller: email,
+                  cursorColor: mainColor,
+                  focusNode: emailFocusNode,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    hintText: 'Email address..',
+                    // labelStyle: TextStyle(fontSize: 18),
+                    filled: true,
+                    isDense: true,
+                    prefixIcon: Icon(Iconsax.sms),
+                    prefixIconColor: mainColor,
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide.none),
+                  ),
+                  onSaved: (value) {
+                    if (email.text.isEmpty || !email.text.contains('@')) {
+                      return 'Email is required';
+                    }
+                    return null;
+                  },
+                ),
                 SizedBox(height: 20),
                 TextField(
                     controller: pwd,
