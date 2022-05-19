@@ -19,8 +19,11 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   int quantity = 0;
+  int index = 0;
   static var box = Hive.box('name');
   List selectedItems = box.get('cart');
+
+  // var subTotal =  ${selectedItems[index]['price'] * selectedItems[index]['quantity']},
   @override
   Widget build(BuildContext context) {
     print(selectedItems);
@@ -49,7 +52,7 @@ class _CartScreenState extends State<CartScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Cart Summary',
                     style: TextStyle(
                       fontSize: 20,
@@ -59,7 +62,7 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                   Text(
                     'Items (${selectedItems.length})',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -75,11 +78,11 @@ class _CartScreenState extends State<CartScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: Row(
-              children: const [
+              children: [
                 Text('Subtotal', style: TextStyle(fontSize: 16)),
                 Spacer(),
                 Text(
-                  '\$ 2,499',
+                  totalAmount.toString(), //toStringAsFixed(),
                   style: TextStyle(fontSize: 16),
                 ),
               ],
@@ -91,7 +94,7 @@ class _CartScreenState extends State<CartScreen> {
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: selectedItems.length,
+              itemCount: itemsCount,
               itemBuilder: (ctx, i) {
                 return Container(
                   width: double.infinity,

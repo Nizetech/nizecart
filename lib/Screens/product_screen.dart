@@ -98,7 +98,7 @@ class _ProductScreenState extends State<ProductScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Get.back(),
         ),
         title: const Text(
@@ -116,7 +116,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
                 onPressed: (() => Get.to(SearchScreen())),
               ),
-              SizedBox(width: 5),
+              const SizedBox(width: 5),
               Padding(
                 padding: EdgeInsets.only(right: 20, top: 10, bottom: 10),
                 child: Cart(),
@@ -211,9 +211,10 @@ class _ProductScreenState extends State<ProductScreen> {
               child: Column(
                 children: [
                   Wrap(
-                      children: items
-                          .map(
-                            (item) => Stack(children: [
+                    children: items
+                        .map(
+                          (item) => Stack(
+                            children: [
                               Container(
                                 alignment: Alignment.center,
                                 width: MediaQuery.of(context).size.width * .43,
@@ -245,8 +246,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                           : const Icon(Iconsax.heart),
                                       onPressed: () {
                                         setState(() {
-                                          box.put('name', 'Nizar');
+                                          box.put('fav', item);
                                           item['isFav'] = !item['isFav'];
+                                          selectedItem.add(item);
                                         });
                                       },
                                       color: mainColor,
@@ -287,11 +289,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                           onTap: () {
                                             setState(
                                               () {
-                                                if (item['quantity'] > 1) {
+                                                if (item['quantity'] > 1 &&
+                                                    item.containsKey(
+                                                        'quantity')) {
                                                   item['quantity']--;
+
                                                   selectedItem.remove(item);
                                                   print(selectedItem);
-                                                  box.delete('name');
+                                                  box.delete('quantity');
                                                   showErrorToast(
                                                       'Removed from Cart');
                                                 }
@@ -317,7 +322,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                           onTap: () {
                                             setState(
                                               () {
-                                                if (item['quantity'] < 10) {
+                                                if (item['quantity'] < 10 &&
+                                                    item.containsKey(
+                                                        'quantity')) {
                                                   item['quantity']++;
                                                   // adding items to the cart list which will later be stored using a suitable backend service
                                                   selectedItem.add(item);
@@ -352,25 +359,29 @@ class _ProductScreenState extends State<ProductScreen> {
                                 top: 14,
                                 right: 10,
                                 child: Container(
-                                    height: 20,
-                                    width: 55,
-                                    alignment: Alignment.center,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(0),
-                                          bottomLeft: Radius.circular(10),
-                                        ),
-                                        color: priColor),
-                                    child: const Text(
-                                      'Express',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500),
-                                    )),
+                                  height: 20,
+                                  width: 55,
+                                  alignment: Alignment.center,
+                                  decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(0),
+                                        bottomLeft: Radius.circular(10),
+                                      ),
+                                      color: priColor),
+                                  child: const Text(
+                                    'Express',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ]),
-                          )
-                          .toList()),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ],
               ),
             ),

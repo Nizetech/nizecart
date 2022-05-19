@@ -121,6 +121,7 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   static var box = Hive.box('name');
   List selectedItems = box.get('cart');
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -161,6 +162,32 @@ class _CartState extends State<Cart> {
   }
 }
 
+int get itemsCount {
+  var box = Hive.box('name');
+  List selectedItems = box.get('cart');
+  return selectedItems == null ? 0 : selectedItems.length;
+}
+
+double get totalAmount {
+  var totalAmount = 0.0;
+  var box = Hive.box('name');
+  List selectedItems = box.get('cart');
+  if (selectedItems != null) {
+    for (var i = 0; i < selectedItems.length; i++) {
+      totalAmount += selectedItems[i]['price'] * selectedItems[i]['quantity'];
+    }
+  }
+}
+
+// void addItem(Map<String, dynamic> item) {
+//   var box = Hive.box('name');
+//   List selectedItems = box.get('cart');
+//   if (selectedItems ) {
+//     selectedItems = [];
+
+//   }
+// }
+
 Widget loader() {
   return const Center(
     child: CircularProgressIndicator(
@@ -174,12 +201,17 @@ void showToast(String label) {
     msg: label,
     backgroundColor: Colors.green,
     gravity: ToastGravity.BOTTOM,
+    toastLength: Toast.LENGTH_SHORT,
   );
 }
 
 void showErrorToast(String label) {
   Fluttertoast.showToast(
-      msg: label, backgroundColor: Colors.red, gravity: ToastGravity.BOTTOM);
+    msg: label,
+    backgroundColor: Colors.red,
+    gravity: ToastGravity.BOTTOM,
+    toastLength: Toast.LENGTH_SHORT,
+  );
 }
 
 // String formatDate(Timestamp str) {
