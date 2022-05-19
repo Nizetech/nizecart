@@ -8,44 +8,10 @@ import 'package:nizecart/Screens/product_screen.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController search = TextEditingController();
-  // int _currentPage = 0;
-  // Timer _timer;
-  // PageController _pageController = PageController(
-  //   initialPage: 0,
-  // );
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
-  //     if (_currentPage < 2) {
-  //       _currentPage++;
-  //     } else {
-  //       _currentPage = 0;
-  //     }
-
-  //     _pageController.animateToPage(
-  //       _currentPage,
-  //       duration: Duration(milliseconds: 350),
-  //       curve: Curves.easeIn,
-  //     );
-  //   });
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _timer?.cancel();
-  // }
+// ignore: must_be_immutable
+class HomeScreen extends StatelessWidget {
+  HomeScreen({Key key, this.items}) : super(key: key);
+  List<Map<String, dynamic>> items;
 
   List slideView = [
     {

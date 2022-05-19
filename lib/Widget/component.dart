@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -107,13 +110,23 @@ class ShopListView extends StatelessWidget {
   }
 }
 
-class Cart extends StatelessWidget {
-  const Cart({Key key}) : super(key: key);
+class Cart extends StatefulWidget {
+  Cart({Key key, this.items}) : super(key: key);
+  List<Map<String, dynamic>> items;
 
+  @override
+  State<Cart> createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
+  static var box = Hive.box('name');
+  List selectedItems = box.get('cart');
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(CartScreen()),
+      onTap: () => Get.to(
+        CartScreen(),
+      ),
       child: Stack(
         children: [
           const Padding(
@@ -133,8 +146,8 @@ class Cart extends StatelessWidget {
               alignment: Alignment.center,
               decoration:
                   const BoxDecoration(shape: BoxShape.circle, color: mainColor),
-              child: const Text(
-                '2',
+              child: Text(
+                '${selectedItems.length}',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 14,

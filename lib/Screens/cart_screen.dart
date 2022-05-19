@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Models/cart.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
-import 'package:nizecart/Screens/product_screen.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CartScreen extends StatefulWidget {
-  CartScreen({Key key}) : super(key: key);
+  CartScreen({
+    Key key,
+    // this.items
+  }) : super(key: key);
+  // List<Map<String, dynamic>> items;
 
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -15,39 +19,11 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   int quantity = 0;
-
-  List<Map<String, dynamic>> items;
-  // List<Map<String, dynamic>> items = [];
-
-  // List<Map> items = [
-  //   {
-  //     'title': 'HeadSet Stereo with strong bazz',
-  //     'image': 'assets/headset.png',
-  //     'price': '\$ 1,499',
-  //   },
-  //   {
-  //     'title': 'HeadSet Stereo with strong bazz',
-  //     'image': 'assets/airpod.png',
-  //     'price': '\$ 1,499',
-  //   },
-  //   {
-  //     'title': 'HeadSet Stereo with strong bazz',
-  //     'image': 'assets/bt.png',
-  //     'price': '\$ 2,499',
-  //   },
-  //   {
-  //     'title': 'HeadSet Stereo with strong bazz',
-  //     'image': 'assets/macbook.png',
-  //     'price': '\$ 2,499',
-  //   },
-  // ];
-
-  final cart = Get.find<Cart>();
-  // final cart = Get.to<Cart>();
-  Carting cart1 = Carting();
-
+  static var box = Hive.box('name');
+  List selectedItems = box.get('cart');
   @override
   Widget build(BuildContext context) {
+    print(selectedItems);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -72,7 +48,7 @@ class _CartScreenState extends State<CartScreen> {
               padding: const EdgeInsets.all(15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
                     'Cart Summary',
                     style: TextStyle(
@@ -82,7 +58,7 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   Text(
-                    'Items (2)',
+                    'Items (${selectedItems.length})',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black,
@@ -99,12 +75,13 @@ class _CartScreenState extends State<CartScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: Row(
-              children: [
+              children: const [
                 Text('Subtotal', style: TextStyle(fontSize: 16)),
                 Spacer(),
-                Text('\$${cart1.totalAmount}',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(
+                  '\$ 2,499',
+                  style: TextStyle(fontSize: 16),
+                ),
               ],
             ),
           ),
@@ -112,131 +89,136 @@ class _CartScreenState extends State<CartScreen> {
             height: 10,
           ),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ...items.map(
-                    (item) => Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(left: 10, top: 15, right: 10),
-                      decoration: BoxDecoration(color: white, boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 3),
-                          blurRadius: 5,
-                          color: Colors.grey.withOpacity(.5),
-                        ),
-                      ]),
-                      padding: EdgeInsets.all(15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: selectedItems.length,
+              itemBuilder: (ctx, i) {
+                return Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(left: 10, top: 15, right: 10),
+                  decoration: BoxDecoration(color: white, boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(0, 3),
+                      blurRadius: 5,
+                      color: Colors.grey.withOpacity(.5),
+                    ),
+                  ]),
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image(
-                                image: AssetImage(item['image']),
-                                width: 140,
-                                height: 120,
-                                fit: BoxFit.contain,
-                              ),
-                              SizedBox(width: 0),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      item['title'],
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    SizedBox(height: 3),
-                                    Text(
-                                      item['price'].toString(),
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          Image(
+                            image: AssetImage(
+                              selectedItems.elementAt(i)['image'],
+                            ),
+                            width: 140,
+                            height: 120,
+                            fit: BoxFit.contain,
                           ),
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Icon(Iconsax.trash, color: mainColor),
-                              SizedBox(width: 10),
-                              const Text(
-                                'Remove',
-                                style: TextStyle(
-                                    color: mainColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (quantity > 1) {
-                                      quantity--;
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(6),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: mainColor),
-                                  child: const Icon(
-                                    Icons.remove,
-                                    size: 18,
-                                    color: white,
-                                  ),
+                          const SizedBox(width: 0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  selectedItems.elementAt(i)['title'],
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.grey),
                                 ),
-                              ),
-                              SizedBox(width: 17),
-                              Text(quantity.toString()),
-                              SizedBox(width: 17),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    quantity++;
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(6),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: mainColor),
-                                  child: const Icon(
-                                    Icons.add,
-                                    size: 18,
-                                    color: white,
-                                  ),
+                                SizedBox(height: 3),
+                                Text(
+                                  selectedItems
+                                      .elementAt(i)['price']
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Icon(Iconsax.trash, color: mainColor),
+                          SizedBox(width: 10),
+                          const Text(
+                            'Remove',
+                            style: TextStyle(
+                                color: mainColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              setState(
+                                () {
+                                  if (selectedItems.elementAt(i)['quantity'] >
+                                      1) {
+                                    selectedItems.elementAt(i)['quantity']--;
+                                    showErrorToast('Removed from Cart');
+                                  } else {
+                                    if (selectedItems
+                                            .elementAt(i)['quantity'] ==
+                                        1) return null;
+                                  }
+                                },
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: mainColor),
+                              child: const Icon(
+                                Icons.remove,
+                                size: 18,
+                                color: white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 17),
+                          Text(selectedItems
+                              .elementAt(i)['quantity']
+                              .toString()),
+                          SizedBox(width: 17),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedItems.elementAt(i)['quantity']++;
+                                showToast('Added to Cart');
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(6),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: mainColor),
+                              child: const Icon(
+                                Icons.add,
+                                size: 18,
+                                color: white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 15),
-                    child: CustomButton(
-                      text: 'Proceed to Checkout',
-                      onPressed: () => Get.to(CheckOutScreen()),
-                    ),
-                  )
-                ],
-              ),
+                );
+              },
             ),
           ),
         ],

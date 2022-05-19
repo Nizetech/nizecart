@@ -20,7 +20,7 @@ class _SearchScreenState extends State<SearchScreen> {
         elevation: 0,
         backgroundColor: secColor,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: white,
             size: 25,
@@ -66,9 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
       backgroundColor: white,
-      body: Column(
-        children: [Container()],
-      ),
+      body: Container(),
     );
   }
 }
