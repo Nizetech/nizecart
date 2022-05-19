@@ -33,7 +33,7 @@ class _ProductScreenState extends State<ProductScreen> {
     },
     {
       'id': 2,
-      'title': 'HeadSet Stereo with strong bazz',
+      'title': 'Huwaie',
       'image': 'assets/airpod.png',
       'price': 1.499,
       'isFav': false,
@@ -41,7 +41,7 @@ class _ProductScreenState extends State<ProductScreen> {
     },
     {
       'id': 3,
-      'title': 'HeadSet Stereo with strong bazz',
+      'title': 'Hand Watch',
       'image': 'assets/bt.png',
       'price': 1.499,
       'isFav': false,
@@ -49,7 +49,7 @@ class _ProductScreenState extends State<ProductScreen> {
     },
     {
       'id': 4,
-      'title': 'HeadSet Stereo with strong bazz',
+      'title': 'Handle Watch',
       'image': 'assets/macbook.png',
       'price': 1.499,
       'isFav': false,
@@ -57,7 +57,7 @@ class _ProductScreenState extends State<ProductScreen> {
     },
     {
       'id': 5,
-      'title': 'HeadSet Stereo with strong bazz',
+      'title': 'Speaker',
       'image': 'assets/headset.png',
       'price': 1.499,
       'isFav': false,
@@ -65,7 +65,7 @@ class _ProductScreenState extends State<ProductScreen> {
     },
     {
       'id': 6,
-      'title': 'HeadSet Stereo with strong bazz',
+      'title': 'Starry Night',
       'image': 'assets/airpod.png',
       'price': 1.499,
       'isFav': false,
@@ -73,7 +73,7 @@ class _ProductScreenState extends State<ProductScreen> {
     },
     {
       'id': 7,
-      'title': 'HeadSet Stereo with strong bazz',
+      'title': 'Bluetooth',
       'image': 'assets/bt.png',
       'price': 1.499,
       'isFav': false,
@@ -81,7 +81,7 @@ class _ProductScreenState extends State<ProductScreen> {
     },
     {
       'id': 8,
-      'title': 'HeadSet Stereo with strong bazz',
+      'title': 'MACBOOK',
       'image': 'assets/macbook.png',
       'price': 1.499,
       'isFav': false,

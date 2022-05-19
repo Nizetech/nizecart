@@ -22,7 +22,6 @@ class _CartScreenState extends State<CartScreen> {
   int index = 0;
   static var box = Hive.box('name');
   List selectedItems = box.get('cart');
-
   // var subTotal =  ${selectedItems[index]['price'] * selectedItems[index]['quantity']},
   @override
   Widget build(BuildContext context) {
@@ -139,7 +138,7 @@ class _CartScreenState extends State<CartScreen> {
                                   selectedItems
                                       .elementAt(i)['price']
                                       .toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),

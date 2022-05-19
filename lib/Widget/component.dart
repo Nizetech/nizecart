@@ -149,7 +149,7 @@ class _CartState extends State<Cart> {
                   const BoxDecoration(shape: BoxShape.circle, color: mainColor),
               child: Text(
                 '${selectedItems.length}',
-                style: TextStyle(
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
                     fontWeight: FontWeight.bold),
