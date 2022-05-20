@@ -13,30 +13,31 @@ class FavouriteScreen extends StatefulWidget {
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
   static var box = Hive.box('name');
-  List selectedItems = box.get('fav');
+  // List favItems = box.get('fav');
+  List favItems = box.get('fav');
+  // var box = box.get('fav');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: SizedBox(),
-          title: const Text(
-            'Favourite',
-            style: TextStyle(fontSize: 20),
-          ),
-          centerTitle: true,
+      appBar: AppBar(
+        leading: SizedBox(),
+        title: const Text(
+          'Favourite',
+          style: TextStyle(fontSize: 20),
         ),
-        backgroundColor: white,
-        body: 
-       selectedItems.contains('fav') ?
-           ListView.builder(
+        centerTitle: true,
+      ),
+      backgroundColor: white,
+      body: favItems.contains('fav')
+          ? ListView.builder(
               shrinkWrap: true,
               itemCount: itemsCount,
               itemBuilder: (ctx, i) {
                 return Container(
                   width: double.infinity,
                   alignment: Alignment.center,
-                  margin: EdgeInsets.only(left: 10, top: 15, right: 10),
+                  margin: const EdgeInsets.only(left: 10, top: 15, right: 10),
                   decoration: BoxDecoration(color: white, boxShadow: [
                     BoxShadow(
                       offset: const Offset(0, 3),
@@ -54,7 +55,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         children: [
                           Image(
                             image: AssetImage(
-                              selectedItems.elementAt(i)['image'],
+                              favItems.elementAt(i)['image'],
                             ),
                             width: 140,
                             height: 120,
@@ -66,17 +67,15 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  selectedItems.elementAt(i)['title'],
+                                  favItems.elementAt(i)['title'],
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 SizedBox(height: 3),
                                 Text(
-                                  selectedItems
-                                      .elementAt(i)['price']
-                                      .toString(),
-                                  style: TextStyle(
+                                  favItems.elementAt(i)['price'].toString(),
+                                  style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
@@ -103,14 +102,14 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                             onTap: () {
                               setState(
                                 () {
-                                  if (selectedItems.elementAt(i)['quantity'] >
-                                      1) {
-                                    selectedItems.elementAt(i)['quantity']--;
+                                  if (favItems.elementAt(i)['quantity'] > 1) {
+                                    favItems.elementAt(i)['quantity']--;
                                     showErrorToast('Removed from Cart');
                                   } else {
-                                    if (selectedItems
-                                            .elementAt(i)['quantity'] ==
-                                        1) return null;
+                                    if (favItems.elementAt(i)['quantity'] ==
+                                        1) {
+                                      return null;
+                                    }
                                   }
                                 },
                               );
@@ -129,14 +128,12 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                             ),
                           ),
                           const SizedBox(width: 17),
-                          Text(selectedItems
-                              .elementAt(i)['quantity']
-                              .toString()),
+                          Text(favItems.elementAt(i)['quantity'].toString()),
                           SizedBox(width: 17),
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                selectedItems.elementAt(i)['quantity']++;
+                                favItems.elementAt(i)['quantity']++;
                                 showToast('Added to Cart');
                               });
                             },
@@ -159,31 +156,30 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   ),
                 );
               },
-            ), 
-            :
-        
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Image.asset(
-                'assets/cart.png',
-                height: 120,
-                width: 150,
-                color: Colors.grey,
-              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Image.asset(
+                    'assets/cart.png',
+                    height: 120,
+                    width: 150,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(height: 10),
+                const Text(
+                  'No Favourite Items',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 10),
-            const Text('No Favourite Items',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-                ),
-          ],
-        ),
-        );
+    );
   }
 }

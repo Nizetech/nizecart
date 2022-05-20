@@ -4,6 +4,7 @@ import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Screens/product_screen.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
@@ -24,6 +25,9 @@ class HomeScreen extends StatelessWidget {
       'image': 'assets/chair.png',
     }
   ];
+  static var box = Hive.box('name');
+  List selectedItems = box.get('cart');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

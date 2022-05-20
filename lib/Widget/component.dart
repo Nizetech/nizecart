@@ -96,7 +96,7 @@ class ShopListView extends StatelessWidget {
               SizedBox(height: 5),
               Text(
                 subtitle,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xff343a40),
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -122,6 +122,7 @@ class _CartState extends State<Cart> {
   static var box = Hive.box('name');
   List selectedItems = box.get('cart');
 
+  ValueNotifier _counter = ValueNotifier(0);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -138,23 +139,50 @@ class _CartState extends State<Cart> {
               size: 25,
             ),
           ),
-          Positioned(
-            right: 0,
-            top: 0,
-            child: Container(
-              height: 16,
-              width: 16,
-              alignment: Alignment.center,
-              decoration:
-                  const BoxDecoration(shape: BoxShape.circle, color: mainColor),
-              child: Text(
-                '${selectedItems.length}',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
+          ValueListenableBuilder(
+            valueListenable: Hive.box('name').listenable(),
+            builder: (ctx, Box box, _) {
+              // ValueListenableBuilder(
+              //   valueListenable: Hive.box('name').listenable(),
+              //   builder: (ctx, Box box, _) {
+              //     List quantity = box.get(
+              //       'cart',
+              //       defaultValue: [],
+              //     );
+
+              //     return Text(
+              //       '${box.get('cart').length}',
+              //       style: const TextStyle(
+              //         color: white,
+              //         fontSize: 12,
+              //         fontWeight: FontWeight.w500,
+              //       ),
+              //     );
+              //   },
+              // );
+              List quantity = box.get(
+                'cart',
+                defaultValue: [],
+              );
+              return Positioned(
+                right: 0,
+                top: 0,
+                child: Container(
+                  height: 16,
+                  width: 16,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: mainColor),
+                  child: Text(
+                    quantity.length.toString(),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -177,6 +205,35 @@ double get totalAmount {
       totalAmount += selectedItems[i]['price'] * selectedItems[i]['quantity'];
     }
   }
+  return totalAmount.roundToDouble();
+}
+
+// void removeItem(int index) {
+//   var box = Hive.box('name');
+//   List selectedItems = box.get('cart');
+//   selectedItems.removeAt(index);
+//   box.put('cart', selectedItems);
+//   Fluttertoast.showToast(
+//     msg: 'Item removed from cart',
+//     toastLength: Toast.LENGTH_SHORT,
+//     gravity: ToastGravity.BOTTOM,
+//     timeInSecForIosWeb: 1,
+//     backgroundColor: Colors.red,
+//     textColor: Colors.white,
+//     fontSize: 16.0,
+//   );
+// }
+
+int get totalQuantity {
+  var totalQuantity = 0;
+  var box = Hive.box('name');
+  List selectedItems = box.get('cart');
+  if (selectedItems != null && selectedItems.length > 0) {
+    for (var i = 0; i < selectedItems.length; i++) {
+      totalQuantity += selectedItems[i]['quantity'];
+    }
+  }
+  return totalQuantity;
 }
 
 // void addItem(Map<String, dynamic> item) {
@@ -201,6 +258,7 @@ void showToast(String label) {
     msg: label,
     backgroundColor: Colors.green,
     gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
     toastLength: Toast.LENGTH_SHORT,
   );
 }
@@ -210,6 +268,7 @@ void showErrorToast(String label) {
     msg: label,
     backgroundColor: Colors.red,
     gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
     toastLength: Toast.LENGTH_SHORT,
   );
 }
@@ -217,3 +276,4 @@ void showErrorToast(String label) {
 // String formatDate(Timestamp str) {
 //   return DateFormat().add_yMMMEd().format(str.toDate());
 // }
+ 
