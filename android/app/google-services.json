@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "861155920000",
+    "project_id": "nizecart-255f9",
+    "storage_bucket": "nizecart-255f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861155920000:android:6f6fc9577266fc9e493e65",
+        "android_client_info": {
+          "package_name": "com.nizetech.nizecart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "861155920000-nvgdtp53evopifgtf5af3k8s1d05ing1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYaTH9bH7G4mMqGm4dMtSuM9epOilXs9c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "861155920000-nvgdtp53evopifgtf5af3k8s1d05ing1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Models/cart.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
+import '../Models/product.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -111,12 +112,12 @@ class _CartScreenState extends State<CartScreen> {
                         children: [
                           Text('Subtotal', style: TextStyle(fontSize: 16)),
                           Spacer(),
-                          Text(
-                            '\$${totalAmount}'
-                                .toString(), //${selectedItems[index]['price'] * selectedItems[index]['quantity']}
+                          // Text(
+                          //   // '\$${totalAmount}'
+                          //       // .toString(), //${selectedItems[index]['price'] * selectedItems[index]['quantity']}
 
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          //   // style: TextStyle(fontSize: 16),
+                          // ),
                         ],
                       ),
                     ),
@@ -126,7 +127,7 @@ class _CartScreenState extends State<CartScreen> {
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: itemsCount,
+                        // itemCount: itemsCount,
                         itemBuilder: (ctx, i) {
                           return Container(
                             width: double.infinity,
@@ -197,7 +198,10 @@ class _CartScreenState extends State<CartScreen> {
                                             ? null
                                             : setState(() {
                                                 selectedItems.removeAt(i);
-                                                box.put('cart', selectedItems);
+                                                // selectedItems.add(
+                                                //     selectedItems.elementAt(i));
+                                                box.put(
+                                                    'cartItem', selectedItems);
                                                 Fluttertoast.showToast(
                                                   msg: 'Item removed from cart',
                                                   toastLength:
@@ -266,7 +270,6 @@ class _CartScreenState extends State<CartScreen> {
                                             selectedItems
                                                 .elementAt(i)['quantity']++;
 
-                                            // selectedItems.add(selectedItems.elementAt(i));
                                             box.put('cartItem', selectedItems);
                                             showToast('Added to Cart');
                                             // selectedItems = [];

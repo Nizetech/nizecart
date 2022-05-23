@@ -1,7 +1,29 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-// import 'package:iconsax/iconsax.dart';
-// import 'package:get/get.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:get/get.dart';
+
+class ProductDetailsScreen extends StatefulWidget {
+  ProductDetailsScreen({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+    );
+  }
+}
 
 // import '../Widget/component.dart';
 

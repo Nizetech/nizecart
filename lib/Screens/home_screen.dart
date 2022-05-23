@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Screens/product_screen.dart';
+import 'package:nizecart/Screens/search_screen.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -67,19 +68,17 @@ class HomeScreen extends StatelessWidget {
                             hintText: 'Search for a product',
                             filled: true,
                             isDense: true,
-                            suffixIcon: Expanded(
-                              child: Container(
-                                width: 50,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  color: mainColor.withOpacity(.7),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Iconsax.search_normal,
-                                  size: 20,
-                                  color: Colors.white,
-                                ),
+                            suffixIcon: Container(
+                              width: 50,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: mainColor.withOpacity(.7),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Iconsax.search_normal,
+                                size: 20,
+                                color: Colors.white,
                               ),
                             ),
                             fillColor: Colors.white,
@@ -214,7 +213,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.to(ProductScreen());
+                        // Get.to(ProductScreen());
                       },
                       child: const ShopListView(
                         sHeight: 185,
@@ -241,7 +240,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.to(ProductScreen());
+                        // Get.to(ProductScreen());
                       },
                       child: const ShopListView(
                         sHeight: 130,
@@ -254,7 +253,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.to(ProductScreen());
+                        // Get.to(ProductScreen());
                       },
                       child: const ShopListView(
                         sHeight: 130,

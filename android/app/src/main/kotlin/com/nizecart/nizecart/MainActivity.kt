@@ -1,4 +1,4 @@
-package com.example.nizecart
+package com.nizetech.nizecart
 
 import io.flutter.embedding.android.FlutterActivity
 

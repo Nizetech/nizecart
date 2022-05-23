@@ -190,52 +190,6 @@ class _CartState extends State<Cart> {
   }
 }
 
-int get itemsCount {
-  var box = Hive.box('name');
-  List selectedItems = box.get('cart');
-  return selectedItems == null ? 0 : selectedItems.length;
-}
-
-double get totalAmount {
-  var totalAmount = 0.0;
-  var box = Hive.box('name');
-  List selectedItems = box.get('cart');
-  if (selectedItems != null) {
-    for (var i = 0; i < selectedItems.length; i++) {
-      totalAmount += selectedItems[i]['price'] * selectedItems[i]['quantity'];
-    }
-  }
-  return totalAmount.roundToDouble();
-}
-
-// void removeItem(int index) {
-//   var box = Hive.box('name');
-//   List selectedItems = box.get('cart');
-//   selectedItems.removeAt(index);
-//   box.put('cart', selectedItems);
-//   Fluttertoast.showToast(
-//     msg: 'Item removed from cart',
-//     toastLength: Toast.LENGTH_SHORT,
-//     gravity: ToastGravity.BOTTOM,
-//     timeInSecForIosWeb: 1,
-//     backgroundColor: Colors.red,
-//     textColor: Colors.white,
-//     fontSize: 16.0,
-//   );
-// }
-
-int get totalQuantity {
-  var totalQuantity = 0;
-  var box = Hive.box('name');
-  List selectedItems = box.get('cart');
-  if (selectedItems != null && selectedItems.length > 0) {
-    for (var i = 0; i < selectedItems.length; i++) {
-      totalQuantity += selectedItems[i]['quantity'];
-    }
-  }
-  return totalQuantity;
-}
-
 // void addItem(Map<String, dynamic> item) {
 //   var box = Hive.box('name');
 //   List selectedItems = box.get('cart');
