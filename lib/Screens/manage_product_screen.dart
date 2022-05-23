@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../Models/imageInput.dart';
 import '../Widget/component.dart';
 
 class AddUser extends StatelessWidget {
@@ -153,6 +154,7 @@ class ManageProducts extends StatelessWidget {
           'title': title.text, // Apple
           'description': description.text, // A fruit
           'price': price.text, // 1.99
+          'image': image.path,
         })
         //;
         // box
@@ -252,6 +254,7 @@ class ManageProducts extends StatelessWidget {
                   )),
             ),
             SizedBox(height: 15),
+            ImageInput(selectImage),
             CustomButton(
               text: "Add Product",
               onPressed: () {

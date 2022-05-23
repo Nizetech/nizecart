@@ -14,7 +14,7 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
-  XFile imageFile;
+  File storedImage;
   Future<void> takePicture() async {
     final ImagePicker picker = ImagePicker();
     final ImageFile = await picker.pickImage(
@@ -24,17 +24,48 @@ class _ImageInputState extends State<ImageInput> {
       return;
     }
 
-    XFile file = XFile(ImageFile.path);
+    File file = File(ImageFile.path);
     setState(() {
-      imageFile = file;
+      storedImage = file;
     });
 
     final appDir = await getApplicationDocumentsDirectory();
     final fileName = path.basename(file.path);
+    final savedImage = await file.copy('${appDir.path}/$fileName');
+    widget.onSelectImage(savedImage);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Column(
+      children: [
+        Container(
+          height: 200,
+          width: 200,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border.all(width: 1, color: Colors.grey),
+          ),
+          child: storedImage == null
+              ? const Text('No Image', textAlign: TextAlign.center)
+              : Image.file(storedImage),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.camera_alt),
+              onPressed: takePicture,
+            ),
+            TextButton(
+                onPressed: takePicture,
+                child: Text(
+                  'Take Picture',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )),
+          ],
+        )
+      ],
+    );
   }
 }
