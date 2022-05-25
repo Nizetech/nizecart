@@ -4,7 +4,7 @@ import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
 
-import 'manage_product_screen.dart';
+import '../Models/manage_product_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key key}) : super(key: key);

@@ -1,130 +1,19 @@
 import 'dart:io';
 
+// import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-// Import the firebase_core and cloud_firestore plugin
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:get/get.dart';
+// import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
-
-import '../Models/imageInput.dart';
+import 'package:nizecart/Models/imageInput2.dart';
+import 'package:nizecart/Models/product_overview_screen.dart';
+import 'imageInput.dart';
 import '../Widget/component.dart';
-
-class AddUser extends StatelessWidget {
-  final String fullName;
-  final String company;
-  final int age;
-
-  AddUser(this.fullName, this.company, this.age);
-
-  @override
-  Widget build(BuildContext context) {
-    // Create a CollectionReference called users that references the firestore collection
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-    Future<void> addUser() {
-      // Call the user's CollectionReference to add a new user
-      return users
-          .add({
-            'full_name': fullName, // John Doe
-            'company': company, // Stokes and Sons
-            'age': age // 42
-          })
-          .then((value) => print(users))
-          .catchError((error) => print("Failed to add user: $error"));
-    }
-
-    return Container(
-      color: Colors.white,
-      child: TextButton(
-        onPressed: addUser,
-        child: Text(
-          "Add User",
-        ),
-      ),
-    );
-  }
-}
-
-// End of File - AddUser.dart */
-// This is the file add user screen.
-
-class GetUserName extends StatelessWidget {
-  final String documentId;
-  const GetUserName(this.documentId);
-
-  @override
-  Widget build(BuildContext context) {
-    // Create a CollectionReference called users that references the firestore collection
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-    return FutureBuilder<DocumentSnapshot>(
-        future: users.doc(documentId).get(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text("Something went wrong");
-          }
-
-          if (snapshot.hasData && snapshot.data.exists) {
-            return Text("Document does not exist");
-          }
-
-          if (snapshot.connectionState == ConnectionState.done) {
-            Map<String, dynamic> data =
-                snapshot.data.data() as Map<String, dynamic>;
-            return Text("Full Name: ${data['full_name']} ${data['commpany']}");
-          }
-
-          return Text("loading");
-        });
-  }
-}
-
-/// This is the class that will be used to display the list of users //
-
-class UserInformation extends StatefulWidget {
-  @override
-  _UserInformationState createState() => _UserInformationState();
-}
-
-class _UserInformationState extends State<UserInformation> {
-  final Stream<QuerySnapshot> _usersStream =
-      FirebaseFirestore.instance.collection('users').snapshots();
-  // FirebaseFirestore.instance.collection('users').get.then((QuerySnapshot querySnapshot ){
-  //   querySnapshot.docs.forEach((docs){
-  //     print(docs.data['full Name']);
-  //   });
-  //});
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _usersStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text('Something went wrong');
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
-        }
-
-        return ListView(
-          children: snapshot.data.docs.map((DocumentSnapshot document) {
-            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            return ListTile(
-              title: Text(data['full_name']),
-              subtitle: Text(data['company']),
-            );
-          }).toList(),
-        );
-      },
-    );
-  }
-}
-
-// this is the class that will be used to display the list of users (Stream Method)//
+// import 'product_overview_screen.dart';
 
 class ManageProducts extends StatelessWidget {
   ManageProducts({Key key}) : super(key: key);
@@ -132,9 +21,10 @@ class ManageProducts extends StatelessWidget {
   TextEditingController title = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController price = TextEditingController();
-  var box = Hive.box('name');
+  // var box = Hive.box('name');
 
   File image;
+  String downloadUrl;
 
   void selectImage(File image) {
     this.image = image;
@@ -149,22 +39,19 @@ class ManageProducts extends StatelessWidget {
         FirebaseFirestore.instance.collection('products');
 
     // Call the products CollectionReference to add a new product
-    products
-        .add({
-          'title': title.text, // Apple
-          'description': description.text, // A fruit
-          'price': price.text, // 1.99
-          'image': image.path,
-        })
-        //;
+    products.add({
+      'title': title.text, // Apple
+      'description': description.text, // A fruit
+      'price': price.text, // 1.99
+      'image': image
+          .path, // /storage/emulated/0/Android/data/com.example.nizecart/files/Pictures/image_name.jpg
+    })
+
         // box
-        //     .add( {
-        //       'title': title.text, // Apple
-        //       'description': description.text, // A fruit
-        //       'price': price.text, // 1.99
-        //     }
-        //     )
-        .then((value) => print(products))
+        //     .put(products, 'products')
+        //     .then((value) => print('product added')
+        //  Get.to(ProductsOverviewScreen())
+        //  )
         .catchError((error) => print("Failed to add product: $error"));
   }
 
@@ -172,14 +59,46 @@ class ManageProducts extends StatelessWidget {
     title.text = "";
     description.text = "";
     price.text = "";
+    image == null;
   }
 
+  Future<void> uploadFile() async {
+    ref = FirebaseStorage.instance
+        .ref()
+        .child('images/${(DateTime.now()).millisecondsSinceEpoch}');
+
+    await ref.putFile(image).whenComplete(() async {
+      ref.getDownloadURL().then((value) {
+        downloadUrl = value;
+        print(downloadUrl);
+      });
+    });
+  }
+
+// @override
+// void initState() {
+//   super.initState();
+//   imageRef = FirebaseFirestore.instance.collection('images');
+
+// }
+  // Storage storage = Storage();
+  CollectionReference imageRef;
+  storage.Reference ref;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Manage Products"),
+        title: const Text("Manage Products"),
         elevation: 0.0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Get.to(ProductsOverviewScreen());
+          },
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -254,11 +173,70 @@ class ManageProducts extends StatelessWidget {
                   )),
             ),
             SizedBox(height: 15),
-            ImageInput(selectImage),
+            // ImageInput(selectImage),
+            // Container(
+            //   height: 200,
+            //   width: 200,
+            //   alignment: Alignment.center,
+            //   decoration: BoxDecoration(
+            //     border: Border.all(width: 1, color: Colors.grey),
+            //   ),
+            //   child: storage == null
+            //       ? const Text(
+            //           'No Image',
+            //           textAlign: TextAlign.center,
+            //           style:
+            //               TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            //         )
+            //       : Image.file(
+            //           storage as File,
+            //           fit: BoxFit.cover,
+            //           width: 200,
+            //           height: 200,
+            //         ),
+            // ),
+            // Row(
+            //   children: [
+            //     IconButton(
+            //       icon: Icon(Icons.camera_alt),
+            //       onPressed: () async {
+            //         final results = await FilePicker.platform.pickFiles(
+            //             allowMultiple: false,
+            //             type: FileType.custom,
+            //             allowedExtensions: ['jpg', 'png']);
+            //         if (results == null) {
+            //           ScaffoldMessenger.of(context).showSnackBar(
+            //             SnackBar(
+            //               content: Text('No Image Selected'),
+            //             ),
+            //           );
+            //           return;
+            //         }
+            //         final path = results.files.first.path;
+            //         final fileName = results.files.single.name;
+
+            //         storage.uploadFile(path, fileName).then((value) => {
+            //               print('done'),
+            //               selectImage(File('$path')),
+            //             });
+            //       },
+            // ),
+            ImageInputs(selectImage),
+            const TextButton(
+                // onPressed: takePicture,
+                child: Text(
+              'Upload Picture',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )),
+            SizedBox(height: 15),
+
             CustomButton(
               text: "Add Product",
               onPressed: () {
+                // setState(() {});
                 addProduct();
+                uploadFile();
+
                 initValue();
               },
             ),

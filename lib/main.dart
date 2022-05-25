@@ -4,11 +4,13 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Auth/signInScreen.dart';
 import 'package:nizecart/Screens/home_screen.dart';
+import 'package:nizecart/Screens/product_details.dart';
+import 'package:nizecart/Models/product_overview_screen.dart';
 import 'package:nizecart/Widget/bottonNav.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:path_provider/path_provider.dart' as path;
 
-import 'Screens/manage_product_screen.dart';
+import 'Models/manage_product_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +37,9 @@ class MyApp extends StatelessWidget {
               foregroundColor: white),
           primarySwatch: Colors.blue,
           backgroundColor: white),
-      home: ManageProducts(),
+      home:
+          // ProductsOverviewScreen(),
+          ManageProducts(),
       //  AddUser('RossMarry', 'nizetech', 56),
     );
   }
