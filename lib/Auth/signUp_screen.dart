@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/Widget/bottonNav.dart';
 import '../Widget/component.dart';
@@ -20,12 +21,13 @@ class _SignUpScreenState extends State<SignUpScreen>
   int selected = 1;
 
   bool enable2 = false;
+  bool visibility = false;
 
   TextEditingController fname = TextEditingController();
   TextEditingController lname = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController pwd = TextEditingController();
-  TextEditingController num = TextEditingController();
+  TextEditingController phn = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -134,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                 ],
               ),
               SizedBox(height: 15),
-              TextFormField(
+              TextField(
                 controller: email,
                 cursorColor: mainColor,
                 decoration: InputDecoration(
@@ -151,17 +153,11 @@ class _SignUpScreenState extends State<SignUpScreen>
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none),
                 ),
-                validator: (value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Invalid email';
-                  }
-                  return null;
-                },
               ),
               SizedBox(height: 15),
-              TextFormField(
+              TextField(
                 controller: pwd,
-                obscureText: true,
+                obscureText: visibility,
                 obscuringCharacter: '*',
                 cursorColor: mainColor,
                 decoration: InputDecoration(
@@ -170,6 +166,17 @@ class _SignUpScreenState extends State<SignUpScreen>
                   filled: true,
                   isDense: true,
                   prefixIcon: Icon(Iconsax.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      visibility ? Icons.visibility_off : Icons.visibility,
+                      color: visibility ? Colors.grey : mainColor,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        visibility = !visibility;
+                      });
+                    },
+                  ),
                   prefixIconColor: mainColor,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -178,17 +185,12 @@ class _SignUpScreenState extends State<SignUpScreen>
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none),
                 ),
-                validator: (value) {
-                  if (value.isEmpty || value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
-                  return null;
-                },
               ),
               SizedBox(height: 15),
               TextField(
-                  controller: num,
+                  controller: phn,
                   cursorColor: mainColor,
+                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     // labelStyle: TextStyle(fontSize: 18),
@@ -229,7 +231,58 @@ class _SignUpScreenState extends State<SignUpScreen>
               SizedBox(height: 30),
               CustomButton(
                 text: 'Create',
-                onPressed: () => Get.to(BottomNav()),
+                onPressed: () {
+                  if (fname.text.isNotEmpty &&
+                      lname.text.isNotEmpty &&
+                      phn.text.isNotEmpty &&
+                      pwd.text.isNotEmpty) {
+                    if (pwd.text.length > 6) {
+                      if (enable2) {
+                        if (email.text.contains('@')) {
+                          if (email.text.contains('.')) {
+                            if (phn.text.length == 11) {
+                              showToast('success');
+                            } else {
+                              showErrorToast('phone number is not valid');
+                              return;
+                            }
+                          } else {
+                            showErrorToast('email is not valid');
+                            return;
+                          }
+                        } else {
+                          showErrorToast('email is not valid');
+                          return;
+                        }
+                      } else {
+                        showErrorToast(
+                            'you must agree with the terms and conditions');
+                        return;
+                      }
+
+                      ProductService()
+                          .signUp(
+                        fname: fname.text,
+                        lname: lname.text,
+                        email: email.text,
+                        pwd: pwd.text,
+                        phn: phn.text,
+                      )
+                          .then((value) {
+                        if (value) {
+                          showToast('Logged in successfully');
+                          Get.to(BottomNav());
+                        } else {
+                          Get.back();
+                        }
+                      });
+                    } else {
+                      showErrorToast('password must be at least 6 characters');
+                    }
+                  } else {
+                    showErrorToast('Please fill all the fields');
+                  }
+                },
               )
             ],
           ),

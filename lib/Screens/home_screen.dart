@@ -14,6 +14,7 @@ import 'package:iconsax/iconsax.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key key, this.items}) : super(key: key);
   List<Map<String, dynamic>> items;
+  TextEditingController search = TextEditingController();
 
   List slideView = [
     {

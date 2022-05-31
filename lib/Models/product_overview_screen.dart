@@ -66,7 +66,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:nizecart/Widget/productService.dart';
+import 'package:nizecart/Models/productService.dart';
 
 class ProductsOverviewScreen extends StatefulWidget {
   ProductsOverviewScreen({Key key}) : super(key: key);
@@ -78,14 +78,14 @@ class ProductsOverviewScreen extends StatefulWidget {
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   // List products = [];
   // Map data;
-  String _imageUrl;
+  // String _imageUrl;
 
-  void initState() {
-    super.initState();
+  // void initState() {
+  //   super.initState();
 
-    var ref = FirebaseStorage.instance.ref().child('images/image.jpg');
-    ref.getDownloadURL().then((loc) => setState(() => _imageUrl = loc));
-  }
+  //   var ref = FirebaseStorage.instance.ref().child('images/image.jpg');
+  //   ref.getDownloadURL().then((loc) => setState(() => _imageUrl = loc));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,8 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                 leading: CircleAvatar(
                   radius: 50,
                   child: snapshot.data[0][index]['image'] != null
-                      ? Image.network(snapshot.data[0][index]['image'])
+                      ? Image.network(snapshot.data[0][index]['image'],
+                          scale: 1.0)
                       : const Text('No Image'),
                   // Image.network(snapshot.data[0][index]['image']),
                 ),

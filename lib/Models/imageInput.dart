@@ -18,7 +18,7 @@
 // }
 
 // class _ImageInputState extends State<ImageInput> {
-  
+
 //   // File storedImage;
 //   // Future<void> takePicture() async {
 //   //   final ImagePicker picker = ImagePicker();
@@ -74,12 +74,12 @@
 //               .ref()
 //               .child('images/imageName')
 //               .putFile(file);
-//           //       .whenComplete(() async {
-//           //   ref.getDownloadURL().then((value) {
-//           //     imageRef.add({
-//           //       'image': value,
-//           //     });
-//           //   });
+//                 .whenComplete(() async {
+//             ref.getDownloadURL().then((value) {
+//               imageRef.add({
+//                 'image': value,
+//               });
+//             });
 
 //           //   var downloadUrl = await snapshot.ref.getDownloadURL();
 //           //   setState(() {
@@ -132,7 +132,6 @@
 //       );
 //     }
 //   }
-// }
 
 // // class Storage {
 // //   final storage = FirebaseStorage.instance;
@@ -145,8 +144,11 @@
 
 // //     try {
 // //       await storage.ref().child(fileName).putFile(file);
-// //     } on Exception catch (e) { 
+// //     } on Exception catch (e) {
 // //       print(e);
 // //     }
 // //   }
-// // }
+// //
+
+// import 'package:flutter/material.dart';
+

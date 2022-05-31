@@ -35,11 +35,12 @@ class MyApp extends StatelessWidget {
               elevation: 0,
               color: secColor,
               foregroundColor: white),
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.red,
           backgroundColor: white),
       home:
           // ProductsOverviewScreen(),
-          ManageProducts(),
+          SignInSCreen(),
+      // ManageProducts(),
       //  AddUser('RossMarry', 'nizetech', 56),
     );
   }

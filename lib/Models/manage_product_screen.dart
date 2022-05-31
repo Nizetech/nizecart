@@ -1,38 +1,38 @@
 import 'dart:io';
 
-// import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-// import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:nizecart/Models/imageInput2.dart';
+import 'package:nizecart/Models/imageInput3.dart';
+import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Models/product_overview_screen.dart';
-import 'imageInput.dart';
 import '../Widget/component.dart';
-// import 'product_overview_screen.dart';
 
-class ManageProducts extends StatelessWidget {
+class ManageProducts extends StatefulWidget {
   ManageProducts({Key key}) : super(key: key);
 
+  @override
+  State<ManageProducts> createState() => _ManageProductsState();
+}
+
+class _ManageProductsState extends State<ManageProducts> {
   TextEditingController title = TextEditingController();
+
   TextEditingController description = TextEditingController();
+
   TextEditingController price = TextEditingController();
+
   // var box = Hive.box('name');
-
-  File image;
-  String downloadUrl;
-
   void selectImage(File image) {
     this.image = image;
   }
 
+  String url;
   // box: Hive.box('products'),
-  // ignore: missing_return
-
   void addProduct() {
     // Create a CollectionReference called products that references the firestore collection
     CollectionReference products =
@@ -43,8 +43,8 @@ class ManageProducts extends StatelessWidget {
       'title': title.text, // Apple
       'description': description.text, // A fruit
       'price': price.text, // 1.99
-      'image': image
-          .path, // /storage/emulated/0/Android/data/com.example.nizecart/files/Pictures/image_name.jpg
+      'image': ProductService().uploadFile(image, url),
+      //     .path, // /storage/emulated/0/Android/data/com.example.nizecart/files/Pictures/image_name.jpg
     })
 
         // box
@@ -59,31 +59,18 @@ class ManageProducts extends StatelessWidget {
     title.text = "";
     description.text = "";
     price.text = "";
-    image == null;
+    image = null;
   }
 
-  Future<void> uploadFile() async {
-    ref = FirebaseStorage.instance
-        .ref()
-        .child('images/${(DateTime.now()).millisecondsSinceEpoch}');
+  File image;
 
-    await ref.putFile(image).whenComplete(() async {
-      ref.getDownloadURL().then((value) {
-        downloadUrl = value;
-        print(downloadUrl);
-      });
-    });
-  }
+  // String imageUrl;
 
-// @override
-// void initState() {
-//   super.initState();
-//   imageRef = FirebaseFirestore.instance.collection('images');
-
-// }
-  // Storage storage = Storage();
   CollectionReference imageRef;
+
   storage.Reference ref;
+
+  // Future uploadFile2() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,55 +160,7 @@ class ManageProducts extends StatelessWidget {
                   )),
             ),
             SizedBox(height: 15),
-            // ImageInput(selectImage),
-            // Container(
-            //   height: 200,
-            //   width: 200,
-            //   alignment: Alignment.center,
-            //   decoration: BoxDecoration(
-            //     border: Border.all(width: 1, color: Colors.grey),
-            //   ),
-            //   child: storage == null
-            //       ? const Text(
-            //           'No Image',
-            //           textAlign: TextAlign.center,
-            //           style:
-            //               TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            //         )
-            //       : Image.file(
-            //           storage as File,
-            //           fit: BoxFit.cover,
-            //           width: 200,
-            //           height: 200,
-            //         ),
-            // ),
-            // Row(
-            //   children: [
-            //     IconButton(
-            //       icon: Icon(Icons.camera_alt),
-            //       onPressed: () async {
-            //         final results = await FilePicker.platform.pickFiles(
-            //             allowMultiple: false,
-            //             type: FileType.custom,
-            //             allowedExtensions: ['jpg', 'png']);
-            //         if (results == null) {
-            //           ScaffoldMessenger.of(context).showSnackBar(
-            //             SnackBar(
-            //               content: Text('No Image Selected'),
-            //             ),
-            //           );
-            //           return;
-            //         }
-            //         final path = results.files.first.path;
-            //         final fileName = results.files.single.name;
-
-            //         storage.uploadFile(path, fileName).then((value) => {
-            //               print('done'),
-            //               selectImage(File('$path')),
-            //             });
-            //       },
-            // ),
-            ImageInputs(selectImage),
+            ImageInput3(selectImage),
             const TextButton(
                 // onPressed: takePicture,
                 child: Text(
@@ -229,13 +168,11 @@ class ManageProducts extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             )),
             SizedBox(height: 15),
-
             CustomButton(
               text: "Add Product",
               onPressed: () {
-                // setState(() {});
                 addProduct();
-                uploadFile();
+                ProductService().uploadFile(image, url);
 
                 initValue();
               },
