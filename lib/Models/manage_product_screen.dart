@@ -33,18 +33,16 @@ class _ManageProductsState extends State<ManageProducts> {
 
   String url;
   // box: Hive.box('products'),
-  void addProduct() {
+  void addProduct(String imageUrl) {
     // Create a CollectionReference called products that references the firestore collection
     CollectionReference products =
         FirebaseFirestore.instance.collection('products');
-
     // Call the products CollectionReference to add a new product
     products.add({
       'title': title.text, // Apple
       'description': description.text, // A fruit
       'price': price.text, // 1.99
-      'image': ProductService().uploadFile(image, url),
-      //     .path, // /storage/emulated/0/Android/data/com.example.nizecart/files/Pictures/image_name.jpg
+      'image': imageUrl,
     })
 
         // box
@@ -59,18 +57,15 @@ class _ManageProductsState extends State<ManageProducts> {
     title.text = "";
     description.text = "";
     price.text = "";
-    image = null;
+    image = (image == null) as File;
   }
 
   File image;
-
-  // String imageUrl;
 
   CollectionReference imageRef;
 
   storage.Reference ref;
 
-  // Future uploadFile2() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,9 +84,10 @@ class _ManageProductsState extends State<ManageProducts> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
           children: [
+            SizedBox(height: 20),
             SizedBox(
               height: 45,
               child: TextField(
@@ -170,10 +166,9 @@ class _ManageProductsState extends State<ManageProducts> {
             SizedBox(height: 15),
             CustomButton(
               text: "Add Product",
-              onPressed: () {
-                addProduct();
-                ProductService().uploadFile(image, url);
-
+              onPressed: () async {
+                String imageUrl = await ProductService().uploadFile(image);
+                addProduct(imageUrl);
                 initValue();
               },
             ),

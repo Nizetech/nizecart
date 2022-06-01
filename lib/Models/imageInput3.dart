@@ -63,27 +63,6 @@ class _ImageInput3State extends State<ImageInput3> {
     final fileName = path.basename(image.path);
     final savedImage = await File(image.path).copy('${appDir.path}/$fileName');
     widget.onSelectImage(savedImage);
-    // final appDir = await getApplicationDocumentsDirectory();
-    // final fileName = basename(image.path);
-    // final file = await image.copy('${appDir.path}/$fileName');
-
-    // final savedImage = await file.copy('${appDir.path}/$file');
-    // widget.onSelectImage(savedImage);
-    // if (image != null) {
-    //   // Upload to Firebase
-    //   var snapshot =
-    //       await storage.ref().child('images/imageName').putFile(file);
-    //   var downloadUrl = await snapshot.ref.getDownloadURL();
-    //   setState(() {
-    //     imageUrl = downloadUrl;
-    //   });
-    // } else {
-    //   print('No Image Path Received');
-    // }
-
-    // } else {
-    //   print('Permission Denied');
-    // }
   }
 
   @override

@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Auth/signUp_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
 
+import '../Models/productService.dart';
 import '../Widget/bottonNav.dart';
 import 'forgetPaassword.dart';
 
@@ -25,6 +28,8 @@ class _SignInSCreenState extends State<SignInSCreen>
   // final Map<String, String>
   FocusNode emailFocusNode = FocusNode();
   FocusNode pwdFocusNode = FocusNode();
+
+  bool isVisible = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,10 +83,21 @@ class _SignInSCreenState extends State<SignInSCreen>
                 SizedBox(height: 20),
                 TextField(
                     controller: pwd,
-                    obscureText: true,
+                    obscureText: isVisible,
                     obscuringCharacter: '*',
                     cursorColor: mainColor,
                     decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          isVisible ? Icons.visibility_off : Icons.visibility,
+                          color: isVisible ? Colors.grey : mainColor,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isVisible = !isVisible;
+                          });
+                        },
+                      ),
                       hintText: 'Password',
                       // labelStyle: TextStyle(fontSize: 18),
                       filled: true,
@@ -111,10 +127,96 @@ class _SignInSCreenState extends State<SignInSCreen>
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: const Color(0xff4838d1),
+                            width: 1,
+                          ),
+                          color: Colors.white,
+                        ),
+                        padding: const EdgeInsets.all(16),
+                        child: Image.asset(
+                          'assets/google.png',
+                          height: 24,
+                          width: 24,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: const Color(0xff4838d1),
+                            width: 1,
+                          ),
+                          color: Colors.white,
+                        ),
+                        padding: const EdgeInsets.all(16),
+                        child: Image.asset(
+                          'assets/facebook.png',
+                          height: 24,
+                          width: 24,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: const Color(0xff4838d1),
+                            width: 1,
+                          ),
+                          color: Colors.white,
+                        ),
+                        padding: const EdgeInsets.all(3),
+                        child: Image.asset(
+                          'assets/apple.png',
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(height: 40),
                 CustomButton(
                   text: 'Login',
-                  onPressed: () => Get.to(BottomNav()),
+                  onPressed: () {
+                    if (email.text.isNotEmpty && pwd.text.isNotEmpty) {
+                      loading('Logging In....');
+                      ProductService()
+                          .signIn(email.text, pwd.text)
+                          .then((value) {
+                        if (value) {
+                          User user = FirebaseAuth.instance.currentUser;
+                          user.reload().then((value) {
+                            if (user.emailVerified) {
+                              Hive.box('name').put('logged', true);
+                              Get.to(BottomNav());
+                            } else {
+                              Get.back();
+                              user.sendEmailVerification();
+                              showErrorToast(
+                                  'please check your mail for verification link');
+                            }
+                          });
+                        }
+                      });
+                    } else {
+                      showErrorToast('Enter your Email and Password');
+                      Get.back();
+                    }
+                  },
                 ),
                 SizedBox(height: 15),
                 RichText(

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nizecart/Widget/component.dart';
 
 class ProductService {
@@ -28,15 +29,21 @@ class ProductService {
 
   // String imageUrl;
 
-  Future<String> uploadFile(File file, String url) async {
+  Future<String> uploadFile(
+    File file,
+  ) async {
+    // if (file == null) {
+    //   return loader();
+    // }
     var ref = FirebaseStorage.instance
         .ref()
         .child('images/${(DateTime.now()).millisecondsSinceEpoch}');
     await ref.putFile(file);
 
     var url = await ref.getDownloadURL();
-    // imageUrl = url;
+
     print(url);
+
     return url;
   }
 
@@ -78,4 +85,59 @@ class ProductService {
       return false;
     }
   }
+
+  Future<bool> signIn(String email, String pwd) async {
+    try {
+      UserCredential user =
+          await auth.signInWithEmailAndPassword(email: email, password: pwd);
+      if (user.user != null) {
+        users.doc(user.user.uid).update({
+          'date_modifield': Timestamp.now(),
+        });
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      FirebaseAuthException ext = e;
+      if (e.message ==
+          'The account is invalid or the user does not have a password.') {
+        showErrorToast('User not found');
+        Get.back();
+      } else if (e.message ==
+          'There is no user record corresponding to this identifier. The user may have been deleted.') {
+        showErrorToast('This email does not exist');
+        Get.back();
+      } else {
+        showErrorToast(ext.message);
+        Get.back();
+      }
+
+      return false;
+    }
+  }
+
+  Future<Map> getUserDetails() async {
+    DocumentSnapshot shot = await users.doc(getUser().uid).get();
+    return shot.data();
+  }
+
+//   Future<bool> addProduct({
+//     String title,
+//     String description,
+//     String price,
+//     String imageUrl,
+//   }) async {
+//     if (products != null) {
+//       await uploadFile;
+//       await users.doc(products.id).set({
+//         'title': title,
+//         'description': description,
+//         'price': price,
+//         'imageUrl': imageUrl,
+//       });
+//       // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
+//     }
+//     return true;
+//   }
 }

@@ -192,7 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                   cursorColor: mainColor,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
-                    hintText: 'Password',
+                    hintText: 'Phone Number',
                     // labelStyle: TextStyle(fontSize: 18),
                     filled: true,
                     isDense: true,
@@ -236,12 +236,12 @@ class _SignUpScreenState extends State<SignUpScreen>
                       lname.text.isNotEmpty &&
                       phn.text.isNotEmpty &&
                       pwd.text.isNotEmpty) {
-                    if (pwd.text.length > 6) {
+                    if (pwd.text.length > 5) {
                       if (enable2) {
                         if (email.text.contains('@')) {
                           if (email.text.contains('.')) {
                             if (phn.text.length == 11) {
-                              showToast('success');
+                              showToast('Signed In Successful');
                             } else {
                               showErrorToast('phone number is not valid');
                               return;

@@ -68,6 +68,8 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Models/productService.dart';
 
+import '../Widget/component.dart';
+
 class ProductsOverviewScreen extends StatefulWidget {
   ProductsOverviewScreen({Key key}) : super(key: key);
 
@@ -104,29 +106,34 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ]),
         // future: Hive.openBox('name'),
         builder: (context, snapshot) {
-          // if (!snapshot.hasData) {
-          //   return Center(
-          //     child: CircularProgressIndicator(),
-          //   );
-          // }
-          return ListView.builder(
-            itemCount: snapshot.data[0].length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  radius: 50,
-                  child: snapshot.data[0][index]['image'] != null
-                      ? Image.network(snapshot.data[0][index]['image'],
-                          scale: 1.0)
-                      : const Text('No Image'),
-                  // Image.network(snapshot.data[0][index]['image']),
-                ),
-                title: Text(snapshot.data[0][index]['title']),
-                subtitle: Text(snapshot.data[0][index]['description']),
-                trailing: Text(snapshot.data[0][index]['price'].toString()),
-              );
-            },
-          );
+          if (!snapshot.hasData) {
+            return loader();
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data[0].length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    radius: 50,
+                    child: snapshot.data[0][index]['image'] != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(
+                                snapshot.data[0][index]['image'],
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover),
+                          )
+                        : const Text('No Image'),
+                    // Image.network(snapshot.data[0][index]['image']),
+                  ),
+                  title: Text(snapshot.data[0][index]['title']),
+                  subtitle: Text(snapshot.data[0][index]['description']),
+                  trailing: Text(snapshot.data[0][index]['price'].toString()),
+                );
+              },
+            );
+          }
         },
       ),
     );

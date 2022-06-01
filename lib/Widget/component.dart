@@ -199,6 +199,37 @@ class _CartState extends State<Cart> {
 //   }
 // }
 
+dynamic loading(String label) {
+  Get.dialog(
+    Material(
+      color: Colors.black.withOpacity(.2),
+      child: Center(
+        child: Container(
+          width: 150,
+          height: 150,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 20),
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(mainColor),
+              ),
+              SizedBox(height: 20),
+              Text(label, textAlign: TextAlign.center)
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+
 Widget loader() {
   return const Center(
     child: CircularProgressIndicator(
