@@ -23,11 +23,11 @@ class _SignUpScreenState extends State<SignUpScreen>
   bool enable2 = false;
   bool visibility = false;
 
-  TextEditingController fname = TextEditingController();
+  TextEditingController displayName = TextEditingController();
   TextEditingController lname = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController pwd = TextEditingController();
-  TextEditingController phn = TextEditingController();
+  TextEditingController phone = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -62,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               ),
               SizedBox(height: 20),
               TextFormField(
-                controller: fname,
+                controller: displayName,
                 cursorColor: mainColor,
                 decoration: InputDecoration(
                   hintText: 'First Name',
@@ -188,7 +188,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               ),
               SizedBox(height: 15),
               TextField(
-                  controller: phn,
+                  controller: phone,
                   cursorColor: mainColor,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
@@ -232,41 +232,49 @@ class _SignUpScreenState extends State<SignUpScreen>
               CustomButton(
                 text: 'Create',
                 onPressed: () {
-                  if (fname.text.isNotEmpty &&
+                  if (displayName.text.isNotEmpty &&
                       lname.text.isNotEmpty &&
-                      phn.text.isNotEmpty &&
+                      phone.text.isNotEmpty &&
                       pwd.text.isNotEmpty) {
                     if (pwd.text.length > 5) {
                       if (enable2) {
                         if (email.text.contains('@')) {
                           if (email.text.contains('.')) {
-                            if (phn.text.length == 11) {
+                            if (phone.text.length == 11) {
                               showToast('Signed In Successful');
+                              loading('Loading...');
                             } else {
                               showErrorToast('phone number is not valid');
+                              Get.back();
                               return;
                             }
                           } else {
                             showErrorToast('email is not valid');
+                            Get.back();
+
                             return;
                           }
                         } else {
                           showErrorToast('email is not valid');
+                          Get.back();
+
                           return;
                         }
                       } else {
                         showErrorToast(
                             'you must agree with the terms and conditions');
+                        Get.back();
+
                         return;
                       }
 
                       ProductService()
                           .signUp(
-                        fname: fname.text,
+                        displayName: displayName.text,
                         lname: lname.text,
                         email: email.text,
                         pwd: pwd.text,
-                        phn: phn.text,
+                        phone: phone.text,
                       )
                           .then((value) {
                         if (value) {

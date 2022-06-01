@@ -6,6 +6,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:nizecart/Screens/product_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 
 class ProductService {
@@ -57,27 +60,79 @@ class ProductService {
     }
   }
 
+  Future<bool> signInWithGoogle() async {
+    try {
+      //Trigger the authentication flow
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      // Once signed in, return the UserCredential
+      final UserCredential user =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      if (user.user != null) {
+        List search = user.user.displayName.split(' ');
+        search.addAll(user.user.email.split('@'));
+        search.add(user.user.uid);
+        search.add(user.user.phoneNumber);
+        await users.doc(user.user.uid).set({
+          'name': user.user.displayName,
+          'last_name': user.user.displayName,
+          'phone': user.user.phoneNumber,
+          'email': user.user.email,
+          'uid': user.user.uid,
+          'date_created': Timestamp.now(),
+          'date_updated': Timestamp.now(),
+        });
+        // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
+        Hive.box('name').put('phone', user.user.phoneNumber);
+        return true;
+      } else {
+        showErrorToast('Google sign in failed');
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      showErrorToast('Google sign in failed');
+      return false;
+    }
+  }
+
   Future<bool> signUp({
     String email,
     String pwd,
-    String fname,
+    String displayName,
     String lname,
-    String phn,
+    String phone,
   }) async {
     try {
       UserCredential user = await auth.createUserWithEmailAndPassword(
           email: email, password: pwd);
       if (user.user != null) {
+        user.user.updateDisplayName(displayName);
+        user.user.sendEmailVerification();
+        List search = displayName.split(' ');
+        search.addAll(email.split('@'));
+        search.add(user.user.uid);
+        search.add(phone);
         await users.doc(user.user.uid).set({
-          'name': fname,
+          'name': displayName,
           'last_name': lname,
-          'phone': phn,
+          'phone': phone,
           'email': email,
           'uid': user.user.uid,
+          'date_created': Timestamp.now(),
+          'date_updated': Timestamp.now(),
         });
         // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
+        Hive.box('name').put('phone', user.user.phoneNumber);
+        return true;
       }
-      return true;
     } catch (e) {
       print(e);
       FirebaseAuthException ext = e;
@@ -112,7 +167,6 @@ class ProductService {
         showErrorToast(ext.message);
         Get.back();
       }
-
       return false;
     }
   }
