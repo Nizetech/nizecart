@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -195,7 +193,6 @@ class _CartState extends State<Cart> {
 //   List selectedItems = box.get('cart');
 //   if (selectedItems ) {
 //     selectedItems = [];
-
 //   }
 // }
 
@@ -229,7 +226,6 @@ dynamic loading(String label) {
   );
 }
 
-
 Widget loader() {
   return const Center(
     child: CircularProgressIndicator(
@@ -261,4 +257,34 @@ void showErrorToast(String label) {
 // String formatDate(Timestamp str) {
 //   return DateFormat().add_yMMMEd().format(str.toDate());
 // }
- 
+
+String greeting() {
+  var hour = DateTime.now().hour;
+  if (hour < 12) {
+    return 'Morning';
+  }
+  if (hour < 17) {
+    return 'Afternoon';
+  }
+  return 'Evening';
+}
+
+class AccountListTile extends StatelessWidget {
+  const AccountListTile({Key key, this.text, this.onTap}) : super(key: key);
+  final String text;
+  final Function onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onTap,
+      leading: Icon(Iconsax.shop),
+      title: Text(
+        text,
+        style: TextStyle(color: Colors.grey),
+      ),
+      trailing: const Icon(Icons.navigate_next_sharp),
+      // onTap: () => Get.to(ManageProduct()),
+    );
+  }
+}

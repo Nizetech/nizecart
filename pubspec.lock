@@ -64,13 +64,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
-  country_state_city_picker:
-    dependency: "direct main"
-    description:
-      name: country_state_city_picker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.8"
   cross_file:
     dependency: transitive
     description:
@@ -339,7 +332,7 @@ packages:
     source: hosted
     version: "2.5.0"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"

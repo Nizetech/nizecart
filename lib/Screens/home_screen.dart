@@ -29,6 +29,7 @@ class HomeScreen extends StatelessWidget {
   ];
   static var box = Hive.box('name');
   List selectedItems = box.get('cart');
+  String name = box.get('displayName');
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           Container(
             height: 150,
-            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
             width: double.infinity,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
@@ -48,12 +49,15 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Image.asset(
-                  'assets/NIZECART.png',
-                  height: 42,
-                  width: 100,
-                  fit: BoxFit.contain,
-                  color: white,
+                Text(
+                  'Good ${greeting()} $name !',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,21 +142,23 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 4),
                                   RichText(
-                                      text: const TextSpan(
-                                          text: '70%',
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontSize: 32,
-                                              color: priColor,
-                                              fontWeight: FontWeight.bold),
-                                          children: [
+                                    text: const TextSpan(
+                                      text: '70%',
+                                      style: TextStyle(
+                                          fontSize: 32,
+                                          color: priColor,
+                                          fontWeight: FontWeight.bold),
+                                      children: [
                                         TextSpan(
-                                            text: ' off',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: priColor,
-                                            ))
-                                      ])),
+                                          text: ' off',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: priColor,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                   Row(
                                     children: const [
                                       Text(
@@ -214,7 +220,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Get.to(ProductScreen());
+                        Get.to(ProductScreen());
                       },
                       child: const ShopListView(
                         sHeight: 185,
@@ -254,7 +260,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Get.to(ProductScreen());
+                        Get.to(ProductScreen());
                       },
                       child: const ShopListView(
                         sHeight: 130,

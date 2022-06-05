@@ -29,7 +29,7 @@ class _SignInSCreenState extends State<SignInSCreen>
   FocusNode emailFocusNode = FocusNode();
   FocusNode pwdFocusNode = FocusNode();
 
-  bool isVisible = false;
+  bool isVisible = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,20 +131,34 @@ class _SignInSCreenState extends State<SignInSCreen>
                 Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(0xff4838d1),
-                            width: 1,
+                      child: GestureDetector(
+                        onTap: () async {
+                          loading('Logging in...');
+                          bool logged =
+                              await ProductService().signInWithGoogle();
+
+                          if (logged) {
+                            Hive.box('name').put('logged', true);
+                            Get.offAll(BottomNav());
+                          } else {
+                            Get.back();
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: const Color(0xff4838d1),
+                              width: 1,
+                            ),
+                            color: Colors.white,
                           ),
-                          color: Colors.white,
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: Image.asset(
-                          'assets/google.png',
-                          height: 24,
-                          width: 24,
+                          padding: const EdgeInsets.all(16),
+                          child: Image.asset(
+                            'assets/google.png',
+                            height: 24,
+                            width: 24,
+                          ),
                         ),
                       ),
                     ),
@@ -194,24 +208,26 @@ class _SignInSCreenState extends State<SignInSCreen>
                   onPressed: () {
                     if (email.text.isNotEmpty && pwd.text.isNotEmpty) {
                       loading('Logging In....');
-                      ProductService()
-                          .signIn(email.text, pwd.text)
-                          .then((value) {
-                        if (value) {
-                          User user = FirebaseAuth.instance.currentUser;
-                          user.reload().then((value) {
-                            if (user.emailVerified) {
-                              Hive.box('name').put('logged', true);
-                              Get.to(BottomNav());
-                            } else {
-                              Get.back();
-                              user.sendEmailVerification();
-                              showErrorToast(
-                                  'please check your mail for verification link');
-                            }
-                          });
-                        }
-                      });
+                      ProductService().signIn(email.text, pwd.text).then(
+                        (value) {
+                          if (value) {
+                            User user = FirebaseAuth.instance.currentUser;
+                            user.reload().then(
+                              (value) {
+                                if (user.emailVerified) {
+                                  Hive.box('name').put('logged', true);
+                                  Get.to(BottomNav());
+                                } else {
+                                  Get.back();
+                                  user.sendEmailVerification();
+                                  showErrorToast(
+                                      'please check your mail for verification link');
+                                }
+                              },
+                            );
+                          }
+                        },
+                      );
                     } else {
                       showErrorToast('Enter your Email and Password');
                       Get.back();
@@ -231,8 +247,9 @@ class _SignInSCreenState extends State<SignInSCreen>
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => Get.to(SignUpScreen()),
                           text: ' Create Account',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
+                            fontWeight: FontWeight.w500,
                             color: priColor,
                           ),
                         ),

@@ -4,7 +4,7 @@ class CartItem {
   final int quantity;
   final double price;
 
-  CartItem({this.id, this.price, this.quantity, this.title});
+  CartItem({this.id, this.price, this.quantity, this.title, cartItem});
 }
 
 class Carting {

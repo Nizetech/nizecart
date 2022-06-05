@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nizecart/Models/product_overview_screen.dart';
 import 'package:nizecart/Screens/search_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
@@ -27,7 +28,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             icon: const Icon(Iconsax.search_normal),
-            onPressed: () => Get.to(SearchScreen()),
+            onPressed: () => Get.to(
+              SearchScreen(),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(10),
@@ -47,23 +50,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fontSize: 20, color: mainColor, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            const ListTile(
-              leading: Icon(Iconsax.wallet_check),
-              title: Text(
-                'Orders',
-                style: TextStyle(color: Colors.grey),
-              ),
-              trailing: Icon(Icons.navigate_next_sharp),
+            const AccountListTile(text: 'Order'),
+            AccountListTile(
+              text: 'Product Overview',
+              onTap: () => Get.to(ProductsOverviewScreen()),
             ),
-            ListTile(
-              leading: const Icon(Iconsax.shop),
-              title: const Text(
-                'Manage Products',
-                style: TextStyle(color: Colors.grey),
-              ),
-              trailing: const Icon(Icons.navigate_next_sharp),
-              // onTap: () => Get.to(ManageProduct()),
-            )
+            AccountListTile(
+              text: 'Manage Product',
+              onTap: () => Get.to(ManageProducts()),
+            ),
           ],
         ),
       ),

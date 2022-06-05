@@ -21,7 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen>
   int selected = 1;
 
   bool enable2 = false;
-  bool visibility = false;
+  bool visibility = true;
 
   TextEditingController displayName = TextEditingController();
   TextEditingController lname = TextEditingController();

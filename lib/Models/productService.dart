@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:nizecart/Screens/product_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:nizecart/Widget/component.dart';
 
 class ProductService {
@@ -90,7 +90,7 @@ class ProductService {
           'date_updated': Timestamp.now(),
         });
         // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
-        Hive.box('name').put('phone', user.user.phoneNumber);
+        Hive.box('name').put('displayName', user.user.displayName);
         return true;
       } else {
         showErrorToast('Google sign in failed');
@@ -130,7 +130,7 @@ class ProductService {
           'date_updated': Timestamp.now(),
         });
         // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
-        Hive.box('name').put('phone', user.user.phoneNumber);
+        Hive.box('name').put('displayName', user.user.displayName);
         return true;
       }
     } catch (e) {
@@ -194,4 +194,45 @@ class ProductService {
 //     }
 //     return true;
 //   }
+  Future<void> sendVerificationEmail() async {
+    await auth.currentUser.sendEmailVerification();
+    showToast("Verification email sent");
+  }
+
+  void resetPwd(String email) {
+    auth
+        .sendPasswordResetEmail(email: email)
+        .then((value) => showToast("Sent Successfully - Check your Mail"));
+  }
+
+  // Future<void> showDate(BuildContext context) async {
+  //   final DateTime picked = await showDatePicker(
+  //       context: context,
+  //       initialDate: DateTime.now(),
+  //       firstDate: DateTime.now(),
+  //       lastDate: DateTime(2101));
+  //   if (picked != null) {
+  //     final TimeOfDay time = await showTimePicker(
+  //       context: context,
+  //       initialTime: TimeOfDay.now(),
+  //     );
+  //     if (time != null) {
+  //       date = TextEditingController(
+  //         text: DateFormat('dd-MM-yyyy').format(picked) +
+  //             " " +
+  //             time.format(context),
+  //       );
+  //     }
+  //   }
+  // }
+
+  // Future<void> signOut() async {
+  //   await auth.signOut();
+  //   await googleSignIn.signOut();
+  //   await facebookLogin.logOut();
+  //   await Hive.box('name').delete('displayName');
+  //   await Hive.box('name').delete('phone');
+  //   Get.offAllNamed('/');
+  // }
+
 }

@@ -23,15 +23,38 @@ class _CartScreenState extends State<CartScreen> {
   int quantity = 0;
   int index = 0;
   static var box = Hive.box('name');
-  List selectedItems = box.get('cart');
-  List quantityI = box.get(
-    'cart',
-    defaultValue: [],
-  );
-  List selectedItems2 = box.get('cart');
+  // List cartItems = box.get('cart');
+  // List quantityI = box.get(
+  //   'cart',
+  //   defaultValue: [],
+  // );
+  List cartItems = box.get('cart');
+
+  double get totalAmount {
+    var totalAmount = 0.0;
+    if (cartItems != null) {
+      for (var i = 0; i < cartItems.length; i++) {
+        totalAmount += cartItems[i]['price'] * cartItems[i]['quantity'];
+      }
+    }
+    return totalAmount.roundToDouble();
+  }
+
+  int get totalQuantity {
+    var totalQuantity = 0;
+    if (cartItems != null && cartItems.length > 0) {
+      for (var i = 0; i < cartItems.length; i++) {
+        totalQuantity += cartItems[i]['quantity'];
+        box.add(totalQuantity);
+        cartItems[i]['quantity'] = totalQuantity;
+      }
+    }
+    return totalQuantity;
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(selectedItems);
+    print(cartItems);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -48,31 +71,32 @@ class _CartScreenState extends State<CartScreen> {
       ),
       backgroundColor: white,
       body:
-          //  !selectedItems.contains(selectedItems)
-          selectedItems.length == 0
+          //  !cartItems.contains(cartItems)
+          cartItems.length == 0
               ? Center(
                   child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/cart.png',
-                      fit: BoxFit.cover,
-                      color: Colors.grey,
-                      height: 100,
-                      width: 100,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      'No items in cart',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/cart.png',
+                        fit: BoxFit.cover,
+                        color: Colors.grey,
+                        height: 100,
+                        width: 100,
                       ),
-                    ),
-                  ],
-                ))
+                      SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        'No items in cart',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               : Column(
                   children: [
                     Container(
@@ -91,8 +115,9 @@ class _CartScreenState extends State<CartScreen> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
+                            // total quantity of all items in cart
                             Text(
-                              'Items (${selectedItems.length})'.toString(),
+                              'Items ($totalQuantity)'.toString(),
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -111,23 +136,23 @@ class _CartScreenState extends State<CartScreen> {
                       child: Row(
                         children: [
                           Text('Subtotal', style: TextStyle(fontSize: 16)),
-                          Spacer(),
-                          // Text(
-                          //   // '\$${totalAmount}'
-                          //       // .toString(), //${selectedItems[index]['price'] * selectedItems[index]['quantity']}
-
-                          //   // style: TextStyle(fontSize: 16),
-                          // ),
+                          const Spacer(),
+                          // total amount of all items in cart
+                          Text(
+                            '\$ $totalAmount'.toString(),
+                            style: TextStyle(fontSize: 16),
+                          ),
                         ],
                       ),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
+                    // List of items in cart
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
-                        // itemCount: itemsCount,
+                        itemCount: cartItems.length,
                         itemBuilder: (ctx, i) {
                           return Container(
                             width: double.infinity,
@@ -147,11 +172,12 @@ class _CartScreenState extends State<CartScreen> {
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
+                                    // product image
                                     Image(
                                       image: AssetImage(
-                                        selectedItems.elementAt(i)['image'],
+                                        cartItems.elementAt(i)['image'],
                                       ),
                                       width: 140,
                                       height: 120,
@@ -164,7 +190,7 @@ class _CartScreenState extends State<CartScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            selectedItems.elementAt(i)['title'],
+                                            cartItems.elementAt(i)['title'],
                                             maxLines: 3,
                                             overflow: TextOverflow.ellipsis,
                                             style:
@@ -172,7 +198,7 @@ class _CartScreenState extends State<CartScreen> {
                                           ),
                                           SizedBox(height: 3),
                                           Text(
-                                            selectedItems
+                                            cartItems
                                                 .elementAt(i)['price']
                                                 .toString(),
                                             style: const TextStyle(
@@ -192,16 +218,14 @@ class _CartScreenState extends State<CartScreen> {
                                     SizedBox(width: 10),
                                     GestureDetector(
                                       onTap: () {
-                                        selectedItems
-                                                    .elementAt(i)['quantity'] ==
-                                                0
+                                        cartItems.elementAt(i)['quantity'] == 0
                                             ? null
                                             : setState(() {
-                                                selectedItems.removeAt(i);
-                                                // selectedItems.add(
-                                                //     selectedItems.elementAt(i));
-                                                box.put(
-                                                    'cartItem', selectedItems);
+                                                cartItems.removeAt(i);
+                                                cartItems.remove('id');
+                                                // cartItems.add(
+                                                //     cartItems.elementAt(i));
+                                                box.put('cartItem', cartItems);
                                                 Fluttertoast.showToast(
                                                   msg: 'Item removed from cart',
                                                   toastLength:
@@ -227,15 +251,15 @@ class _CartScreenState extends State<CartScreen> {
                                       onTap: () {
                                         setState(
                                           () {
-                                            if (selectedItems2
+                                            if (cartItems
                                                     .elementAt(i)['quantity'] >
                                                 1) {
-                                              selectedItems2
+                                              cartItems
                                                   .elementAt(i)['quantity']--;
                                               showErrorToast(
                                                   'Removed from Cart');
-                                              box.put(
-                                                  'cartItem', selectedItems2);
+                                              cartItems.add(cartItems);
+                                              box.put('cartItem', cartItems);
                                             } else {
                                               null;
                                             }
@@ -257,32 +281,37 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                     ),
                                     const SizedBox(width: 17),
-                                    Text(selectedItems2
-                                        .elementAt(i)['quantity']
-                                        .toString()),
+                                    Text(
+                                      cartItems
+                                          .elementAt(i)['quantity']
+                                          .toString(),
+                                    ),
                                     SizedBox(width: 17),
                                     GestureDetector(
                                       onTap: () {
-                                        setState(() {
-                                          if (selectedItems
-                                                  .elementAt(i)['quantity'] <
-                                              10) {
-                                            selectedItems
-                                                .elementAt(i)['quantity']++;
+                                        setState(
+                                          () {
+                                            if (cartItems
+                                                    .elementAt(i)['quantity'] <
+                                                10) {
+                                              cartItems
+                                                  .elementAt(i)['quantity']++;
 
-                                            box.put('cartItem', selectedItems);
-                                            showToast('Added to Cart');
-                                            // selectedItems = [];
-
-                                          } else if (selectedItems.contains(
-                                              selectedItems.elementAt(i))) {
-                                            selectedItems.addAll(
-                                                selectedItems.elementAt(i));
-                                          } else {
-                                            showErrorToast(
-                                                'Item limit reached');
-                                          }
-                                        });
+                                              box.put('cartItem', cartItems);
+                                              showToast('Added to Cart');
+                                              cartItems = [];
+                                            } else if (cartItems.contains(
+                                              cartItems.elementAt(i),
+                                            )) {
+                                              cartItems.addAll(
+                                                cartItems.elementAt(i),
+                                              );
+                                            } else {
+                                              showErrorToast(
+                                                  'Item limit reached');
+                                            }
+                                          },
+                                        );
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(6),
@@ -306,6 +335,10 @@ class _CartScreenState extends State<CartScreen> {
                         },
                       ),
                     ),
+                    // SizedBox(height: 20),
+                    // CustomButton(
+                    //   onPressed: () => Get.to(CheckOutScreen()),
+                    // ),
                   ],
                 ),
     );

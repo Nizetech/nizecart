@@ -50,7 +50,7 @@ class _ManageProductsState extends State<ManageProducts> {
         //     .then((value) => print('product added')
         //  Get.to(ProductsOverviewScreen())
         //  )
-        .catchError((error) => print("Failed to add product: $error"));
+        .catchError((error) => showErrorToast("Failed to add product: $error"));
   }
 
   void initValue() {
@@ -78,7 +78,7 @@ class _ManageProductsState extends State<ManageProducts> {
             color: Colors.white,
           ),
           onPressed: () {
-            Get.to(ProductsOverviewScreen());
+            Get.back();
           },
         ),
         centerTitle: true,

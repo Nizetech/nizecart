@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Widget/bottonNav.dart';
 import '../Widget/component.dart';
 
@@ -46,7 +47,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             SizedBox(height: 20),
             TextField(
                 controller: email,
-                obscureText: true,
                 cursorColor: mainColor,
                 decoration: InputDecoration(
                   hintText: 'Email address',
@@ -65,9 +65,16 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 )),
             SizedBox(height: 30),
             CustomButton(
-              text: 'Submit',
-              onPressed: () => Get.to(BottomNav()),
-            ),
+                text: 'Submit',
+                onPressed: () {
+                  if (email.text.isEmpty) {
+                    showToast('Please enter your email');
+                    ProductService().resetPwd(email.text);
+                  } else {
+                    showToast('Email sent');
+                    // Get.to(BottomNav());
+                  }
+                }),
             Spacer(),
           ],
         ),

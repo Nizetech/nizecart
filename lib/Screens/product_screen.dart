@@ -99,7 +99,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   var showOnlyFavourites = false;
   String value;
-  List products = [];
+  // List products = [];
 
   // get selectedItems => null;
   List selectedItems = [];
@@ -108,7 +108,7 @@ class _ProductScreenState extends State<ProductScreen> {
     //  widget.data['isFav'] = item['isfav'];
     var box = Hive.box('name');
 
-    products = Hive.box('name').get('products', defaultValue: []);
+    // products = box.get('products', defaultValue: []);
 
     return Scaffold(
       appBar: AppBar(
@@ -148,112 +148,127 @@ class _ProductScreenState extends State<ProductScreen> {
             width: double.infinity,
             color: mainColor.withOpacity(.2),
             padding: EdgeInsets.all(15),
-            child: Row(
-              children: [
-                PopupMenuButton(
-                  onSelected: (FilterOptions SelectedValue) {
-                    setState(() {
-                      if (SelectedValue == FilterOptions.Favorites) {
-                        showOnlyFavourites = true;
-                      } else {
-                        showOnlyFavourites = false;
-                      }
-                    });
-                  },
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      child: Text('Only Favourites'),
-                      value: FilterOptions.All,
+            child: Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: PopupMenuButton(
+                        onSelected: (FilterOptions SelectedValue) {
+                          setState(() {
+                            if (SelectedValue == FilterOptions.Favorites) {
+                              showOnlyFavourites = true;
+                            } else {
+                              showOnlyFavourites = false;
+                            }
+                          });
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem(
+                            child: Text('Only Favourites'),
+                            value: FilterOptions.All,
+                          ),
+                          const PopupMenuItem(
+                            child: Text('Show All'),
+                            value: FilterOptions.Favorites,
+                          ),
+                          const PopupMenuItem(
+                            child: Text('Price high to low'),
+                            value: FilterOptions.Favorites,
+                          ),
+                          const PopupMenuItem(
+                            child: Text('Discount'),
+                            value: FilterOptions.Favorites,
+                          ),
+                          const PopupMenuItem(
+                            child: Text('Rating'),
+                            value: FilterOptions.Favorites,
+                          ),
+                        ],
+                      ),
                     ),
-                    const PopupMenuItem(
-                      child: Text('Show All'),
-                      value: FilterOptions.Favorites,
-                    ),
-
-                    // const PopupMenuItem(
-                    //   child: Text('Price high to low'),
-                    // ),
-                    // const PopupMenuItem(
-                    //   child: Text('Discount'),
-                    // ),
-                    // const PopupMenuItem(
-                    //   child: Text('Rating'),
-                    // ),
-                  ],
-                ),
-                DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    isDense: true,
-                    isExpanded: true,
-                    icon: const Icon(Icons.keyboard_arrow_down_sharp),
-                    alignment: Alignment.bottomCenter,
-                    value: value,
-                    hint: const Text(' Sort by'),
-                    onChanged: (String val) {
-                      setState(() {
-                        value = val;
-                      });
-                    },
-                    items: const [
-                      DropdownMenuItem(
-                        child: Text(
-                          'All',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        value: 'All',
-                      ),
-                      DropdownMenuItem(
-                        child: Text(
-                          'Headset',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        value: 'Headset',
-                      ),
-                      DropdownMenuItem(
-                        child: Text(
-                          'Airpods',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        value: 'Airpods',
-                      ),
-                      DropdownMenuItem(
-                        child: Text(
-                          'Bt',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        value: 'Bt',
-                      ),
-                      DropdownMenuItem(
-                        child: Text(
-                          'Macbook',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        value: 'Macbook',
-                      ),
-                    ],
                   ),
-                ),
-              ],
+                  Expanded(
+                    flex: 2,
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        isDense: true,
+                        isExpanded: true,
+                        icon: const Icon(Icons.keyboard_arrow_down_sharp),
+                        alignment: Alignment.bottomCenter,
+                        value: value,
+                        hint: const Text('Sort by'),
+                        onChanged: (String val) {
+                          setState(
+                            () {
+                              value = val;
+                            },
+                          );
+                        },
+                        items: const [
+                          DropdownMenuItem(
+                            child: Text(
+                              'All',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            value: 'All',
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              'Headset',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            value: 'Headset',
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              'Airpods',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            value: 'Airpods',
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              'Bt',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            value: 'Bt',
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              'Macbook',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            value: 'Macbook',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -267,7 +282,6 @@ class _ProductScreenState extends State<ProductScreen> {
                             children: [
                               GestureDetector(
                                 // onTap: () => Get.to(ProductDetailsScreen())
-
                                 child: Container(
                                   alignment: Alignment.center,
                                   width:
@@ -407,10 +421,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                       //                 item.containsKey(
                                       //                     'quantity')) {
                                       //               item['quantity']++;
-                                      //               // adding items to the cart list which will later be stored using a suitable backend service
+                                      //          adding items to the cart list which will later be stored using a suitable backend service
                                       //               selectedItem.add(item);
                                       //               box.put('cart', selectedItem);
-                                      //               // ignore: avoid_print
+                                      // ignore: avoid_print
                                       //               print(selectedItem);
                                       //               showToast('Added to cart');
                                       //             }

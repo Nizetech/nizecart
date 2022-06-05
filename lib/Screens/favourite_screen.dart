@@ -96,20 +96,20 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         //   onPressed: () {
                         //     setState(() {
                         //       item['isFav'] = !item['isFav'];
-                        //       // selectedItem.add(item);
-                        //       // box.put('fav', selectedItem);
+                        // selectedItem.add(item);
+                        // box.put('fav', selectedItem);
                         //     });
                         //   },
                         //   color: mainColor,
                         // ),
-                        SizedBox(height: 3),
+                        const SizedBox(height: 3),
                         Text(
                           favItems.elementAt(i)['title'],
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: Colors.grey),
                         ),
-                        SizedBox(height: 3),
+                        const SizedBox(height: 3),
                         Text(
                           '\$${favItems.elementAt(i)['price']}'.toString(),
                           style: const TextStyle(
@@ -132,6 +132,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            // Delete Button for Favourite Items in Cart List Screen and Favourite Screen
                             GestureDetector(
                               onTap: () {
                                 setState(
@@ -164,6 +165,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                               ),
                             ),
                             SizedBox(width: 15),
+                            // Add Button for Favourite Items to Cart Items List and Update the Cart List in Hive Box as well
+
                             Expanded(
                               child: SizedBox(
                                 height: 40,
