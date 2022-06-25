@@ -60,10 +60,13 @@
 //   }
 // }
 
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Models/productService.dart';
@@ -112,24 +115,47 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             return ListView.builder(
               itemCount: snapshot.data[0].length,
               itemBuilder: (context, index) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    radius: 50,
-                    child: snapshot.data[0][index]['image'] != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(
-                                snapshot.data[0][index]['image'],
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover),
-                          )
-                        : const Text('No Image'),
-                    // Image.network(snapshot.data[0][index]['image']),
+                return Slidable(
+                  endActionPane: const ActionPane(
+                    motion: ScrollMotion(),
+                    children: [
+                      SlidableAction(
+                        // An action can be bigger than the others.
+                        flex: 2,
+                        // onPressed: () {},
+                        backgroundColor: Color(0xFF7BC043),
+                        foregroundColor: Colors.white,
+                        icon: Icons.archive,
+                        label: 'Archive',
+                      ),
+                      SlidableAction(
+                        // onPressed: () {},
+                        backgroundColor: Color(0xFF0392CF),
+                        foregroundColor: Colors.white,
+                        icon: Icons.save,
+                        label: 'Save',
+                      ),
+                    ],
                   ),
-                  title: Text(snapshot.data[0][index]['title']),
-                  subtitle: Text(snapshot.data[0][index]['description']),
-                  trailing: Text(snapshot.data[0][index]['price'].toString()),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 50,
+                      child: snapshot.data[0][index]['image'] != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.network(
+                                  snapshot.data[0][index]['image'],
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover),
+                            )
+                          : const Text('No Image'),
+                      // Image.network(snapshot.data[0][index]['image']),
+                    ),
+                    title: Text(snapshot.data[0][index]['title']),
+                    subtitle: Text(snapshot.data[0][index]['description']),
+                    trailing: Text(snapshot.data[0][index]['price'].toString()),
+                  ),
                 );
               },
             );

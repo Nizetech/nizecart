@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
+import 'package:nizecart/Auth/signInScreen.dart';
 import 'package:nizecart/Widget/component.dart';
 
 class ProductService {
@@ -19,6 +20,10 @@ class ProductService {
   CollectionReference products = firestore.collection('products');
 
   User getUser() => auth.currentUser;
+
+  Future<void> deleteProduct(String title) async {
+    await products.doc(title).delete();
+  }
 
   Future<List> getProducts() async {
     QuerySnapshot snapshot = await products.get();
@@ -171,6 +176,13 @@ class ProductService {
     }
   }
 
+  Future<bool> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    await Hive.box('name').delete('displayName');
+    loader();
+    return Get.to(SignInSCreen());
+  }
+
   Future<Map> getUserDetails() async {
     DocumentSnapshot shot = await users.doc(getUser().uid).get();
     return shot.data();
@@ -228,8 +240,8 @@ class ProductService {
 
   // Future<void> signOut() async {
   //   await auth.signOut();
-  //   await googleSignIn.signOut();
-  //   await facebookLogin.logOut();
+  // await signInWithGoogle.signOut();
+  // await facebookLogin.logOut();
   //   await Hive.box('name').delete('displayName');
   //   await Hive.box('name').delete('phone');
   //   Get.offAllNamed('/');

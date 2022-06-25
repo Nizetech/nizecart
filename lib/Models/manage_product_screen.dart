@@ -53,6 +53,24 @@ class _ManageProductsState extends State<ManageProducts> {
         .catchError((error) => showErrorToast("Failed to add product: $error"));
   }
 
+  void removeProduct() {
+    // Create a CollectionReference called products that references the firestore collection
+    CollectionReference products =
+        FirebaseFirestore.instance.collection('products');
+    // to remove a product
+    products
+        .doc('${title.text}')
+        .delete()
+
+        // box
+        //     .put(products, 'products')
+        //     .then((value) => print('product added')
+        //  Get.to(ProductsOverviewScreen())
+        //  )
+        .catchError(
+            (error) => showErrorToast("Failed to delete product: $error"));
+  }
+
   void initValue() {
     title.text = "";
     description.text = "";

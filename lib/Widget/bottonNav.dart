@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nizecart/Auth/signInScreen.dart';
+import 'package:nizecart/Auth/signUp_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 
 import '../Screens/account_screen.dart';
@@ -17,14 +20,24 @@ class BottomNav extends StatefulWidget {
 class _BottomNavState extends State<BottomNav> {
   int index = 0;
   int currentIndex = 0;
+  bool isLoggedIn;
   List body = [
-    HomeScreen(),
-    CategoryScreen(),
-    FavouriteScreen(),
-    ProfileScreen(),
     // Container(),
     // Container()
   ];
+
+  Box box = Hive.box('name');
+  @override
+  void initState() {
+    isLoggedIn = box.get('logged', defaultValue: false);
+    body = [
+      isLoggedIn ? HomeScreen() : SignInSCreen(),
+      CategoryScreen(),
+      FavouriteScreen(),
+      ProfileScreen(),
+    ];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +49,7 @@ class _BottomNavState extends State<BottomNav> {
         unselectedItemColor: Color(0xFFC7D1D7),
         type: BottomNavigationBarType.fixed,
         selectedItemColor: mainColor,
-        unselectedLabelStyle: TextStyle(
+        unselectedLabelStyle: const TextStyle(
           color: Colors.grey,
           fontSize: 12,
         ),
@@ -54,10 +67,12 @@ class _BottomNavState extends State<BottomNav> {
             icon: Icon(Iconsax.heart),
             label: 'Favourite',
           ),
+
           // BottomNavigationBarItem(
           //   icon: Icon(Iconsax.message),
           //   label: 'Inbox',
           // ),
+
           BottomNavigationBarItem(
             icon: Icon(Iconsax.user),
             label: 'Account',

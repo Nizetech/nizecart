@@ -216,6 +216,7 @@ class _SignInSCreenState extends State<SignInSCreen>
                               (value) {
                                 if (user.emailVerified) {
                                   Hive.box('name').put('logged', true);
+
                                   Get.to(BottomNav());
                                 } else {
                                   Get.back();

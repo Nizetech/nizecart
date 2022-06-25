@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:nizecart/Models/cart.dart';
-import 'package:nizecart/Screens/checkout_screen.dart';
-import '../Models/product.dart';
-import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nizecart/Screens/checkout_screen.dart';
+import '../Widget/component.dart';
 
 class CartScreen extends StatefulWidget {
   CartScreen({
@@ -148,7 +146,7 @@ class _CartScreenState extends State<CartScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    // List of items in cart
+                    //List of items in cart
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -247,24 +245,29 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                     ),
                                     Spacer(),
+                                    // To remove item
                                     GestureDetector(
                                       onTap: () {
-                                        setState(
-                                          () {
-                                            if (cartItems
-                                                    .elementAt(i)['quantity'] >
-                                                1) {
-                                              cartItems
-                                                  .elementAt(i)['quantity']--;
-                                              showErrorToast(
-                                                  'Removed from Cart');
-                                              cartItems.add(cartItems);
-                                              box.put('cartItem', cartItems);
-                                            } else {
-                                              null;
-                                            }
-                                          },
-                                        );
+                                        // setState(() {
+                                        //   if()
+                                        // });
+                                        // setState(
+                                        //   () {
+                                        //     if (cartItems
+                                        //             .elementAt(i)['quantity'] >
+                                        //         1) {
+                                        //       cartItems
+                                        //           .elementAt(i)['quantity']--;
+                                        //       showErrorToast(
+                                        //           'Removed from Cart');
+                                        // cartItems.add(cartItems);
+                                        // box.put('cartItem', cartItems);
+                                        //     }
+                                        //     //  else {
+                                        //     //   null;
+                                        //     // }
+                                        //   },
+                                        // );
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(6),
@@ -282,11 +285,13 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                     const SizedBox(width: 17),
                                     Text(
-                                      cartItems
-                                          .elementAt(i)['quantity']
-                                          .toString(),
-                                    ),
+                                        // cartItems
+                                        //     .elementAt(i)['quantity']
+                                        //     .toString()
+                                        // ,
+                                        'gone'),
                                     SizedBox(width: 17),
+                                    // To Add item
                                     GestureDetector(
                                       onTap: () {
                                         setState(
@@ -299,13 +304,13 @@ class _CartScreenState extends State<CartScreen> {
 
                                               box.put('cartItem', cartItems);
                                               showToast('Added to Cart');
-                                              cartItems = [];
-                                            } else if (cartItems.contains(
-                                              cartItems.elementAt(i),
-                                            )) {
-                                              cartItems.addAll(
-                                                cartItems.elementAt(i),
-                                              );
+                                              // cartItems = [];
+                                              // } else if (cartItems.contains(
+                                              //   cartItems.elementAt(i),
+                                              // )) {
+                                              //   cartItems.addAll(
+                                              //     cartItems.elementAt(i),
+                                              //   );
                                             } else {
                                               showErrorToast(
                                                   'Item limit reached');
@@ -329,16 +334,16 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                   ],
                                 ),
+                                SizedBox(height: 20),
+                                // CustomButton(
+                                //   onPressed: () => Get.to(CheckOutScreen()),
+                                // ),
                               ],
                             ),
                           );
                         },
                       ),
                     ),
-                    // SizedBox(height: 20),
-                    // CustomButton(
-                    //   onPressed: () => Get.to(CheckOutScreen()),
-                    // ),
                   ],
                 ),
     );

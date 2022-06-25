@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/Widget/bottonNav.dart';
@@ -279,6 +280,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                           .then((value) {
                         if (value) {
                           showToast('Logged in successfully');
+                          Hive.box('name').put("logged", true);
                           Get.to(BottomNav());
                         } else {
                           Get.back();

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Models/product_overview_screen.dart';
 import 'package:nizecart/Screens/search_screen.dart';
 import 'package:nizecart/Widget/component.dart';
@@ -15,6 +17,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  static var box = Hive.box('name');
+  String name = box.get('displayName');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,9 +49,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Welcome fortune!',
-              style: TextStyle(
+            Text(
+              'Welcome ${name} !',
+              style: const TextStyle(
                   fontSize: 20, color: mainColor, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
@@ -59,6 +64,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               text: 'Manage Product',
               onTap: () => Get.to(ManageProducts()),
             ),
+            AccountListTile(
+                text: 'Sign Out',
+                onTap: () {
+                  ProductService().signOut();
+                }),
           ],
         ),
       ),
