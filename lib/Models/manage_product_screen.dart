@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nizecart/Models/imageInput3.dart';
+import 'package:nizecart/Models/image_input.dart';
 import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Models/product_overview_screen.dart';
 import '../Widget/component.dart';
@@ -27,58 +29,30 @@ class _ManageProductsState extends State<ManageProducts> {
   TextEditingController price = TextEditingController();
 
   // var box = Hive.box('name');
-  void selectImage(File image) {
-    this.image = image;
-  }
+  // void selectImage(File storedImage2) {
+  //   image = storedImage2;
+  // }
 
   String url;
-  // box: Hive.box('products'),
-  void addProduct(String imageUrl) {
-    // Create a CollectionReference called products that references the firestore collection
-    CollectionReference products =
-        FirebaseFirestore.instance.collection('products');
-    // Call the products CollectionReference to add a new product
-    products.add({
-      'title': title.text, // Apple
-      'description': description.text, // A fruit
-      'price': price.text, // 1.99
-      'image': imageUrl,
-    })
-
-        // box
-        //     .put(products, 'products')
-        //     .then((value) => print('product added')
-        //  Get.to(ProductsOverviewScreen())
-        //  )
-        .catchError((error) => showErrorToast("Failed to add product: $error"));
-  }
 
   void removeProduct() {
     // Create a CollectionReference called products that references the firestore collection
     CollectionReference products =
         FirebaseFirestore.instance.collection('products');
     // to remove a product
-    products
-        .doc('${title.text}')
-        .delete()
-
-        // box
-        //     .put(products, 'products')
-        //     .then((value) => print('product added')
-        //  Get.to(ProductsOverviewScreen())
-        //  )
-        .catchError(
-            (error) => showErrorToast("Failed to delete product: $error"));
+    products.doc('${title.text}').delete().catchError(
+        (error) => showErrorToast("Failed to delete product: $error"));
   }
 
   void initValue() {
     title.text = "";
     description.text = "";
     price.text = "";
-    image = (image == null) as File;
+    storedImage = null;
   }
 
-  File image;
+  File storedImage;
+  File storedImage2;
 
   CollectionReference imageRef;
 
@@ -120,10 +94,10 @@ class _ManageProductsState extends State<ManageProducts> {
                     iconColor: mainColor,
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: mainColor)),
+                        borderSide: const BorderSide(color: mainColor)),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: mainColor)),
+                        borderSide: const BorderSide(color: mainColor)),
                   )),
             ),
             SizedBox(height: 15),
@@ -137,7 +111,6 @@ class _ManageProductsState extends State<ManageProducts> {
                     // labelStyle: TextStyle(fontSize: 18),
                     filled: true,
                     isDense: true,
-
                     iconColor: mainColor,
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -161,33 +134,139 @@ class _ManageProductsState extends State<ManageProducts> {
                     // labelStyle: TextStyle(fontSize: 18),
                     filled: true,
                     isDense: true,
-                    prefixIcon: Icon(Iconsax.dollar_circle),
+                    prefixIcon: const Icon(Iconsax.dollar_circle),
                     prefixIconColor: mainColor,
                     iconColor: mainColor,
-
                     enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: mainColor)),
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: mainColor),
+                    ),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: mainColor)),
+                        borderSide: const BorderSide(color: mainColor)),
                   )),
             ),
             SizedBox(height: 15),
-            ImageInput3(selectImage),
-            const TextButton(
-                // onPressed: takePicture,
-                child: Text(
-              'Upload Picture',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            )),
-            SizedBox(height: 15),
+            // ImageInput3(selectImage),
+            Container(
+              height: 200,
+              width: 200,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Colors.grey),
+              ),
+              child: (storedImage == null
+                  //  && storedImage2 == null
+                  )
+                  ? const Text(
+                      'No Image',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    )
+                  : Image.file(
+                      // isCamera ?
+                      storedImage,
+                      // : storedImage2,
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.cover,
+                    ),
+            ),
+            SizedBox(height: 5),
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Get.dialog(Dialog(
+                    child: Container(
+                      height: 100,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              // ImageInput().takePicture2(storedImage2);
+                              // setState(() {
+                              //   isCamera = !isCamera;
+                              // });
+                              // XFile pickedFile = await ImagePicker().pickImage(
+                              //     source: ImageSource.camera, imageQuality: 40);
+                              // if (pickedFile != null) {
+                              //   setState(() {
+                              //     storedImage = File(pickedFile.path);
+                              //   });
+                              // }
+                              // Get.back();
+                            },
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Icon(Iconsax.camera5),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'Camera',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ]),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              // ImageInput().takePicture(ImageSource.gallery);
+                              // // takepicture();
+                              // setState(() {
+                              //   isCamera = !isCamera;
+                              // });
+                              XFile pickedFile = await ImagePicker().pickImage(
+                                  source: ImageSource.gallery,
+                                  imageQuality: 40);
+                              if (pickedFile != null) {
+                                setState(() {
+                                  storedImage = File(pickedFile.path);
+                                });
+                              }
+                              Get.back();
+                            },
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Icon(Iconsax.gallery),
+                                  SizedBox(height: 10),
+                                  Text('Galley',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ))
+                                ]),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ));
+                },
+                child: const Text(
+                  'Add Image',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ),
+            ),
+            SizedBox(height: 25),
             CustomButton(
               text: "Add Product",
               onPressed: () async {
-                String imageUrl = await ProductService().uploadFile(image);
-                addProduct(imageUrl);
+                loading('Adding Product...');
+
+                print(storedImage);
+                String imageUrl =
+                    await ProductService().uploadFile(storedImage);
+                ProductService().addProduct(
+                    imageUrl, title.text, description.text, price.text);
                 initValue();
+                showToast('Product Added');
+                Get.back();
               },
             ),
           ],

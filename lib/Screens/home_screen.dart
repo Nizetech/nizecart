@@ -27,10 +27,9 @@ class HomeScreen extends StatelessWidget {
       'image': 'assets/chair.png',
     }
   ];
-  static var box = Hive.box('name');
   List selectedItems = box.get('cart');
-  String name = box.get('displayName');
-
+  static var box = Hive.box('name');
+  String name = box.get('fname');
   @override
   Widget build(BuildContext context) {
     return Scaffold(

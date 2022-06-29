@@ -24,15 +24,20 @@ class _SignUpScreenState extends State<SignUpScreen>
   bool enable2 = false;
   bool visibility = true;
 
-  TextEditingController displayName = TextEditingController();
+  TextEditingController fname = TextEditingController();
   TextEditingController lname = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController pwd = TextEditingController();
   TextEditingController phone = TextEditingController();
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final AuthMode authMode = AuthMode.signup;
+  // final AuthMode authMode = AuthMode.signup;
+
+  FocusNode lastname;
+  FocusNode eml;
+  FocusNode password;
+  FocusNode number;
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +68,14 @@ class _SignUpScreenState extends State<SignUpScreen>
               ),
               SizedBox(height: 20),
               TextFormField(
-                controller: displayName,
+                controller: fname,
                 cursorColor: mainColor,
+                textCapitalization: TextCapitalization.sentences,
+                textInputAction: TextInputAction.next,
+                // onFieldSubmitted: (
+                //   FocusScope.of(context).requestFocus(lastname);
+                // ),
+                onEditingComplete: () => FocusScope.of(context).unfocus(),
                 decoration: InputDecoration(
                   hintText: 'First Name',
                   // labelStyle: TextStyle(fontSize: 18),
@@ -88,6 +99,9 @@ class _SignUpScreenState extends State<SignUpScreen>
               TextField(
                 controller: lname,
                 cursorColor: mainColor,
+                textCapitalization: TextCapitalization.sentences,
+                textInputAction: TextInputAction.next,
+                onSubmitted: (_) => FocusScope.of(context).unfocus(),
                 decoration: InputDecoration(
                   hintText: 'Last Name',
                   // labelStyle: TextStyle(fontSize: 18),
@@ -140,6 +154,8 @@ class _SignUpScreenState extends State<SignUpScreen>
               TextField(
                 controller: email,
                 cursorColor: mainColor,
+                textInputAction: TextInputAction.next,
+                onSubmitted: (_) => FocusScope.of(context).unfocus(),
                 decoration: InputDecoration(
                   hintText: 'Email address..',
                   // labelStyle: TextStyle(fontSize: 18),
@@ -161,6 +177,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                 obscureText: visibility,
                 obscuringCharacter: '*',
                 cursorColor: mainColor,
+                textInputAction: TextInputAction.next,
+                onSubmitted: (_) => FocusScope.of(context).unfocus(),
                 decoration: InputDecoration(
                   hintText: 'Password',
                   // labelStyle: TextStyle(fontSize: 18),
@@ -192,6 +210,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                   controller: phone,
                   cursorColor: mainColor,
                   keyboardType: TextInputType.phone,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => FocusScope.of(context).unfocus(),
                   decoration: InputDecoration(
                     hintText: 'Phone Number',
                     // labelStyle: TextStyle(fontSize: 18),
@@ -233,7 +253,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               CustomButton(
                 text: 'Create',
                 onPressed: () {
-                  if (displayName.text.isNotEmpty &&
+                  if (fname.text.isNotEmpty &&
                       lname.text.isNotEmpty &&
                       phone.text.isNotEmpty &&
                       pwd.text.isNotEmpty) {
@@ -241,9 +261,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                       if (enable2) {
                         if (email.text.contains('@')) {
                           if (email.text.contains('.')) {
-                            if (phone.text.length == 11) {
-                              showToast('Signed In Successful');
+                            if (phone.text.length >= 11) {
                               loading('Loading...');
+                              // showToast('Signed In Successful');
                             } else {
                               showErrorToast('phone number is not valid');
                               Get.back();
@@ -265,13 +285,14 @@ class _SignUpScreenState extends State<SignUpScreen>
                         showErrorToast(
                             'you must agree with the terms and conditions');
                         Get.back();
+                        Get.back();
 
                         return;
                       }
 
                       ProductService()
                           .signUp(
-                        displayName: displayName.text,
+                        displayName: fname.text,
                         lname: lname.text,
                         email: email.text,
                         pwd: pwd.text,
@@ -279,11 +300,13 @@ class _SignUpScreenState extends State<SignUpScreen>
                       )
                           .then((value) {
                         if (value) {
-                          showToast('Logged in successfully');
-                          Hive.box('name').put("logged", true);
+                          showToast('loggedIn in successfully');
+                          Hive.box('name').put("isLoggedIn", true);
                           Get.to(BottomNav());
                         } else {
                           Get.back();
+                          Get.back();
+                          // Get.to(BottomNav());
                         }
                       });
                     } else {

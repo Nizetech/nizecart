@@ -18,26 +18,31 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
+  static Box box = Hive.box('name');
+  bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
   int index = 0;
   int currentIndex = 0;
-  bool isLoggedIn;
-  List body = [
-    // Container(),
-    // Container()
+  List<Widget> body = [
+    //   // isLoggedIn ? HomeScreen() : SignInScreen(),
+
+    HomeScreen(),
+    CategoryScreen(),
+    FavouriteScreen(),
+    ProfileScreen(),
   ];
 
-  Box box = Hive.box('name');
-  @override
-  void initState() {
-    isLoggedIn = box.get('logged', defaultValue: false);
-    body = [
-      isLoggedIn ? HomeScreen() : SignInSCreen(),
-      CategoryScreen(),
-      FavouriteScreen(),
-      ProfileScreen(),
-    ];
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   isLoggedIn = box.get('isLoggedIn', defaultValue: false);
+  //   List body = [
+  //     isLoggedIn ? HomeScreen() : SignInSCreen(),
+  //     HomeScreen(),
+  //     CategoryScreen(),
+  //     FavouriteScreen(),
+  //     ProfileScreen(),
+  //   ];
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Widget/component.dart';
 
 class FavouriteScreen extends StatefulWidget {
@@ -14,10 +16,10 @@ class FavouriteScreen extends StatefulWidget {
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
-  static var box = Hive.box('name');
+  // static var box = Hive.box('name');
 
-  List selectedItems = box.get('cart');
-  List favItems = box.get('fav');
+  // List selectedItems = box.get('cart');
+  // List favItems = box.get('fav');
 
   @override
   Widget build(BuildContext context) {
@@ -37,246 +39,407 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           ],
         ),
         backgroundColor: white,
-        body: favItems.length == 0
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/cart.png',
-                      height: 120,
-                      width: 150,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  const Text(
-                    'No Favourite Items',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              )
-            : ListView.builder(
-                shrinkWrap: true,
-                itemCount: favItems.length,
-                itemBuilder: (ctx, i) {
-                  return Container(
-                    alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width * .43,
-                    margin: const EdgeInsets.only(left: 10, top: 15, right: 10),
-                    decoration: BoxDecoration(
-                      color: white,
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 3),
-                          blurRadius: 5,
-                          color: Colors.grey.withOpacity(.5),
-                        ),
-                      ],
-                    ),
-                    padding: EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+        body:
+            // favItems.length == 0
+            //     ?
+            //      Column(
+            //         crossAxisAlignment: CrossAxisAlignment.center,
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Center(
+            //             child: Image.asset(
+            //               'assets/cart.png',
+            //               height: 120,
+            //               width: 150,
+            //               color: Colors.grey,
+            //             ),
+            //           ),
+            //           SizedBox(height: 10),
+            //           const Text(
+            //             'No Favourite Items',
+            //             style: TextStyle(
+            //               color: Colors.grey,
+            //               fontWeight: FontWeight.bold,
+            //               fontSize: 20,
+            //             ),
+            //           ),
+            //         ],
+            //       )
+            //:
+            FutureBuilder(
+          // future: ProductService.getFavProducts(),
+          // builder: (context, snapshot) {
+          //   if (snapshot.hasData) {
+          //     return ListView.builder(
+          //       itemCount: favItems.length,
+          //       itemBuilder: (context, index) {
+          //         return ProductItem(
+          //           product: snapshot.data[index],
+          //           onTap: () {
+          //             Get.toNamed('/product_detail',
+          //                 arguments: snapshot.data[index]);
+          //           },
+          //         );
+          //       },
+          //     );
+          //   } else {
+          //     return Center(
+          //       child: CircularProgressIndicator(),
+          //     );
+          //   }
+          // }),
+          future: Future.wait([
+            ProductService().getProducts(),
+          ]),
+          builder: ((context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return snapshot.data[0].isEmpty
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image(
-                          image: AssetImage(favItems.elementAt(i)['image']),
-                          width: 140,
-                          height: 120,
-                          fit: BoxFit.contain,
-                        ),
-                        // IconButton(
-                        //   icon: item['isFav']
-                        //       ? Icon(Iconsax.heart5)
-                        //       : const Icon(Iconsax.heart),
-                        //   onPressed: () {
-                        //     setState(() {
-                        //       item['isFav'] = !item['isFav'];
-                        // selectedItem.add(item);
-                        // box.put('fav', selectedItem);
-                        //     });
-                        //   },
-                        //   color: mainColor,
-                        // ),
-                        const SizedBox(height: 3),
-                        Text(
-                          favItems.elementAt(i)['title'],
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          '\$${favItems.elementAt(i)['price']}'.toString(),
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 3),
-                        RatingBarIndicator(
-                          rating: 2.75,
-                          itemBuilder: (context, index) => const Icon(
-                            Icons.star,
-                            color: Colors.amber,
+                        Center(
+                          child: Image.asset(
+                            'assets/cart.png',
+                            height: 120,
+                            width: 150,
+                            color: Colors.grey,
                           ),
-                          itemCount: 5,
-                          itemSize: 15,
-                          direction: Axis.horizontal,
                         ),
                         SizedBox(height: 10),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // Delete Button for Favourite Items in Cart List Screen and Favourite Screen
-                            GestureDetector(
-                              onTap: () {
-                                setState(
-                                  () {
-                                    if (favItems.elementAt(i)['quantity'] !=
-                                            0 ||
-                                        favItems.elementAt(i)['quantity'] !=
-                                            null) {
-                                      favItems.removeAt(i);
-
-                                      box.put('favItem', selectedItems);
-                                      showErrorToast('Removed from Cart');
-                                    } else {
-                                      null;
-                                    }
-                                  },
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(6),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: mainColor),
-                                child: const Icon(
-                                  Iconsax.trash,
-                                  size: 25,
-                                  color: white,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 15),
-                            // Add Button for Favourite Items to Cart Items List and Update the Cart List in Hive Box as well
-
-                            Expanded(
-                              child: SizedBox(
-                                height: 40,
-                                child: CustomButton(
-                                  text: 'Add to cart',
-                                  onPressed: () {
-                                    setState(
-                                      () {
-                                        if (favItems.elementAt(i)['quantity'] <
-                                                1 &&
-                                            !favItems.contains('id')) {
-                                          favItems.elementAt(1)['quantity']++;
-                                          // adding items to the cart list which will later be stored using a suitable backend service
-                                          selectedItems
-                                              .add(favItems.elementAt(i));
-                                          box.put('favItem', selectedItems);
-                                          // ignore: avoid_print
-                                          // print(selectedItem);
-                                          showToast('Added to cart');
-                                        }
-                                        // else if (favItems
-                                        //     .contains(favItems.elementAt(i))) {
-                                        //   favItems.addAll(favItems.elementAt(i));
-                                        // }
-                                        else {
-                                          showToast(
-                                              'Item already added to cart');
-                                        }
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                        // Row(
-                        //   mainAxisAlignment:
-                        //       MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     GestureDetector(
-                        //       onTap: () {
-                        //         setState(
-                        //           () {
-                        //             if (item['quantity'] > 0 &&
-                        //                 item.containsKey(
-                        //                     'quantity')) {
-                        //               item['quantity']--;
-                        //               selectedItem.remove(item);
-                        //               print(selectedItem);
-                        //               box.delete('quantity');
-                        //               showErrorToast(
-                        //                   'Removed from Cart');
-                        //             }
-                        //           },
-                        //         );
-                        //       },
-                        //       child: Container(
-                        //         padding: EdgeInsets.all(6),
-                        //         alignment: Alignment.center,
-                        //         decoration: BoxDecoration(
-                        //             borderRadius:
-                        //                 BorderRadius.circular(4),
-                        //             color: mainColor),
-                        //         child: const Icon(
-                        //           Icons.remove,
-                        //           size: 18,
-                        //           color: white,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     Text(item['quantity'].toString()),
-                        //     GestureDetector(
-                        //       onTap: () {
-                        //         setState(
-                        //           () {
-                        //             if (item['quantity'] < 10 &&
-                        //                 item.containsKey(
-                        //                     'quantity')) {
-                        //               item['quantity']++;
-                        //               // adding items to the cart list which will later be stored using a suitable backend service
-                        //               selectedItem.add(item);
-                        //               box.put('cart', selectedItem);
-                        //               // ignore: avoid_print
-                        //               print(selectedItem);
-                        //               showToast('Added to cart');
-                        //             }
-                        //           },
-                        //         );
-                        //       },
-                        //       child: Container(
-                        //         padding: EdgeInsets.all(6),
-                        //         alignment: Alignment.center,
-                        //         decoration: BoxDecoration(
-                        //             borderRadius:
-                        //                 BorderRadius.circular(4),
-                        //             color: mainColor),
-                        //         child: const Icon(
-                        //           Icons.add,
-                        //           size: 18,
-                        //           color: white,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
+                        const Text(
+                          'No Favourite Items',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
                       ],
-                    ),
-                  );
-                },
-              ));
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data[0].length,
+                      itemBuilder: (ctx, i) {
+                        return Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width * .43,
+                          margin: const EdgeInsets.only(
+                              left: 10, top: 15, right: 10),
+                          decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                offset: const Offset(0, 3),
+                                blurRadius: 5,
+                                color: Colors.grey.withOpacity(.5),
+                              ),
+                            ],
+                          ),
+                          padding: EdgeInsets.all(15),
+                          child: snapshot.data[0][i] != null
+                              // snapshot.data[0][i].fav == true
+                              //     ? IconButton(
+                              //         icon: Icon(
+                              //           Icons.favorite,
+                              //           color: red,
+                              //         ),
+                              //         onPressed: () {
+                              //           ProductService().removeFav(snapshot.data[0][i]);
+                              //           Fluttertoast.showToast(
+                              //               msg: 'Removed from Favourite',
+                              //               toastLength: Toast.LENGTH_SHORT,
+                              //               gravity: ToastGravity.BOTTOM,
+                              //               timeInSecForIosWeb: 1,
+                              //               backgroundColor: Colors.grey,
+                              //               textColor: Colors.white,
+                              //               fontSize: 16.0);
+                              //         },
+                              //       )
+                              //     : IconButton(
+                              //         icon: Icon(
+                              //           Icons.favorite_border,
+                              //           color: red,
+                              //         ),
+                              //         onPressed: () {
+                              //           ProductService().addFav(snapshot.data[0][i]);
+                              //           Fluttertoast.showToast(
+                              //               msg: 'Added to Favourite',
+                              //               toastLength: Toast.LENGTH_SHORT,
+                              //               gravity: ToastGravity.BOTTOM,
+                              //               timeInSecForIosWeb: 1,
+                              //               backgroundColor: Colors.grey,
+                              //               textColor: Colors.white,
+                              //               fontSize: 16.0);
+                              //         },
+                              //       ),
+                              //  Column(
+                              //   crossAxisAlignment: CrossAxisAlignment.start,
+                              //   children: [
+                              //     Row(
+                              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //       children: [
+                              //         Text(
+                              //           snapshot.data[0][i].name,
+                              //           style: TextStyle(
+                              //             fontSize: 20,
+                              //             fontWeight: FontWeight.bold,
+                              //           ),
+                              //         ),
+                              //         IconButton(
+                              //           icon: Icon(
+                              //             Icons.delete,
+                              //             color: Colors.red,
+                              //           ),
+                              //           onPressed: () {
+                              //             ProductService().removeFav(snapshot.data[0][i]);
+                              //             Fluttertoast.showToast(
+                              //                 msg: 'Removed from Favourite',
+                              //                 toastLength: Toast.LENGTH_SHORT,
+                              //                 gravity: ToastGravity.BOTTOM,
+                              //                 timeInSecForIosWeb: 1,
+                              //                 backgroundColor: Colors.grey,
+                              //                 textColor: Colors.white,
+                              //                 fontSize: 16.0);
+                              //           },
+                              //         ),
+                              //       ],
+                              //     ),
+                              //     SizedBox(height: 10),
+                              //     CachedNetworkImage(
+                              //       imageUrl: snapshot.data[0][i].image,
+                              //       height: 100,
+                              //       width: 100,
+                              //       fit: BoxFit.cover,
+                              //     ),
+                              //     SizedBox(height: 10),
+                              //     Text(
+                              //       '₹ ${snapshot.data[0][i].price}',
+                              //       style: TextStyle(
+                              //         fontSize: 20,
+                              //         fontWeight: FontWeight.bold,
+                              //       ),
+                              //     ),
+                              //     SizedBox(height: 10),
+                              //     RatingBar(
+                              //       initialRating: snapshot.data[0][i].rating,
+                              //       itemCount: 5,
+                              //       itemSize: 20,
+                              //       itemPadding: EdgeInsets.symmetric(horizontal: 2),
+                              //       itemBuilder: (context, _) => Icon(
+                              //         Icons.star,
+                              //         color: Colors.
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: snapshot.data[0][i]['image'],
+                                        // favItems.elementAt(i)['image']
+                                        width: double.infinity,
+                                        height: 120,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                    // IconButton(
+                                    //   icon: item['isFav']
+                                    //       ? Icon(Iconsax.heart5)
+                                    //       : const Icon(Iconsax.heart),
+                                    //   onPressed: () {
+                                    //     setState(() {
+                                    //       item['isFav'] = !item['isFav'];
+                                    // selectedItem.add(item);
+                                    // box.put('fav', selectedItem);
+                                    //     });
+                                    //   },
+                                    //   color: mainColor,
+                                    // ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      snapshot.data[0][i]['title'],
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      '\$ ${snapshot.data[0][i]['price']}',
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(height: 3),
+                                    RatingBarIndicator(
+                                      rating: 2.75,
+                                      itemBuilder: (context, index) =>
+                                          const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      itemCount: 5,
+                                      itemSize: 15,
+                                      direction: Axis.horizontal,
+                                    ),
+                                    SizedBox(height: 10),
+                                    // Row(
+                                    //   mainAxisSize: MainAxisSize.min,
+                                    //   children: [
+                                    //     // Delete Button for Favourite Items in Cart List Screen and Favourite Screen
+                                    //     GestureDetector(
+                                    //       onTap: () {
+                                    //         setState(
+                                    //           () {
+                                    //             if (favItems.elementAt(i)['quantity'] !=
+                                    //                     0 ||
+                                    //                 favItems.elementAt(i)['quantity'] !=
+                                    //                     null) {
+                                    //               favItems.removeAt(i);
+
+                                    //               box.put('favItem', selectedItems);
+                                    //               showErrorToast('Removed from Cart');
+                                    //             } else {
+                                    //               null;
+                                    //             }
+                                    //           },
+                                    //         );
+                                    //       },
+                                    //       child: Container(
+                                    //         padding: EdgeInsets.all(6),
+                                    //         alignment: Alignment.center,
+                                    //         decoration: BoxDecoration(
+                                    //             borderRadius: BorderRadius.circular(4),
+                                    //             color: mainColor),
+                                    //         child: const Icon(
+                                    //           Iconsax.trash,
+                                    //           size: 25,
+                                    //           color: white,
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //     SizedBox(width: 15),
+                                    //     // Add Button for Favourite Items to Cart Items List and Update the Cart List in Hive Box as well
+
+                                    //     Expanded(
+                                    //       child: SizedBox(
+                                    //         height: 40,
+                                    //         child: CustomButton(
+                                    //           text: 'Add to cart',
+                                    //           onPressed: () {
+                                    //             setState(
+                                    //               () {
+                                    //                 if (favItems.elementAt(i)['quantity'] <
+                                    //                         1 &&
+                                    //                     !favItems.contains('id')) {
+                                    //                   favItems.elementAt(1)['quantity']++;
+                                    //                   // adding items to the cart list which will later be stored using a suitable backend service
+                                    //                   selectedItems
+                                    //                       .add(favItems.elementAt(i));
+                                    //                   box.put('favItem', selectedItems);
+                                    //                   // ignore: avoid_print
+                                    //                   // print(selectedItem);
+                                    //                   showToast('Added to cart');
+                                    //                 }
+                                    //                 // else if (favItems
+                                    //                 //     .contains(favItems.elementAt(i))) {
+                                    //                 //   favItems.addAll(favItems.elementAt(i));
+                                    //                 // }
+                                    //                 else {
+                                    //                   showToast(
+                                    //                       'Item already added to cart');
+                                    //                 }
+                                    //               },
+                                    //             );
+                                    //           },
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // )
+                                    // // Row(
+                                    //   mainAxisAlignment:
+                                    //       MainAxisAlignment.spaceBetween,
+                                    //   children: [
+                                    //     GestureDetector(
+                                    //       onTap: () {
+                                    //         setState(
+                                    //           () {
+                                    //             if (item['quantity'] > 0 &&
+                                    //                 item.containsKey(
+                                    //                     'quantity')) {
+                                    //               item['quantity']--;
+                                    //               selectedItem.remove(item);
+                                    //               print(selectedItem);
+                                    //               box.delete('quantity');
+                                    //               showErrorToast(
+                                    //                   'Removed from Cart');
+                                    //             }
+                                    //           },
+                                    //         );
+                                    //       },
+                                    //       child: Container(
+                                    //         padding: EdgeInsets.all(6),
+                                    //         alignment: Alignment.center,
+                                    //         decoration: BoxDecoration(
+                                    //             borderRadius:
+                                    //                 BorderRadius.circular(4),
+                                    //             color: mainColor),
+                                    //         child: const Icon(
+                                    //           Icons.remove,
+                                    //           size: 18,
+                                    //           color: white,
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //     Text(item['quantity'].toString()),
+                                    //     GestureDetector(
+                                    //       onTap: () {
+                                    //         setState(
+                                    //           () {
+                                    //             if (item['quantity'] < 10 &&
+                                    //                 item.containsKey(
+                                    //                     'quantity')) {
+                                    //               item['quantity']++;
+                                    //               // adding items to the cart list which will later be stored using a suitable backend service
+                                    //               selectedItem.add(item);
+                                    //               box.put('cart', selectedItem);
+                                    //               // ignore: avoid_print
+                                    //               print(selectedItem);
+                                    //               showToast('Added to cart');
+                                    //             }
+                                    //           },
+                                    //         );
+                                    //       },
+                                    //       child: Container(
+                                    //         padding: EdgeInsets.all(6),
+                                    //         alignment: Alignment.center,
+                                    //         decoration: BoxDecoration(
+                                    //             borderRadius:
+                                    //                 BorderRadius.circular(4),
+                                    //             color: mainColor),
+                                    //         child: const Icon(
+                                    //           Icons.add,
+                                    //           size: 18,
+                                    //           color: white,
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                  ],
+                                )
+                              : const Text('No Image'),
+                        );
+                      },
+                    );
+            }
+          }),
+        ));
   }
 }

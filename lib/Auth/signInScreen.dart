@@ -134,11 +134,11 @@ class _SignInSCreenState extends State<SignInSCreen>
                       child: GestureDetector(
                         onTap: () async {
                           loading('Logging in...');
-                          bool logged =
+                          bool isLoggedIn =
                               await ProductService().signInWithGoogle();
 
-                          if (logged) {
-                            Hive.box('name').put('logged', true);
+                          if (isLoggedIn) {
+                            Hive.box('name').put('isLoggedIn', true);
                             Get.offAll(BottomNav());
                           } else {
                             Get.back();
@@ -206,26 +206,21 @@ class _SignInSCreenState extends State<SignInSCreen>
                 CustomButton(
                   text: 'Login',
                   onPressed: () {
-                    if (email.text.isNotEmpty && pwd.text.isNotEmpty) {
+                    if (email.text.trim().isNotEmpty ||
+                        pwd.text.trim().isNotEmpty) {
                       loading('Logging In....');
-                      ProductService().signIn(email.text, pwd.text).then(
+                      ProductService()
+                          .signIn(email.text.trim(), pwd.text.trim())
+                          .then(
                         (value) {
                           if (value) {
-                            User user = FirebaseAuth.instance.currentUser;
-                            user.reload().then(
-                              (value) {
-                                if (user.emailVerified) {
-                                  Hive.box('name').put('logged', true);
+                            Hive.box('name').put('isLoggedIn', true);
 
-                                  Get.to(BottomNav());
-                                } else {
-                                  Get.back();
-                                  user.sendEmailVerification();
-                                  showErrorToast(
-                                      'please check your mail for verification link');
-                                }
-                              },
-                            );
+                            Get.to(BottomNav());
+                            showToast('Login Successful');
+                          } else {
+                            showErrorToast('Invalid Email or Password');
+                            Get.back();
                           }
                         },
                       );

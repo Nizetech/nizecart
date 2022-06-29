@@ -23,11 +23,11 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key key}) : super(key: key);
   static Box box = Hive.box('name');
-  bool logged = box.get('logged', defaultValue: false);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    bool isLoggedIn = box.get('isLoggedIn');
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NizeCart',
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: white),
       home:
           // ProductsOverviewScreen(),
-          SignInSCreen(),
+          isLoggedIn ? BottomNav() : SignInSCreen(),
       // ManageProducts(),
       //  AddUser('RossMarry', 'nizetech', 56),
     );

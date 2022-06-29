@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Models/product_overview_screen.dart';
+import 'package:nizecart/Screens/profile.dart';
 import 'package:nizecart/Screens/search_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
@@ -56,6 +57,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 20),
             const AccountListTile(text: 'Order'),
+            AccountListTile(
+              text: 'Profile',
+              onTap: () => Get.to(Profile()),
+            ),
             AccountListTile(
               text: 'Product Overview',
               onTap: () => Get.to(ProductsOverviewScreen()),
