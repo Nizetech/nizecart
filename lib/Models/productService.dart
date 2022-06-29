@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:nizecart/Auth/signInScreen.dart';
 import 'package:nizecart/Widget/component.dart';
@@ -19,6 +20,8 @@ class ProductService {
   CollectionReference userCredential = firestore.collection('Users');
   CollectionReference products = firestore.collection('products');
   CollectionReference favourite = firestore.collection('favourite');
+
+  Reference storageReference = FirebaseStorage.instance.ref('profilePicture');
 
   User getUser() => auth.currentUser;
 
@@ -89,7 +92,6 @@ class ProductService {
   }
 
   //Update product
-
   Future<void> updateProduct(
       String imageUrl, String title, String description, String price) async {
     await products.doc(title).update({
@@ -114,20 +116,40 @@ class ProductService {
 //     return data;
 //   }
 
-// // Update profileImage
-//   Future<void> updateProfileImage(String imageUrl) async {
-//     await userCredential.doc(getUser().uid).update({
-//       'profileImage': imageUrl,
-//     });
-//   }
+// Update profileImage
+  Future<void> updateProfileImage(File image) async {
+    try {
+      //Upload image to firebase storage
+      UploadTask uploadTask =
+          storageReference.child(getUser().uid).putFile((image));
 
-//   //Get profileImage
-//   Future<String> getProfileImage() async {
-//     QuerySnapshot snapshot = await userCredential.where('uid', isEqualTo: getUser().uid).get();
-//     List<QueryDocumentSnapshot> docs = snapshot.docs;
-//     String data = docs[0].data()['profileImage'];
-//     return data;
-//   }
+      // Get url of image
+      String photoUrl;
+      uploadTask.then((value) {
+        value.ref.getDownloadURL().then((url) {
+          photoUrl = url;
+          userCredential.doc(getUser().uid).update({
+            'profileImage': photoUrl,
+            'imageUploaded': true,
+          });
+          getUser().updatePhotoURL(
+            photoUrl,
+          );
+        });
+      });
+    } catch (e) {
+      showErrorToast(e.toString());
+    }
+  }
+
+  // //Get profileImage
+  // Future<String> getProfileImage() async {
+  //   QuerySnapshot snapshot =
+  //       await userCredential.where('uid', isEqualTo: getUser().uid).get();
+  //   List<QueryDocumentSnapshot> docs = snapshot.docs;
+  //   // String data = docs[0].data()['profileImage'];
+  //   // return data;
+  // }
 
 //   //Get displayName
 //   Future<String> getDisplayName() async {
@@ -235,6 +257,7 @@ class ProductService {
           'last_name': user.user.displayName,
           'phone': user.user.phoneNumber,
           'email': user.user.email,
+          // 'profileImage': user.user.photoUrl,
           'uid': user.user.uid,
           'date_created': Timestamp.now(),
           'date_updated': Timestamp.now(),
@@ -260,6 +283,8 @@ class ProductService {
     String displayName,
     String lname,
     String phone,
+    String photoUrl,
+    String address,
   }) async {
     try {
       //create user on firebase auth
@@ -298,28 +323,6 @@ class ProductService {
     }
   }
 
-  //Sign in with email and password
-
-  // Future<bool> signIn({
-  //   String email,
-  //   String pwd,
-  // }) async {
-  //   try {
-  //     UserCredential user = await auth.signInWithEmailAndPassword(
-  //         email: email, password: pwd);
-  //     if (user.user != null) {
-  //       // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
-  //       Hive.box('name').put('displayName', user.user.displayName);
-  //       return true;
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //     FirebaseException ext = e;
-  //     showErrorToast(ext.message);
-  //     return false;
-  //   }
-  // }
-
   Future<bool> signIn(String email, String pwd) async {
     try {
       UserCredential user =
@@ -354,13 +357,6 @@ class ProductService {
       return false;
     }
   }
-
-  // Future<bool> signOut() async {
-  //   await FirebaseAuth.instance.signOut();
-  //   await Hive.box('name').delete('displayName');
-  //   loader();
-  //   return Get.to(SignInSCreen());
-  // }
 
   Future<Map> getUserDetails() async {
     DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
@@ -397,15 +393,6 @@ class ProductService {
   //       );
   //     }
   //   }
-  // }
-
-  // Future<void> signOut() async {
-  //   await auth.signOut();
-  // await signInWithGoogle.signOut();
-  // await facebookLogin.logOut();
-  //   await Hive.box('name').delete('displayName');
-  //   await Hive.box('name').delete('phone');
-  //   Get.offAllNamed('/');
   // }
 
 }
