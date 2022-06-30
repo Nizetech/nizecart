@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nizecart/Screens/product_screen.dart';
 
 const white = Colors.white;
 const mainColor = Color(0xffEA4E4E);
@@ -38,71 +40,120 @@ class CustomButton extends StatelessWidget {
 }
 
 class ShopListView extends StatelessWidget {
-  final double sHeight;
-  final double height;
-  final double width;
-  final String title;
-  final String subtitle;
-  final String image;
+  final Map data;
 
-  const ShopListView(
-      {Key key,
-      this.height,
-      this.image,
-      this.sHeight,
-      this.subtitle,
-      this.title,
-      this.width})
-      : super(key: key);
+  const ShopListView({
+    Key key,
+    this.data,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: sHeight,
-      child: ListView.separated(
-        padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 8,
-        separatorBuilder: (ctx, i) => SizedBox(width: 10),
-        itemBuilder: (ctx, i) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: height,
-                width: width,
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Image.asset(
-                  image,
-                  fit: BoxFit.contain,
-                ),
+    return GestureDetector(
+      onTap: () {
+        Get.to(ProductScreen());
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 130,
+            width: 150,
+            padding: EdgeInsets.all(7),
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CachedNetworkImage(
+                imageUrl: data['image'],
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
-              SizedBox(height: 5),
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.black.withOpacity(.7),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            data['title'],
+            maxLines: 1,
+            style: TextStyle(
+              overflow: TextOverflow.ellipsis,
+              color: Colors.black.withOpacity(.7),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            data['price'],
+            style: const TextStyle(
+              color: Color(0xff343a40),
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ShopListView2 extends StatelessWidget {
+  final Map data;
+
+  const ShopListView2({
+    Key key,
+    this.data,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(ProductScreen());
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 70,
+            width: 90,
+            padding: EdgeInsets.all(7),
+            decoration: BoxDecoration(
+              color: Colors.grey.withOpacity(.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CachedNetworkImage(
+                imageUrl: data['image'],
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
-              SizedBox(height: 5),
-              Text(
-                subtitle,
-                style: const TextStyle(
-                  color: Color(0xff343a40),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              )
-            ],
-          );
-        },
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            data['title'],
+            maxLines: 1,
+            style: TextStyle(
+              overflow: TextOverflow.ellipsis,
+              color: Colors.black.withOpacity(.7),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 5),
+          Text(
+            data['price'],
+            style: const TextStyle(
+              color: Color(0xff343a40),
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          )
+        ],
       ),
     );
   }

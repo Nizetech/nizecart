@@ -45,9 +45,9 @@ class ImageInput {
   //     return null;
   //   }
   // }
-  Future<void> takePicture2(File storedImage2) async {
+  Future<void> takePicture2({ImageSource imageSource}) async {
     final ImagePicker picker = ImagePicker();
-    final imageFile = await picker.pickImage(
+    var imageFile = await picker.pickImage(
         source: ImageSource.camera,
         maxWidth: 500,
         maxHeight: 500,
@@ -56,24 +56,24 @@ class ImageInput {
     if (imageFile == null) {
       return;
     }
-    // if (imageFile != null) {
-    //   CroppedFile croppedFile = await ImageCropper().cropImage(
-    //       sourcePath: imageFile.path,
-    //       compressQuality: 50,
-    //       uiSettings: [
-    //         AndroidUiSettings(
-    //           lockAspectRatio: true,
-    //         ),
-    //       ]);
-    //   if (croppedFile != null) {
-    //      File(croppedFile.path);
-    // imageFile = croppedFile;
-    //   } else {
-    //     return;
-    //   }
-    // }
+    if (imageFile != null) {
+      CroppedFile croppedFile = await ImageCropper().cropImage(
+          sourcePath: imageFile.path,
+          compressQuality: 50,
+          uiSettings: [
+            AndroidUiSettings(
+              lockAspectRatio: true,
+            ),
+          ]);
+      if (croppedFile != null) {
+        File(croppedFile.path);
+        imageFile = croppedFile as XFile;
+      } else {
+        return;
+      }
+    }
 
-    File file = File(imageFile.path);
+    // File file = File(imageFile.path);
     // storedImage2 = file;
 
     // final appDir = await getApplicationDocumentsDirectory();

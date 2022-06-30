@@ -95,29 +95,99 @@ class _ProfileState extends State<Profile> {
                         bottom: 0,
                         right: 0,
                         child: GestureDetector(
-                          onTap: () async {
-                            ImagePicker picker = ImagePicker();
-                            XFile file = await picker.pickImage(
-                              source: ImageSource.camera,
-                              imageQuality: 30,
-                            );
+                          onTap: () {
+                            Get.dialog(Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                        'Change Profile Picture',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      TextButton.icon(
+                                        onPressed: () async {
+                                          ImagePicker picker = ImagePicker();
+                                          XFile file = await picker.pickImage(
+                                            source: ImageSource.gallery,
+                                            imageQuality: 30,
+                                          );
 
-                            if (file != null) {
-                              ProductService().updateProfileImage(
-                                File(file.path),
-                              );
-                              setState(() {
-                                user.reload();
-                              });
-                            }
+                                          if (file != null) {
+                                            ProductService().updateProfileImage(
+                                              File(file.path),
+                                            );
+                                            Get.back();
+                                            setState(() {
+                                              user.reload();
+                                            });
+                                          }
+                                        },
+                                        icon: Icon(Iconsax.gallery),
+                                        label: Text('Choose from Gallery'),
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            secColor,
+                                          ),
+                                          foregroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      TextButton.icon(
+                                        onPressed: () async {
+                                          ImagePicker picker = ImagePicker();
+                                          XFile file = await picker.pickImage(
+                                            source: ImageSource.camera,
+                                            imageQuality: 30,
+                                          );
+
+                                          if (file != null) {
+                                            ProductService().updateProfileImage(
+                                              File(file.path),
+                                            );
+                                            Get.back();
+                                            setState(() {
+                                              user.reload();
+                                            });
+                                          }
+                                        },
+                                        icon: Icon(Iconsax.image),
+                                        label: Text('Choose from camera'),
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            secColor,
+                                          ),
+                                          foregroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ));
                           },
                           child: Container(
                             height: 50,
                             width: 50,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
+                                // ignore: prefer_const_literals_to_create_immutables
                                 boxShadow: [
-                                  BoxShadow(
+                                  const BoxShadow(
                                     blurRadius: 3,
                                   )
                                 ],

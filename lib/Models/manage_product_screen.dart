@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:nizecart/Models/imageInput3.dart';
 import 'package:nizecart/Models/image_input.dart';
 import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Models/product_overview_screen.dart';
@@ -52,7 +52,7 @@ class _ManageProductsState extends State<ManageProducts> {
   }
 
   File storedImage;
-  File storedImage2;
+  // File storedImage2;
 
   CollectionReference imageRef;
 
@@ -186,18 +186,27 @@ class _ManageProductsState extends State<ManageProducts> {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              // ImageInput().takePicture2(storedImage2);
-                              // setState(() {
-                              //   isCamera = !isCamera;
-                              // });
-                              // XFile pickedFile = await ImagePicker().pickImage(
-                              //     source: ImageSource.camera, imageQuality: 40);
-                              // if (pickedFile != null) {
-                              //   setState(() {
-                              //     storedImage = File(pickedFile.path);
-                              //   });
-                              // }
-                              // Get.back();
+                              XFile pickedFile = await ImagePicker().pickImage(
+                                  source: ImageSource.camera, imageQuality: 40);
+                              if (pickedFile != null) {
+                                CroppedFile croppedFile = await ImageCropper()
+                                    .cropImage(
+                                        sourcePath: pickedFile.path,
+                                        compressQuality: 50,
+                                        uiSettings: [
+                                      AndroidUiSettings(
+                                        lockAspectRatio: false,
+                                      ),
+                                    ]);
+                                if (croppedFile != null) {
+                                  setState(() {
+                                    storedImage = File(croppedFile.path);
+                                  });
+                                } else {
+                                  return null;
+                                }
+                              }
+                              Get.back();
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -215,31 +224,56 @@ class _ManageProductsState extends State<ManageProducts> {
                           ),
                           GestureDetector(
                             onTap: () async {
+                              XFile pickedFile = await ImagePicker().pickImage(
+                                  source: ImageSource.gallery,
+                                  imageQuality: 40);
+                              if (pickedFile != null) {
+                                CroppedFile croppedFile = await ImageCropper()
+                                    .cropImage(
+                                        sourcePath: pickedFile.path,
+                                        compressQuality: 50,
+                                        uiSettings: [
+                                      AndroidUiSettings(
+                                        lockAspectRatio: false,
+                                      ),
+                                    ]);
+                                if (croppedFile != null) {
+                                  setState(() {
+                                    storedImage = File(croppedFile.path);
+                                  });
+                                } else {
+                                  return null;
+                                }
+                              }
+                              Get.back();
+
                               // ImageInput().takePicture(ImageSource.gallery);
                               // // takepicture();
                               // setState(() {
                               //   isCamera = !isCamera;
                               // });
-                              XFile pickedFile = await ImagePicker().pickImage(
-                                  source: ImageSource.gallery,
-                                  imageQuality: 40);
-                              if (pickedFile != null) {
-                                setState(() {
-                                  storedImage = File(pickedFile.path);
-                                });
-                              }
-                              Get.back();
+                              // XFile pickedFile = await ImagePicker().pickImage(
+                              //     source: ImageSource.gallery,
+                              //     imageQuality: 40);
+                              // if (pickedFile != null) {
+                              //   setState(() {
+                              //     storedImage = File(pickedFile.path);
+                              //   });
+                              // }
+                              // Get.back();
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: const [
                                   Icon(Iconsax.gallery),
                                   SizedBox(height: 10),
-                                  Text('Galley',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ))
+                                  Text(
+                                    'Galley',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ]),
                           ),
                         ],
@@ -258,7 +292,6 @@ class _ManageProductsState extends State<ManageProducts> {
               text: "Add Product",
               onPressed: () async {
                 loading('Adding Product...');
-
                 print(storedImage);
                 String imageUrl =
                     await ProductService().uploadFile(storedImage);

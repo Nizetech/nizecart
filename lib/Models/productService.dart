@@ -122,7 +122,6 @@ class ProductService {
       //Upload image to firebase storage
       UploadTask uploadTask =
           storageReference.child(getUser().uid).putFile((image));
-
       // Get url of image
       String photoUrl;
       uploadTask.then((value) {
@@ -204,7 +203,7 @@ class ProductService {
 //     return data;
 //   }
 
-  // get location
+  // upload product image
 
   Future<String> uploadFile(
     File file,
