@@ -302,6 +302,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                         if (value) {
                           showToast('loggedIn in successfully');
                           Hive.box('name').put("isLoggedIn", true);
+                          // Hive.box('name').put('');
                           Get.to(BottomNav());
                         } else {
                           Get.back();

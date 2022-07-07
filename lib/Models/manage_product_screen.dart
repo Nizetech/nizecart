@@ -52,7 +52,6 @@ class _ManageProductsState extends State<ManageProducts> {
   }
 
   File storedImage;
-  // File storedImage2;
 
   CollectionReference imageRef;
 
@@ -108,7 +107,6 @@ class _ManageProductsState extends State<ManageProducts> {
                   cursorColor: mainColor,
                   decoration: InputDecoration(
                     labelText: 'Description',
-                    // labelStyle: TextStyle(fontSize: 18),
                     filled: true,
                     isDense: true,
                     iconColor: mainColor,
@@ -131,7 +129,6 @@ class _ManageProductsState extends State<ManageProducts> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Price',
-                    // labelStyle: TextStyle(fontSize: 18),
                     filled: true,
                     isDense: true,
                     prefixIcon: const Icon(Iconsax.dollar_circle),
@@ -147,7 +144,6 @@ class _ManageProductsState extends State<ManageProducts> {
                   )),
             ),
             SizedBox(height: 15),
-            // ImageInput3(selectImage),
             Container(
               height: 200,
               width: 200,
@@ -155,9 +151,7 @@ class _ManageProductsState extends State<ManageProducts> {
               decoration: BoxDecoration(
                 border: Border.all(width: 1, color: Colors.grey),
               ),
-              child: (storedImage == null
-                  //  && storedImage2 == null
-                  )
+              child: (storedImage == null)
                   ? const Text(
                       'No Image',
                       textAlign: TextAlign.center,
@@ -165,9 +159,7 @@ class _ManageProductsState extends State<ManageProducts> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     )
                   : Image.file(
-                      // isCamera ?
                       storedImage,
-                      // : storedImage2,
                       height: 200,
                       width: 200,
                       fit: BoxFit.cover,
@@ -246,21 +238,6 @@ class _ManageProductsState extends State<ManageProducts> {
                                 }
                               }
                               Get.back();
-
-                              // ImageInput().takePicture(ImageSource.gallery);
-                              // // takepicture();
-                              // setState(() {
-                              //   isCamera = !isCamera;
-                              // });
-                              // XFile pickedFile = await ImagePicker().pickImage(
-                              //     source: ImageSource.gallery,
-                              //     imageQuality: 40);
-                              // if (pickedFile != null) {
-                              //   setState(() {
-                              //     storedImage = File(pickedFile.path);
-                              //   });
-                              // }
-                              // Get.back();
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,

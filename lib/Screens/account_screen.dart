@@ -20,6 +20,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   static var box = Hive.box('name');
   String name = box.get('displayName');
+  final String lname = box.get('lname');
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Welcome ${name} !',
+              'Welcome ${name} ' ' ${lname} !',
               style: const TextStyle(
                   fontSize: 20, color: mainColor, fontWeight: FontWeight.bold),
             ),

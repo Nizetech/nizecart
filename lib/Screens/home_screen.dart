@@ -41,9 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> refresh() async => setState(() {});
 
-  final List selectedItems = HomeScreen.box.get('cart');
+  // final List selectedItems = HomeScreen.box.get('cart');
 
-  String name = HomeScreen.box.get('fname');
+  String name = HomeScreen.box.get('displayName');
   static FirebaseAuth auth = FirebaseAuth.instance;
   User user = auth.currentUser;
 
@@ -193,8 +193,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           return Container(
                                               margin: const EdgeInsets.only(
                                                   left: 0, right: 10, top: 20),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 18, horizontal: 20),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 18,
+                                                      horizontal: 20),
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
@@ -303,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     SizedBox(
                                       height: 185,
                                       child: ListView.separated(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                             left: 15, right: 15, top: 15),
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
@@ -335,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     SizedBox(
                                       height: 125,
                                       child: ListView.separated(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                             left: 15, right: 15, top: 15),
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
@@ -354,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     SizedBox(
                                       height: 125,
                                       child: ListView.separated(
-                                        padding: EdgeInsets.only(
+                                        padding: const EdgeInsets.only(
                                             left: 15, right: 15, top: 15),
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
@@ -363,7 +365,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                             SizedBox(width: 10),
                                         itemBuilder: (ctx, i) {
                                           Map data = snapshot.data[i];
-
                                           return ShopListView2(
                                             data: data,
                                           );

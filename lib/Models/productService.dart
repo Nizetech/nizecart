@@ -24,11 +24,26 @@ class ProductService {
   Reference storageReference = FirebaseStorage.instance.ref('profilePicture');
 
   User getUser() => auth.currentUser;
+// String id= await products.doc().docID().toString;
+//  String id= await products.doc().id.toString();
 
   // Future<void> signOut() async {
   //   await auth.signOut();
   //   Get.offAllNamed('/signIn');
   // }
+
+//   products.setData({
+//   documentID:  ,
+//   /* ... */
+// });
+  // final productID = '${DateTime.now().millisecondsSinceEpoch}';
+// set doument id
+  // Future<String> setDocumentID(String documentID) async {
+  //   await products.doc(documentID).set({
+  //     'documentID': documentID,
+  //   });
+  // }
+
   static Box box = Hive.box('name');
   bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
   bool get currentUser {
@@ -45,26 +60,56 @@ class ProductService {
     return Get.to(SignInSCreen());
   }
 
-  Future<void> deleteProduct(String title) async {
-    await products.doc(title).delete();
+  // delete product
+
+  Future<void> deleteProduct(String productID) async {
+    await products.doc(productID).delete();
   }
 
   Future<List> getProducts() async {
-    QuerySnapshot snapshot = await products.get();
+    var snapshot = await products.get();
     List<QueryDocumentSnapshot> docs = snapshot.docs;
     List<Map> data = [];
     for (var item in docs) {
       data.add(item.data());
     }
+    print(data);
     return data;
+    // for (var doc in snapshot.docs) {
+    //   Map<String, dynamic> data = doc.data();
+    // }
   }
 
-// add favProduct
+// get a particular
+  // Future<Map> getProduct(String title) async {
+  //   QuerySnapshot snapshot = await products.doc(title).get();
+  //   return snapshot.data();
+  // }
+// add favproduct
+  void addFavourite(Map product) async {
+    userCredential
+        .doc(getUser().uid)
+        .collection('favourite')
+        .doc(product['productID'])
+        .set(product)
+        .then((value) => showToast('Product added to favourites'));
+  }
+
+// remove favProduct
+  void removeFavourite(Map product) async {
+    userCredential
+        .doc(getUser().uid)
+        .collection('favourite')
+        .doc(product['productID'])
+        .delete()
+        .then((value) => showErrorToast('Product reomved from favourites'));
+  }
 
 //get favProduct
 
   Future<List> getFavProduct() async {
-    QuerySnapshot snapshot = await favourite.get();
+    QuerySnapshot snapshot =
+        await userCredential.doc(getUser().uid).collection('favourite').get();
     List<QueryDocumentSnapshot> docs = snapshot.docs;
     List<Map> data = [];
     for (var item in docs) {
@@ -73,28 +118,49 @@ class ProductService {
     return data;
   }
 
+  Future<Map> getProduct(String productID) async {
+    // final productID = '${DateTime.now().millisecondsSinceEpoch}';
+    DocumentSnapshot snapshot = await products.doc(productID).get();
+    Map data = snapshot.data();
+    return data;
+  }
+  // String id;
+
   //Add product
   Future<void> addProduct(
       String imageUrl, String title, String description, String price) async {
-    // Create a CollectionReference called products that references the firestore collection
-// UserCredential userCredential = await auth.currentUser.getIdToken();
+    //set document id
+    final productID = '${DateTime.now().millisecondsSinceEpoch}';
 
-// get user id
-
-    await products.add({
-      'title': title, // Apple
-      'description': description, // A fruit
-      'price': price, // 1.99
-      'image': imageUrl,
-      // 'userId': auth.currentUser.uid,
-      'prodId': getUser().uid,
+    /// get user id
+    await products.doc(productID).set({
+      'title': title,
+      'description': description,
+      'price': price,
+      'imageUrl': imageUrl,
+      // 'userID': getUser().uid,
+      'productID': productID,
     });
+    // String id = products.doc().id.toString();
+    // await products.add({
+    //   'title': title, // Apple
+    //   'description': description, // A fruit
+    //   'price': price, // 1.99
+    //   'image': imageUrl,
+    //   // 'userId': auth.currentUser.uid,
+    //   'prodId': id,
+    // });
   }
 
   //Update product
   Future<void> updateProduct(
-      String imageUrl, String title, String description, String price) async {
-    await products.doc(title).update({
+    String imageUrl,
+    String title,
+    String description,
+    String price,
+  ) async {
+    String prodId = getUser().uid;
+    await products.doc(prodId).update({
       'title': title, // Apple
       'description': description, // A fruit
       'price': price, // 1.99
@@ -221,16 +287,6 @@ class ProductService {
     return url;
   }
 
-  // Future<String> loadImage() async {
-  //   try {
-  //     await uploadFile;
-  //     return downloadUrl;
-  //   } catch (e) {
-  //     print('error' + e);
-  //     return null;
-  //   }
-  // }
-
   Future<bool> signInWithGoogle() async {
     try {
       //Trigger the authentication flow
@@ -247,10 +303,10 @@ class ProductService {
       final UserCredential user =
           await FirebaseAuth.instance.signInWithCredential(credential);
       if (user.user != null) {
-        // List search = user.user.displayName.split(' ');
-        // search.addAll(user.user.email.split('@'));
-        // search.add(user.user.uid);
-        // search.add(user.user.phoneNumber);
+        List search = user.user.displayName.split(' ');
+        search.addAll(user.user.email.split('@'));
+        search.add(user.user.uid);
+        search.add(user.user.phoneNumber);
         await userCredential.doc(user.user.uid).set({
           'fname': user.user.displayName,
           'last_name': user.user.displayName,
@@ -293,10 +349,10 @@ class ProductService {
         // user.user.updateDisplayName(fname);
 
         // user.user.sendEmailVerification();
-        // List search = fname.split(' ');
-        // search.addAll(email.split('@'));
-        // search.add(user.user.uid);
-        // search.add(phone);
+        List search = displayName.split(' ');
+        search.addAll(email.split('@'));
+        search.add(user.user.uid);
+        search.add(phone);
         await userCredential.doc(user.user.uid).set(
           {
             'fname': displayName,

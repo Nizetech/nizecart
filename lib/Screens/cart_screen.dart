@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -26,33 +27,35 @@ class _CartScreenState extends State<CartScreen> {
   //   'cart',
   //   defaultValue: [],
   // );
-  List cartItems = box.get('cart');
 
-  double get totalAmount {
-    var totalAmount = 0.0;
-    if (cartItems != null) {
-      for (var i = 0; i < cartItems.length; i++) {
-        totalAmount += cartItems[i]['price'] * cartItems[i]['quantity'];
-      }
-    }
-    return totalAmount.roundToDouble();
-  }
+  // double get totalAmount {
+  //   var totalAmount = 0.0;
+  //   if (cartItems != null) {
+  //     for (var i = 0; i < cartItems.length; i++) {
+  //       totalAmount += cartItems[i]['price'] * cartItems[i]['quantity'];
+  //     }
+  //   }
+  //   return totalAmount.roundToDouble();
+  // }
 
-  int get totalQuantity {
-    var totalQuantity = 0;
-    if (cartItems != null && cartItems.length > 0) {
-      for (var i = 0; i < cartItems.length; i++) {
-        totalQuantity += cartItems[i]['quantity'];
-        box.add(totalQuantity);
-        cartItems[i]['quantity'] = totalQuantity;
-      }
-    }
-    return totalQuantity;
-  }
+  // int get totalQuantity {
+  //   var totalQuantity = 0;
+  //   if (cartItems != null && cartItems.length > 0) {
+  //     for (var i = 0; i < cartItems.length; i++) {
+  //       totalQuantity += cartItems[i]['quantity'];
+  //       box.add(totalQuantity);
+  //       cartItems[i]['quantity'] = totalQuantity;
+  //     }
+  //   }
+  //   return totalQuantity;
+  // }
+  // Map data = cartItems[index];
 
+  List cartItems = box.get('cart', defaultValue: []);
   @override
   Widget build(BuildContext context) {
-    print(cartItems);
+    // Map data = cartItems[0];
+    print(cartItems[0]);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -70,7 +73,7 @@ class _CartScreenState extends State<CartScreen> {
       backgroundColor: white,
       body:
           //  !cartItems.contains(cartItems)
-          cartItems.length == 0
+          cartItems.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -104,8 +107,8 @@ class _CartScreenState extends State<CartScreen> {
                         padding: const EdgeInsets.all(15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
+                          children: const [
+                            Text(
                               'Cart Summary',
                               style: TextStyle(
                                 fontSize: 20,
@@ -115,8 +118,9 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             // total quantity of all items in cart
                             Text(
-                              'Items ($totalQuantity)'.toString(),
-                              style: const TextStyle(
+                              '0',
+                              // 'Items ($totalQuantity)'.toString(),
+                              style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w500,
@@ -137,7 +141,8 @@ class _CartScreenState extends State<CartScreen> {
                           const Spacer(),
                           // total amount of all items in cart
                           Text(
-                            '\$ $totalAmount'.toString(),
+                            '0',
+                            // '\$ $totalAmount'.toString(),
                             style: TextStyle(fontSize: 16),
                           ),
                         ],
@@ -150,8 +155,10 @@ class _CartScreenState extends State<CartScreen> {
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: cartItems.length,
+                        itemCount: 2,
+                        // itemCount: cartItems.length,
                         itemBuilder: (ctx, i) {
+                          print(cartItems[0]);
                           return Container(
                             width: double.infinity,
                             alignment: Alignment.center,
@@ -173,14 +180,13 @@ class _CartScreenState extends State<CartScreen> {
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     // product image
-                                    Image(
-                                      image: AssetImage(
-                                        cartItems.elementAt(i)['image'],
-                                      ),
-                                      width: 140,
-                                      height: 120,
-                                      fit: BoxFit.contain,
-                                    ),
+                                    // CachedNetworkImage(
+                                    //   imageUrl: cartItems[i]['image'],
+                                    //   width: 140,
+                                    //   height: 120,
+                                    //   fit: BoxFit.contain,
+                                    // ),
+
                                     const SizedBox(width: 0),
                                     Expanded(
                                       child: Column(
@@ -188,22 +194,22 @@ class _CartScreenState extends State<CartScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            cartItems.elementAt(i)['title'],
+                                            // cartItems.elementAt(index)[0]
+                                            //     ['title'],
+                                            '9',
                                             maxLines: 3,
                                             overflow: TextOverflow.ellipsis,
                                             style:
                                                 TextStyle(color: Colors.grey),
                                           ),
                                           SizedBox(height: 3),
-                                          Text(
-                                            cartItems
-                                                .elementAt(i)['price']
-                                                .toString(),
-                                            style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                          // Text(
+                                          //   cartItems[0][0]['price'].toString(),
+                                          //   style: const TextStyle(
+                                          //       color: Colors.black,
+                                          //       fontSize: 16,
+                                          //       fontWeight: FontWeight.bold),
+                                          // ),
                                         ],
                                       ),
                                     ),
@@ -216,25 +222,25 @@ class _CartScreenState extends State<CartScreen> {
                                     SizedBox(width: 10),
                                     GestureDetector(
                                       onTap: () {
-                                        cartItems.elementAt(i)['quantity'] == 0
-                                            ? null
-                                            : setState(() {
-                                                cartItems.removeAt(i);
-                                                cartItems.remove('id');
-                                                // cartItems.add(
-                                                //     cartItems.elementAt(i));
-                                                box.put('cartItem', cartItems);
-                                                Fluttertoast.showToast(
-                                                  msg: 'Item removed from cart',
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 1,
-                                                  backgroundColor: Colors.red,
-                                                  textColor: Colors.white,
-                                                  fontSize: 16.0,
-                                                );
-                                              });
+                                        // cartItems.elementAt(i)['quantity'] == 0
+                                        //     ? null
+                                        //     : setState(() {
+                                        //         cartItems.removeAt(i);
+                                        //         cartItems.remove('id');
+                                        //         // cartItems.add(
+                                        //         //     cartItems.elementAt(i));
+                                        //         box.put('cartItem', cartItems);
+                                        //         Fluttertoast.showToast(
+                                        //           msg: 'Item removed from cart',
+                                        //           toastLength:
+                                        //               Toast.LENGTH_SHORT,
+                                        //           gravity: ToastGravity.BOTTOM,
+                                        //           timeInSecForIosWeb: 1,
+                                        //           backgroundColor: Colors.red,
+                                        //           textColor: Colors.white,
+                                        //           fontSize: 16.0,
+                                        //         );
+                                        //       });
                                       },
                                       child: const Text(
                                         'Remove',
@@ -294,29 +300,29 @@ class _CartScreenState extends State<CartScreen> {
                                     // To Add item
                                     GestureDetector(
                                       onTap: () {
-                                        setState(
-                                          () {
-                                            if (cartItems
-                                                    .elementAt(i)['quantity'] <
-                                                10) {
-                                              cartItems
-                                                  .elementAt(i)['quantity']++;
+                                        // setState(
+                                        //   () {
+                                        //     if (cartItems
+                                        //             .elementAt(i)['quantity'] <
+                                        //         10) {
+                                        //       cartItems
+                                        //           .elementAt(i)['quantity']++;
 
-                                              box.put('cartItem', cartItems);
-                                              showToast('Added to Cart');
-                                              // cartItems = [];
-                                              // } else if (cartItems.contains(
-                                              //   cartItems.elementAt(i),
-                                              // )) {
-                                              //   cartItems.addAll(
-                                              //     cartItems.elementAt(i),
-                                              //   );
-                                            } else {
-                                              showErrorToast(
-                                                  'Item limit reached');
-                                            }
-                                          },
-                                        );
+                                        //       box.put('cartItem', cartItems);
+                                        //       showToast('Added to Cart');
+                                        //       // cartItems = [];
+                                        //       // } else if (cartItems.contains(
+                                        //       //   cartItems.elementAt(i),
+                                        //       // )) {
+                                        //       //   cartItems.addAll(
+                                        //       //     cartItems.elementAt(i),
+                                        //       //   );
+                                        //     } else {
+                                        //       showErrorToast(
+                                        //           'Item limit reached');
+                                        //     }
+                                        //   },
+                                        // );
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(6),

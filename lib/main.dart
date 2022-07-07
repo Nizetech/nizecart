@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    bool isLoggedIn = box.get('isLoggedIn');
+    bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'NizeCart',

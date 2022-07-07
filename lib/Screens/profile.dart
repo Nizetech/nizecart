@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nizecart/Models/productService.dart';
 
@@ -64,33 +65,58 @@ class _ProfileState extends State<Profile> {
                 children: [
                   Stack(
                     children: [
-                      Container(
-                          height: 140,
-                          width: 140,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 3,
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(75),
-                              color: white),
-                          child: user.photoURL == null
-                              ? const Icon(
-                                  Iconsax.user,
-                                  size: 70,
-                                  color: secColor,
-                                )
-                              : ClipRRect(
-                                  borderRadius: BorderRadius.circular(70),
+                      GestureDetector(
+                        onTap: () => Get.dialog(Dialog(
+                          backgroundColor: secColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Container(
+                            height: 230,
+                            width: 200,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
                                   child: CachedNetworkImage(
                                     imageUrl: user.photoURL,
-                                    height: 140,
-                                    width: 140,
+                                    height: 230,
+                                    width: double.infinity,
                                     fit: BoxFit.cover,
                                   ),
-                                )),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )),
+                        child: Container(
+                            height: 140,
+                            width: 140,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                boxShadow: const [
+                                  BoxShadow(
+                                    blurRadius: 3,
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(75),
+                                color: white),
+                            child: user.photoURL == null
+                                ? const Icon(
+                                    Iconsax.user,
+                                    size: 70,
+                                    color: secColor,
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(70),
+                                    child: CachedNetworkImage(
+                                      imageUrl: user.photoURL,
+                                      height: 140,
+                                      width: 140,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )),
+                      ),
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -116,7 +142,7 @@ class _ProfileState extends State<Profile> {
                                       TextButton.icon(
                                         onPressed: () async {
                                           ImagePicker picker = ImagePicker();
-                                          XFile file = await picker.pickImage(
+                                          var file = await picker.pickImage(
                                             source: ImageSource.gallery,
                                             imageQuality: 30,
                                           );
@@ -125,14 +151,45 @@ class _ProfileState extends State<Profile> {
                                             ProductService().updateProfileImage(
                                               File(file.path),
                                             );
-                                            Get.back();
                                             setState(() {
                                               user.reload();
                                             });
+                                            Get.back();
                                           }
+                                          return;
+
+                                          // if (file == null) {
+                                          //   return;
+                                          // }
+                                          // CroppedFile croppedFile =
+                                          //     await ImageCropper().cropImage(
+                                          //         sourcePath: file.path,
+                                          //         compressQuality: 50,
+                                          //         uiSettings: [
+                                          //       AndroidUiSettings(
+                                          //         lockAspectRatio: true,
+                                          //       ),
+                                          //     ]);
+                                          // if (croppedFile != null) {
+                                          //   File(croppedFile.path);
+                                          //   setState(() {
+                                          //     // file = File(croppedFile.path);
+                                          //     file = croppedFile as XFile;
+                                          //   });
+
+                                          //   ProductService().updateProfileImage(
+                                          //       File(file.path));
+                                          //   Get.back();
+                                          //   setState(() {
+                                          //     user.reload();
+                                          //   });
+                                          // } else {
+                                          //   return;
+                                          // }
                                         },
-                                        icon: Icon(Iconsax.gallery),
-                                        label: Text('Choose from Gallery'),
+                                        icon: const Icon(Iconsax.gallery),
+                                        label:
+                                            const Text('Choose from Gallery'),
                                         style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all(

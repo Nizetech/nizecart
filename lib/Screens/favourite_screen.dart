@@ -89,7 +89,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           //   }
           // }),
           future: Future.wait([
-            ProductService().getProducts(),
+            ProductService().getFavProduct(),
           ]),
           builder: ((context, snapshot) {
             if (!snapshot.hasData) {
@@ -240,13 +240,15 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
                                       child: CachedNetworkImage(
-                                        imageUrl: snapshot.data[0][i]['image'],
+                                        imageUrl: snapshot.data[0][i]
+                                            ['imageUrl'],
                                         // favItems.elementAt(i)['image']
                                         width: double.infinity,
                                         height: 120,
                                         fit: BoxFit.fill,
                                       ),
                                     ),
+
                                     // IconButton(
                                     //   icon: item['isFav']
                                     //       ? Icon(Iconsax.heart5)
@@ -287,7 +289,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                       itemSize: 15,
                                       direction: Axis.horizontal,
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     // Row(
                                     //   mainAxisSize: MainAxisSize.min,
                                     //   children: [

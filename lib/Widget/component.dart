@@ -67,7 +67,7 @@ class ShopListView extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: data['image'],
+                imageUrl: data['imageUrl'],
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
@@ -127,7 +127,7 @@ class ShopListView2 extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: data['image'],
+                imageUrl: data['imageUrl'],
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
@@ -222,13 +222,21 @@ class _CartState extends State<Cart> {
                   alignment: Alignment.center,
                   decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: mainColor),
-                  child: Text(
-                    quantity.length.toString(),
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  child: quantity.length == []
+                      ? Text(
+                          '0',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        )
+                      : Text(
+                          quantity.length.toString(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        ),
                 ),
               );
             },
