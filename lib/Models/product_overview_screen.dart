@@ -6,13 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:nizecart/Models/product.dart';
 import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Screens/updateScreen.dart';
 
 import '../Widget/component.dart';
 
 class ProductsOverviewScreen extends StatefulWidget {
-  ProductsOverviewScreen({Key key}) : super(key: key);
+  // final productID;
+  ProductsOverviewScreen({
+    Key key,
+  }) : super(key: key);
 
   @override
   State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
@@ -38,7 +42,8 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           if (!snapshot.hasData) {
             return loader();
           } else {
-            return snapshot.data[0].isEmpty
+            List data = snapshot.data[0];
+            return data.isEmpty
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -63,22 +68,21 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                     ],
                   )
                 : ListView.builder(
-                    itemCount: snapshot.data[0].length,
+                    itemCount: data.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () => Get.to(UpdateScreen()),
+                        onTap: () => Get.to(UpdateScreen(data: data)),
                         child: Slidable(
                           startActionPane: ActionPane(
                               extentRatio: 0.25,
                               motion: ScrollMotion(),
                               children: [
                                 SlidableAction(
-                                 
-                                  // onPressed: () {
-                                  // print('delete');
-                                  // ProductService().deleteProduct(
-                                  //     productID: snapshot.data[0][index].id);
-                                  // },
+                                  onPressed: (context) {
+                                    // print('delete');
+                                    // ProductService()
+                                    //     .deleteProduct(widget.productID);
+                                  },
                                   spacing: 2,
                                   backgroundColor: Colors.red,
                                   foregroundColor: Colors.white,
@@ -101,7 +105,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                               ),
                             ],
                           ),
-                          child: snapshot.data[0].isEmpty
+                          child: data == null
                               ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -128,30 +132,25 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                               : ListTile(
                                   leading: CircleAvatar(
                                     radius: 50,
-                                    child: snapshot.data[0][index]
-                                                ['imageUrl'] !=
-                                            null
+                                    child: data[index]['imageUrl'] != null
                                         ? ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(50),
                                             child: CachedNetworkImage(
                                                 imageUrl:
                                                     // 'https://firebasestorage.googleapis.com/v0/b/nizecart-255f9.appspot.com/o/images%2FShFwoLUXSsUzIbjtwi88L59AVFc2.jpg?alt=media&token=f946ea96-31ba-47bb-a681-2845a7665ac4',
-                                                    snapshot.data[0][index]
-                                                        ['imageUrl'],
+                                                    data[index]['imageUrl'],
                                                 width: 50,
                                                 height: 50,
                                                 fit: BoxFit.cover),
                                           )
                                         : const Text('No Image'),
-                                    // Image.network(snapshot.data[0][index]['image']),
+                                    // Image.network(data[index]['image']),
                                   ),
-                                  title: Text(snapshot.data[0][index]['title']),
-                                  subtitle: Text(
-                                      snapshot.data[0][index]['description']),
-                                  trailing: Text(snapshot.data[0][index]
-                                          ['price']
-                                      .toString()),
+                                  title: Text(data[index]['title']),
+                                  subtitle: Text(data[index]['description']),
+                                  trailing:
+                                      Text(data[index]['price'].toString()),
                                 ),
                         ),
                       );

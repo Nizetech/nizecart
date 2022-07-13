@@ -191,24 +191,6 @@ class _CartState extends State<Cart> {
           ValueListenableBuilder(
             valueListenable: Hive.box('name').listenable(),
             builder: (ctx, Box box, _) {
-              // ValueListenableBuilder(
-              //   valueListenable: Hive.box('name').listenable(),
-              //   builder: (ctx, Box box, _) {
-              //     List quantity = box.get(
-              //       'cart',
-              //       defaultValue: [],
-              //     );
-
-              //     return Text(
-              //       '${box.get('cart').length}',
-              //       style: const TextStyle(
-              //         color: white,
-              //         fontSize: 12,
-              //         fontWeight: FontWeight.w500,
-              //       ),
-              //     );
-              //   },
-              // );
               List quantity = box.get(
                 'cart',
                 defaultValue: [],
@@ -222,10 +204,11 @@ class _CartState extends State<Cart> {
                   alignment: Alignment.center,
                   decoration: const BoxDecoration(
                       shape: BoxShape.circle, color: mainColor),
+                  // ignore: unrelated_type_equality_checks
                   child: quantity.length == []
-                      ? Text(
+                      ? const Text(
                           '0',
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.bold),

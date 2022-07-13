@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -34,7 +35,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   int counter = 0;
   bool fav = false;
-  int quantity = 1;
+  int quantity = 0;
   int price = 0;
   int total = 0;
   Map data = {};
@@ -286,13 +287,12 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
           FutureBuilder(
             future: ProductService().getProducts(),
-            builder: (context, snapshot) {
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (!snapshot.hasData) {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
               } else {
-                data = snapshot.data[0];
                 // print(data);
                 return Expanded(
                   child: GridView.builder(
@@ -303,6 +303,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       // physics: BouncingScrollPhysics(),
                       itemCount: snapshot.data.length,
                       itemBuilder: (ctx, i) {
+                        data = snapshot.data[i];
                         return
                             //  Wrap(
                             // children: [
@@ -332,7 +333,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CachedNetworkImage(
-                                      imageUrl: data['imageUrl'],
+                                      imageUrl: snapshot.data[i]['imageUrl'],
                                       width: 140,
                                       height: 120,
                                       fit: BoxFit.contain,
@@ -343,13 +344,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                           : const Icon(Iconsax.heart),
                                       onPressed: () {
                                         if (fav) {
-                                          ProductService()
-                                              .removeFavourite(data);
+                                          ProductService().removeFavourite(
+                                              snapshot.data[0]);
                                           setState(() {
                                             fav = false;
                                           });
                                         } else {
-                                          ProductService().addFavourite(data);
+                                          ProductService()
+                                              .addFavourite(snapshot.data[0]);
                                           setState(() {
                                             fav = true;
                                           });
@@ -359,14 +361,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                     SizedBox(height: 3),
                                     Text(
-                                      data['title'],
+                                      snapshot.data[i]['title'],
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                     SizedBox(height: 3),
                                     Text(
-                                      ' \$' + data['price'],
+                                      ' \$' + snapshot.data[i]['price'],
                                       style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 16,
@@ -401,19 +403,25 @@ class _ProductScreenState extends State<ProductScreen> {
                                         onPressed: () {
                                           setState(
                                             () {
-                                              if (products.length < 0
+                                              if (!snapshot.data
+                                                      .contains('productID')
                                                   // &&
                                                   // !selectedItems.contains('id')
                                                   ) {
                                                 quantity++;
                                                 // adding items to the cart list which will later be stored using a suitable backend service
                                                 Map productItem = {
-                                                  'id': data['productID'],
-                                                  'title': data['title'],
-                                                  'price': data['price'],
-                                                  'imageUrl': data['imageUrl'],
+                                                  'id': snapshot.data[i]
+                                                      ['productID'],
+                                                  'title': snapshot.data[i]
+                                                      ['title'],
+                                                  'price': snapshot.data[i]
+                                                      ['price'],
+                                                  'imageUrl': snapshot.data[i]
+                                                      ['imageUrl'],
                                                   'quantity': quantity,
                                                   'rating': rating,
+                                                  'qty': quantity,
                                                 };
                                                 products.add(productItem);
                                                 box.put('cart', products);
@@ -429,76 +437,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                         },
                                       ),
                                     )
-                                    // Row(
-                                    //   mainAxisAlignment:
-                                    //       MainAxisAlignment.spaceBetween,
-                                    //   children: [
-                                    //     GestureDetector(
-                                    //       onTap: () {
-                                    //         setState(
-                                    //           () {
-                                    //             if (item['quantity'] > 0 &&
-                                    //                 item.containsKey(
-                                    //                     'quantity')) {
-                                    //               item['quantity']--;
-                                    //               selectedItem.remove(item);
-                                    //               print(selectedItem);
-                                    //               box.delete('quantity');
-                                    //               showErrorToast(
-                                    //                   'Removed from Cart');
-                                    //             }
-                                    //           },
-                                    //         );
-                                    //       },
-                                    //       child: Container(
-                                    //         padding: EdgeInsets.all(6),
-                                    //         alignment: Alignment.center,
-                                    //         decoration: BoxDecoration(
-                                    //             borderRadius:
-                                    //                 BorderRadius.circular(4),
-                                    //             color: mainColor),
-                                    //         child: const Icon(
-                                    //           Icons.remove,
-                                    //           size: 18,
-                                    //           color: white,
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //     Text(item['quantity'].toString()),
-                                    //     GestureDetector(
-                                    //       onTap: () {
-                                    //         setState(
-                                    //           () {
-                                    //             if (item['quantity'] < 10 &&
-                                    //                 item.containsKey(
-                                    //                     'quantity')) {
-                                    //               item['quantity']++;
-                                    //          adding items to the cart list which will later be stored using a suitable backend service
-                                    //               selectedItem.add(item);
-                                    //               box.put('cart', selectedItem);
-                                    // ignore: avoid_print
-                                    //               print(selectedItem);
-                                    //               showToast('Added to cart');
-                                    //             }
-                                    //           },
-                                    //         );
-                                    //       },
-                                    //       child: Container(
-                                    //         padding: EdgeInsets.all(6),
-                                    //         alignment: Alignment.center,
-                                    //         decoration: BoxDecoration(
-                                    //             borderRadius:
-                                    //                 BorderRadius.circular(4),
-                                    //             color: mainColor),
-                                    //         child: const Icon(
-                                    //           Icons.add,
-                                    //           size: 18,
-                                    //           color: white,
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
                                   ],
                                 ),
                               ),

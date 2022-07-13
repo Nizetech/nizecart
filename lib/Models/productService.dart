@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:http/http.dart';
-import 'package:intl/intl.dart';
+// import 'package:http/http.dart';
+// import 'package:intl/intl.dart';
 import 'package:nizecart/Auth/signInScreen.dart';
 import 'package:nizecart/Widget/component.dart';
 
@@ -24,6 +24,8 @@ class ProductService {
   Reference storageReference = FirebaseStorage.instance.ref('profilePicture');
 
   User getUser() => auth.currentUser;
+  final productID = '${DateTime.now().millisecondsSinceEpoch}';
+
 // String id= await products.doc().docID().toString;
 //  String id= await products.doc().id.toString();
 
@@ -67,14 +69,19 @@ class ProductService {
   }
 
   Future<List> getProducts() async {
-    var snapshot = await products.get();
-    List<QueryDocumentSnapshot> docs = snapshot.docs;
-    List<Map> data = [];
-    for (var item in docs) {
-      data.add(item.data());
+    try {
+      var snapshot = await products.get();
+      List<QueryDocumentSnapshot> docs = snapshot.docs;
+      List<Map> data = [];
+      for (var item in docs) {
+        data.add(item.data());
+      }
+      print(data);
+      return data;
+    } catch (e) {
+      print(e);
+      return [];
     }
-    print(data);
-    return data;
     // for (var doc in snapshot.docs) {
     //   Map<String, dynamic> data = doc.data();
     // }
@@ -86,7 +93,7 @@ class ProductService {
   //   return snapshot.data();
   // }
 // add favproduct
-  void addFavourite(Map product) async {
+  void addFavourite(Map product) {
     userCredential
         .doc(getUser().uid)
         .collection('favourite')
@@ -96,7 +103,7 @@ class ProductService {
   }
 
 // remove favProduct
-  void removeFavourite(Map product) async {
+  void removeFavourite(Map product) {
     userCredential
         .doc(getUser().uid)
         .collection('favourite')
@@ -120,9 +127,14 @@ class ProductService {
 
   Future<Map> getProduct(String productID) async {
     // final productID = '${DateTime.now().millisecondsSinceEpoch}';
-    DocumentSnapshot snapshot = await products.doc(productID).get();
-    Map data = snapshot.data();
-    return data;
+    try {
+      DocumentSnapshot snapshot = await products.doc(productID).get();
+      // Map data = snapshot.data();
+      return snapshot.data();
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
   // String id;
 
@@ -130,7 +142,6 @@ class ProductService {
   Future<void> addProduct(
       String imageUrl, String title, String description, String price) async {
     //set document id
-    final productID = '${DateTime.now().millisecondsSinceEpoch}';
 
     /// get user id
     await products.doc(productID).set({
@@ -138,8 +149,9 @@ class ProductService {
       'description': description,
       'price': price,
       'imageUrl': imageUrl,
-      // 'userID': getUser().uid,
+      'favorite': false,
       'productID': productID,
+      'rating': 0,
     });
     // String id = products.doc().id.toString();
     // await products.add({
@@ -159,8 +171,8 @@ class ProductService {
     String description,
     String price,
   ) async {
-    String prodId = getUser().uid;
-    await products.doc(prodId).update({
+    // String prodId = getUser().uid;
+    await products.doc(productID).update({
       'title': title, // Apple
       'description': description, // A fruit
       'price': price, // 1.99
