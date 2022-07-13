@@ -39,7 +39,7 @@ class _CartScreenState extends State<CartScreen> {
     for (var element in cartItems) {
       totalAmount += element['price'] * element['qty'];
     }
-    return totalAmount.toString();
+    return totalAmount;
   }
 
   // double get totalAmount {
@@ -70,7 +70,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     // Map data = cartItems[0];
-    print(cartItems[0]);
+    print(cartItems);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -89,6 +89,7 @@ class _CartScreenState extends State<CartScreen> {
       body:
           //  !cartItems.contains(0)
           // cartItems.isEmpty
+
           cartItems.isEmpty
               ? Center(
                   child: Column(
@@ -161,8 +162,10 @@ class _CartScreenState extends State<CartScreen> {
                           Text(
                             // '\$$totalAmount'.toString(),
                             // 'total ' + '$totalAmount.',
-                            // totalAmount as String,
-                            '0',
+                            // totalAmount.toString(),
+                            // '0',
+                            // totalAmount.toString(),
+                            totalQuantity.toString(),
                             // '\$$totalAmount'.toString(),
 
                             // '₦' + totalAmount.toString(),

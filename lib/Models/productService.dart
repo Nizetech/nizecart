@@ -66,6 +66,7 @@ class ProductService {
 
   Future<void> deleteProduct(String productID) async {
     await products.doc(productID).delete();
+    await storageReference.child(productID).delete();
   }
 
   Future<List> getProducts() async {
@@ -180,10 +181,6 @@ class ProductService {
     });
   }
 
-  // //Delete product
-  // Future<void> deleteProduct(String title) async {
-  //   await products.doc(title).delete();
-  // }
   // String imageUrl;
 
 //   //Get product by title
@@ -289,10 +286,7 @@ class ProductService {
     // if (file == null) {
     //   return loader();
     // }
-    var ref = FirebaseStorage.instance
-        .ref()
-        .child('images')
-        .child(getUser().uid + '.jpg');
+    var ref = FirebaseStorage.instance.ref().child('images').child(productID);
     await ref.putFile(file);
     var url = await ref.getDownloadURL();
     print(url);

@@ -47,79 +47,10 @@ class _ProductScreenState extends State<ProductScreen> {
     rating = userRating;
   }
 
-  // List<Map<String, dynamic>> items = [
-  //   {
-  //     'id': 1,
-  //     'title': 'HeadSet Stereo with strong bazz',
-  //     'image': 'assets/headset.png',
-  //     'price': 1.499,
-  //     'isFav': false,
-  //     'quantity': 0,
-  //   },
-  //   {
-  //     'id': 2,
-  //     'title': 'Huwaie',
-  //     'image': 'assets/airpod.png',
-  //     'price': 1.499,
-  //     'isFav': false,
-  //     'quantity': 0,
-  //   },
-  //   {
-  //     'id': 3,
-  //     'title': 'Hand Watch',
-  //     'image': 'assets/bt.png',
-  //     'price': 1.499,
-  //     'isFav': false,
-  //     'quantity': 0,
-  //   },
-  //   {
-  //     'id': 4,
-  //     'title': 'Handle Watch',
-  //     'image': 'assets/macbook.png',
-  //     'price': 1.499,
-  //     'isFav': false,
-  //     'quantity': 0,
-  //   },
-  //   {
-  //     'id': 5,
-  //     'title': 'Speaker',
-  //     'image': 'assets/headset.png',
-  //     'price': 1.499,
-  //     'isFav': false,
-  //     'quantity': 0,
-  //   },
-  //   {
-  //     'id': 6,
-  //     'title': 'Starry Night',
-  //     'image': 'assets/airpod.png',
-  //     'price': 1.499,
-  //     'isFav': false,
-  //     'quantity': 0,
-  //   },
-  //   {
-  //     'id': 7,
-  //     'title': 'Bluetooth',
-  //     'image': 'assets/bt.png',
-  //     'price': 1.499,
-  //     'isFav': false,
-  //     'quantity': 0,
-  //   },
-  //   {
-  //     'id': 8,
-  //     'title': 'MACBOOK',
-  //     'image': 'assets/macbook.png',
-  //     'price': 1.499,
-  //     'isFav': false,
-  //     'quantity': 0,
-  //   },
-  // ];
-
   static var box = Hive.box('name');
   var showOnlyFavourites = false;
   String value;
-  //  box.get('cart' ,defaultValue: []);
 
-  // get selectedItems => null;
   @override
   Widget build(BuildContext context) {
     //  widget.data['isFav'] = item['isfav'];
@@ -340,20 +271,23 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                     IconButton(
                                       icon: fav
-                                          ? Icon(Iconsax.heart5)
+                                          ? const Icon(Iconsax.heart5)
                                           : const Icon(Iconsax.heart),
                                       onPressed: () {
                                         if (fav) {
-                                          ProductService().removeFavourite(
-                                              snapshot.data[0]);
+                                          // ProductService().removeFavourite(
+                                          //     snapshot.data[i]);
                                           setState(() {
                                             fav = false;
                                           });
                                         } else {
-                                          ProductService()
-                                              .addFavourite(snapshot.data[0]);
+                                          // ProductService()
+                                          //     .addFavourite(snapshot.data[i]);
                                           setState(() {
                                             fav = true;
+
+                                            // products.remove(
+                                            //     snapshot.data[i]['productID']);
                                           });
                                         }
                                       },
