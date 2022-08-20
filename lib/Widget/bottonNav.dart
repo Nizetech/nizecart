@@ -24,25 +24,11 @@ class _BottomNavState extends State<BottomNav> {
   int currentIndex = 0;
   List<Widget> body = [
     //   // isLoggedIn ? HomeScreen() : SignInScreen(),
-
     HomeScreen(),
     CategoryScreen(),
     FavouriteScreen(),
     ProfileScreen(),
   ];
-
-  // @override
-  // void initState() {
-  //   isLoggedIn = box.get('isLoggedIn', defaultValue: false);
-  //   List body = [
-  //     isLoggedIn ? HomeScreen() : SignInSCreen(),
-  //     HomeScreen(),
-  //     CategoryScreen(),
-  //     FavouriteScreen(),
-  //     ProfileScreen(),
-  //   ];
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +58,6 @@ class _BottomNavState extends State<BottomNav> {
             icon: Icon(Iconsax.heart),
             label: 'Favourite',
           ),
-
-          // BottomNavigationBarItem(
-          //   icon: Icon(Iconsax.message),
-          //   label: 'Inbox',
-          // ),
-
           BottomNavigationBarItem(
             icon: Icon(Iconsax.user),
             label: 'Account',

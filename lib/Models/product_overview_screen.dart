@@ -38,11 +38,12 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ProductService().getProducts(),
         ]),
         builder: (context, snapshot) {
-          print(snapshot.data);
+          // print(snapshot.data);
           if (!snapshot.hasData) {
             return loader();
           } else {
             List data = snapshot.data[0];
+            print(data);
             return data.isEmpty
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,8 +71,17 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                 : ListView.builder(
                     itemCount: data.length,
                     itemBuilder: (context, index) {
+                      print(data[index]);
+                      Map item = data[index];
+                      // Map item = {
+                      //   'title': data[index]['title'],
+                      //   'description': data[index]['description'],
+                      //   'price': data[index]['price'],
+                      //   'imageUrl': data[index]['imageUrl'],
+                      //   'productID': data[index]['productID'],
+                      // };
                       return GestureDetector(
-                        onTap: () => Get.to(UpdateScreen(data: data)),
+                        onTap: () => Get.to(UpdateScreen(data: item)),
                         child: Slidable(
                           startActionPane: ActionPane(
                               extentRatio: 0.25,

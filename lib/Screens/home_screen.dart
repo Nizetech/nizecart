@@ -68,12 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Good ${greeting()} $name !',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24),
+                    Expanded(
+                      child: Text(
+                        'Good ${greeting()} $name !',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24),
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -116,7 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: MediaQuery.of(context).size.width * .7,
                       child: TextField(
                           controller: search,
-                          obscureText: true,
                           cursorColor: mainColor,
                           decoration: InputDecoration(
                             hintText: 'Search for a product',

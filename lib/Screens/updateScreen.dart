@@ -22,7 +22,7 @@ import 'package:nizecart/Models/productService.dart';
 import '../Widget/component.dart';
 
 class UpdateScreen extends StatefulWidget {
-  final List data;
+  final Map data;
   const UpdateScreen({Key key, this.data}) : super(key: key);
 
   @override
@@ -31,14 +31,25 @@ class UpdateScreen extends StatefulWidget {
 
 class _UpdateScreenState extends State<UpdateScreen> {
   TextEditingController newTitle = TextEditingController();
+  String title;
 
   TextEditingController newDescription = TextEditingController();
+  String description;
 
   TextEditingController newPrice = TextEditingController();
-  // CollectionReference products = Firestore.instance.collection('products');
+  TextEditingController price = TextEditingController();
+  // CollectionReference products = Firestore.instance.collecdsjmjljtion('products');
 //
   @override
   void initState() {
+    // ProductService().getProduct().then((value) {
+    // print(widget.data);
+    setState(() {
+      widget.data['title'] = title;
+      widget.data['desciption'] = description;
+      widget.data['price'] = price;
+    });
+    // });
     super.initState();
   }
   // CollectionReference products = firestore.collection('products');
@@ -66,10 +77,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
   CollectionReference imageRef;
   // Map data = {};
 
-  storage.Reference ref;
+  // storage.Reference ref;
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User getUser() => auth.currentUser;
+  // FirebaseAuth auth = FirebaseAuth.instance;
+  // User getUser() => auth.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +127,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
             SizedBox(height: 20),
             SizedBox(
               height: 45,
-              child: TextFormField(
-                  // initialValue: widget.data[0]['title'],
-                  controller:
-                      TextEditingController(text: widget.data[0]['title']),
+              child: TextField(
+                  // initialValue: widget.data['title'],
+                  controller: TextEditingController(text: widget.data['title']),
                   // controller: newTitle,
                   cursorColor: mainColor,
                   decoration: InputDecoration(
@@ -140,9 +150,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
             SizedBox(height: 15),
             SizedBox(
               height: 45,
-              child: TextFormField(
-                  // initialValue: widget.data[0]['description'],
-                  controller: newDescription,
+              child: TextField(
+                  // initialValue: TextEditingController(text: description),
+                  controller:
+                      TextEditingController(text: widget.data['description']),
                   cursorColor: mainColor,
                   decoration: InputDecoration(
                     labelText: 'Description',
@@ -163,7 +174,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
               height: 45,
               width: 150,
               child: TextFormField(
-                  controller: newPrice,
+                  // controller: newPrice,
+                  // controller: TextEditingController(text: widget.data['price']),
                   // initialValue: widget.data[0]['price'],
                   cursorColor: mainColor,
                   keyboardType: TextInputType.number,
@@ -184,6 +196,20 @@ class _UpdateScreenState extends State<UpdateScreen> {
                   )),
             ),
             SizedBox(height: 15),
+            Container(
+              height: 200,
+              width: 200,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Colors.grey),
+              ),
+              child: Image.network(
+                widget.data['imageUrl'],
+                height: 200,
+                width: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
             // Container(
             //   height: 200,
             //   width: 200,

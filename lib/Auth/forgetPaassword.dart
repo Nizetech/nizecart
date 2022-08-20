@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nizecart/Auth/signInScreen.dart';
 import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Widget/bottonNav.dart';
 import '../Widget/component.dart';
@@ -67,12 +68,14 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             CustomButton(
                 text: 'Submit',
                 onPressed: () {
+                  print("email: ${email.text}");
                   if (email.text.isEmpty) {
-                    showToast('Please enter your email');
-                    ProductService().resetPwd(email.text);
+                    showErrorToast('Please enter your email');
                   } else {
+                    ProductService().resetPwd(email.text.trim());
+                    // ProductService().sendVerificationEmail();
                     showToast('Email sent');
-                    // Get.to(BottomNav());
+                    Get.to(() => SignInSCreen());
                   }
                 }),
             Spacer(),

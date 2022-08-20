@@ -34,7 +34,7 @@ class _ProductScreenState extends State<ProductScreen> {
   double userRating = 3.0;
 
   int counter = 0;
-  bool fav = false;
+  // bool fav = false;
   int quantity = 0;
   int price = 0;
   int total = 0;
@@ -270,21 +270,27 @@ class _ProductScreenState extends State<ProductScreen> {
                                       fit: BoxFit.contain,
                                     ),
                                     IconButton(
-                                      icon: fav
+                                      icon: snapshot.data[i]['favorite']
                                           ? const Icon(Iconsax.heart5)
                                           : const Icon(Iconsax.heart),
                                       onPressed: () {
-                                        if (fav) {
+                                        if (snapshot.data[i]['favorite']) {
                                           // ProductService().removeFavourite(
                                           //     snapshot.data[i]);
-                                          setState(() {
-                                            fav = false;
-                                          });
+                                          // setState(() {
+                                          // fav = !fav;
+                                          snapshot.data[i]['favorite'] =
+                                              // true;
+                                              !snapshot.data[i]['favorite'];
+                                          // });
                                         } else {
                                           // ProductService()
                                           //     .addFavourite(snapshot.data[i]);
                                           setState(() {
-                                            fav = true;
+                                            // fav = !fav;
+                                            snapshot.data[i]['favorite'] =
+                                                // false;
+                                                !snapshot.data[i]['favorite'];
 
                                             // products.remove(
                                             //     snapshot.data[i]['productID']);

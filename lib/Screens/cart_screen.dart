@@ -25,7 +25,7 @@ class _CartScreenState extends State<CartScreen> {
   static var box = Hive.box('name');
 
   // Get total quantity
-  get totalQuantity {
+  int get totalQuantity {
     var total = 0;
     for (var element in cartItems) {
       total += element['qty'];
@@ -34,10 +34,10 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   // Get total Amount
-  get totalAmount {
+  int get totalAmount {
     var totalAmount = 0;
     for (var element in cartItems) {
-      totalAmount += element['price'] * element['qty'];
+      totalAmount += int.parse(element['price']) * int.parse(element['qty']);
     }
     return totalAmount;
   }
@@ -167,7 +167,6 @@ class _CartScreenState extends State<CartScreen> {
                             // totalAmount.toString(),
                             totalQuantity.toString(),
                             // '\$$totalAmount'.toString(),
-
                             // '₦' + totalAmount.toString(),
                             style: TextStyle(fontSize: 16),
                           ),
@@ -283,7 +282,7 @@ class _CartScreenState extends State<CartScreen> {
                                             cartItems[i]['qty']--;
                                             box.put('cartItem', cartItems);
                                             Fluttertoast.showToast(
-                                              msg: 'Item removed from cart',
+                                              msg: 'Removed from cart',
                                               toastLength: Toast.LENGTH_SHORT,
                                               gravity: ToastGravity.BOTTOM,
                                               timeInSecForIosWeb: 1,

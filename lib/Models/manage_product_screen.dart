@@ -97,7 +97,8 @@ class _ManageProductsState extends State<ManageProducts> {
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: const BorderSide(color: mainColor)),
-                  )),
+                  ),
+                  ),
             ),
             SizedBox(height: 15),
             SizedBox(

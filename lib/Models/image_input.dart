@@ -17,34 +17,6 @@ XFile image;
 bool isCamera = false;
 
 class ImageInput {
-  // Future<File> pickImage({ImageSource imageSource}) async {
-  //   try {
-  //     // pick image from gallery
-  //     XFile pickedFile = await ImagePicker()
-  //         .pickImage(source: ImageSource.gallery, imageQuality: 40);
-
-  //     if (pickedFile != null) {
-  //       CroppedFile croppedFile = await ImageCropper().cropImage(
-  //           sourcePath: pickedFile.path,
-  //           compressQuality: 50,
-  //           uiSettings: [
-  //             AndroidUiSettings(
-  //               lockAspectRatio: false,
-  //             ),
-  //           ]);
-  //       if (croppedFile != null) {
-  //         return File(croppedFile.path);
-  //       } else {
-  //         return null;
-  //       }
-  //     } else {
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //     return null;
-  //   }
-  // }
   Future<void> takePicture2({ImageSource imageSource}) async {
     final ImagePicker picker = ImagePicker();
     var imageFile = await picker.pickImage(
@@ -72,53 +44,16 @@ class ImageInput {
         return;
       }
     }
-
-    // File file = File(imageFile.path);
-    // storedImage2 = file;
-
-    // final appDir = await getApplicationDocumentsDirectory();
-    // final fileName = path.basename(imageFile.path);
-    // final savedImage = await file.copy('${appDir.path}/$fileName');
-    // widget.onSelectImage(savedImage);
   }
-
-  // final appDir = await getApplicationDocumentsDirectory();
-  // final fileName = path.basename(imageFile.path);
-  // final savedImage =
-  //     await File(imageFile.path).copy('${appDir.path}/$fileName');
-  // widget.onSelectImage(savedImage);
 
   Future takePicture(ImageSource imageSource) async {
     // final storage = FirebaseStorage.instance;
     final ImagePicker picker = ImagePicker();
-
-    // Check for permissiom
-    // await Permission.photos.request();
-    // var permissionStatus = await Permission.photos.status;
-    // if (permissionStatus.isGranted) {
-    // Select Image
     image =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 40);
 
     if (image == null) return;
-    //   if (image != null) {
-    //     CroppedFile croppedFile = await ImageCropper().cropImage(
-    //         sourcePath: image.path,
-    //         compressQuality: 50,
-    //         uiSettings: [
-    //           AndroidUiSettings(
-    //             lockAspectRatio: true,
-    //           ),
-    //         ]);
-    //     if (croppedFile != null) {
-    //       return File(croppedFile.path);
-    //     } else {
-    //       return null;
-    //     }
-    //   }
 
     File file = File(image.path);
-
-    // storedImage = file;
   }
 }

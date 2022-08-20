@@ -11,6 +11,7 @@ import 'package:hive_flutter/adapters.dart';
 // import 'package:http/http.dart';
 // import 'package:intl/intl.dart';
 import 'package:nizecart/Auth/signInScreen.dart';
+import 'package:nizecart/Models/enums.dart';
 import 'package:nizecart/Widget/component.dart';
 
 class ProductService {
@@ -19,32 +20,12 @@ class ProductService {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference userCredential = firestore.collection('Users');
   CollectionReference products = firestore.collection('products');
-  CollectionReference favourite = firestore.collection('favourite');
+  // CollectionReference favourite = firestore.collection('favourite');
 
   Reference storageReference = FirebaseStorage.instance.ref('profilePicture');
 
   User getUser() => auth.currentUser;
   final productID = '${DateTime.now().millisecondsSinceEpoch}';
-
-// String id= await products.doc().docID().toString;
-//  String id= await products.doc().id.toString();
-
-  // Future<void> signOut() async {
-  //   await auth.signOut();
-  //   Get.offAllNamed('/signIn');
-  // }
-
-//   products.setData({
-//   documentID:  ,
-//   /* ... */
-// });
-  // final productID = '${DateTime.now().millisecondsSinceEpoch}';
-// set doument id
-  // Future<String> setDocumentID(String documentID) async {
-  //   await products.doc(documentID).set({
-  //     'documentID': documentID,
-  //   });
-  // }
 
   static Box box = Hive.box('name');
   bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
@@ -63,7 +44,6 @@ class ProductService {
   }
 
   // delete product
-
   Future<void> deleteProduct(String productID) async {
     await products.doc(productID).delete();
     await storageReference.child(productID).delete();
@@ -88,11 +68,6 @@ class ProductService {
     // }
   }
 
-// get a particular
-  // Future<Map> getProduct(String title) async {
-  //   QuerySnapshot snapshot = await products.doc(title).get();
-  //   return snapshot.data();
-  // }
 // add favproduct
   void addFavourite(Map product) {
     userCredential
@@ -110,14 +85,13 @@ class ProductService {
         .collection('favourite')
         .doc(product['productID'])
         .delete()
-        .then((value) => showErrorToast('Product reomved from favourites'));
+        .then((value) => showErrorToast('Product removed from favorites'));
   }
 
 //get favProduct
-
   Future<List> getFavProduct() async {
     QuerySnapshot snapshot =
-        await userCredential.doc(getUser().uid).collection('favourite').get();
+        await userCredential.doc(getUser().uid).collection('favorite').get();
     List<QueryDocumentSnapshot> docs = snapshot.docs;
     List<Map> data = [];
     for (var item in docs) {
@@ -126,16 +100,11 @@ class ProductService {
     return data;
   }
 
-  Future<Map> getProduct(String productID) async {
+  Future<Map> getProduct() async {
     // final productID = '${DateTime.now().millisecondsSinceEpoch}';
-    try {
-      DocumentSnapshot snapshot = await products.doc(productID).get();
-      // Map data = snapshot.data();
-      return snapshot.data();
-    } catch (e) {
-      print(e);
-      return null;
-    }
+    DocumentSnapshot snapshot = await products.doc(productID).get();
+    // Map data = snapshot.data();
+    return snapshot.data();
   }
   // String id;
 
@@ -154,15 +123,6 @@ class ProductService {
       'productID': productID,
       'rating': 0,
     });
-    // String id = products.doc().id.toString();
-    // await products.add({
-    //   'title': title, // Apple
-    //   'description': description, // A fruit
-    //   'price': price, // 1.99
-    //   'image': imageUrl,
-    //   // 'userId': auth.currentUser.uid,
-    //   'prodId': id,
-    // });
   }
 
   //Update product
@@ -184,7 +144,7 @@ class ProductService {
   // String imageUrl;
 
 //   //Get product by title
-//   Future<Map> getProductByTitle(String title) async {
+//   Future<Map> getProductByTitle(String title) async {k
 //     QuerySnapshot snapshot = await products.where('title', isEqualTo: title).get();
 //     List<QueryDocumentSnapshot> docs = snapshot.docs;
 //     Map data = docs[0].data();
@@ -206,24 +166,15 @@ class ProductService {
             'profileImage': photoUrl,
             'imageUploaded': true,
           });
-          getUser().updatePhotoURL(
-            photoUrl,
-          );
+          // getUser().updatePhotoURL(
+          //   photoUrl,
+          // );
         });
       });
     } catch (e) {
       showErrorToast(e.toString());
     }
   }
-
-  // //Get profileImage
-  // Future<String> getProfileImage() async {
-  //   QuerySnapshot snapshot =
-  //       await userCredential.where('uid', isEqualTo: getUser().uid).get();
-  //   List<QueryDocumentSnapshot> docs = snapshot.docs;
-  //   // String data = docs[0].data()['profileImage'];
-  //   // return data;
-  // }
 
 //   //Get displayName
 //   Future<String> getDisplayName() async {
@@ -240,42 +191,11 @@ class ProductService {
 //     });
 //   }
 
-//   //Get email
-//   Future<String> getEmail() async {
-//     QuerySnapshot snapshot = await userCredential.where('uid', isEqualTo: getUser().uid).get();
-//     List<QueryDocumentSnapshot> docs = snapshot.docs;
-//     String data = docs[0].data()['email'];
-//     return data;
-//   }
-
 //   //Update email
 //   Future<void> updateEmail(String email) async {
 //     await userCredential.doc(getUser().uid).update({
 //       'email': email,
 //     });
-//   }
-
-//   //Get phoneNumber
-//   Future<String> getPhoneNumber() async {
-//     QuerySnapshot snapshot = await userCredential.where('uid', isEqualTo: getUser().uid).get();
-//     List<QueryDocumentSnapshot> docs = snapshot.docs;
-//     String data = docs[0].data()['phoneNumber'];
-//     return data;
-//   }
-
-//   //Update phoneNumber
-//   Future<void> updatePhoneNumber(String phoneNumber) async {
-//     await userCredential.doc(getUser().uid).update({
-//       'phoneNumber': phoneNumber,
-//     });
-//   }
-
-//   //Get address
-//   Future<String> getAddress() async {
-//     QuerySnapshot snapshot = await userCredential.where('uid', isEqualTo: getUser().uid).get();
-//     List<QueryDocumentSnapshot> docs = snapshot.docs;
-//     String data = docs[0].data()['address'];
-//     return data;
 //   }
 
   // upload product image
@@ -309,10 +229,10 @@ class ProductService {
       final UserCredential user =
           await FirebaseAuth.instance.signInWithCredential(credential);
       if (user.user != null) {
-        List search = user.user.displayName.split(' ');
-        search.addAll(user.user.email.split('@'));
-        search.add(user.user.uid);
-        search.add(user.user.phoneNumber);
+        // List search = user.user.displayName.split(' ');
+        // search.addAll(user.user.email.split('@'));
+        // search.add(user.user.uid);
+        // search.add(user.user.phoneNumber);
         await userCredential.doc(user.user.uid).set({
           'fname': user.user.displayName,
           'last_name': user.user.displayName,
@@ -321,7 +241,6 @@ class ProductService {
           // 'profileImage': user.user.photoUrl,
           'uid': user.user.uid,
           'date_created': Timestamp.now(),
-          'date_updated': Timestamp.now(),
         });
         // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
         Hive.box('name').put('displayName', user.user.displayName);
@@ -353,12 +272,11 @@ class ProductService {
           email: email, password: pwd);
       if (user.user != null) {
         // user.user.updateDisplayName(fname);
-
         // user.user.sendEmailVerification();
-        List search = displayName.split(' ');
-        search.addAll(email.split('@'));
-        search.add(user.user.uid);
-        search.add(phone);
+        // List search = displayName.split(' ');
+        // search.addAll(email.split('@'));
+        // search.add(user.user.uid);
+        // search.add(phone);
         await userCredential.doc(user.user.uid).set(
           {
             'fname': displayName,
@@ -429,10 +347,40 @@ class ProductService {
     showToast("Verification email sent");
   }
 
-  void resetPwd(String email) {
-    auth
-        .sendPasswordResetEmail(email: email)
-        .then((value) => showToast("Sent Successfully - Check your Mail"));
+// Reset Password
+
+  // Future<void> resetPwd(String email) async {
+  // String res = "Some error occurred";
+  // try {
+  //   FirebaseAuth auth = FirebaseAuth.instance;
+  //   await auth.sendPasswordResetEmail(email: email.trim());
+  //   return res = "Email sent";
+  // } catch (e) {
+  //   print(" Catch Reset Password Error: ${e.toString()}");
+
+  //   return res = e.message;
+  // } on FirebaseAuthException catch (e) {
+  //   print("Reset Password Error: ${e.toString()}");
+  // }
+  // return res;
+  //   await auth
+  //       .sendPasswordResetEmail(email: email)
+  //       .then((value) => _status = AuthStatus.successful)
+  //       .catchError(
+  //           (e) => _status = AuthExceptionHandler.handleAuthException(e));
+  //   return _status;
+  // }
+
+  Future<String> resetPwd(String email) async {
+    var status = '';
+    await auth.sendPasswordResetEmail(email: email).then((value) {
+      print('Email sent successfully');
+      return status = 'Email sent';
+    }).catchError((e) {
+      print('Error in sending email: ${e.toString()}');
+      return status = AuthExceptionHandler.handleAuthException(e);
+    });
+    return status;
   }
 
   // Future<void> showDate(BuildContext context) async {
