@@ -30,7 +30,11 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           centerTitle: true,
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 20, top: 10, bottom: 10,),
+              padding: EdgeInsets.only(
+                right: 20,
+                top: 10,
+                bottom: 10,
+              ),
               child: Cart(),
             ),
           ],
@@ -131,7 +135,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                   onPressed: (context) {
                                     // print('delete');
                                     Map data = snapshot.data[0];
-                                    ProductService().removeFavourite(data);
+                                    ProductService().removeFavorite(data);
                                   },
                                   spacing: 2,
                                   backgroundColor: Colors.red,

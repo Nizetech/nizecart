@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Models/product_overview_screen.dart';
+import 'package:nizecart/Screens/change_password_screen.dart';
 import 'package:nizecart/Screens/profile.dart';
 import 'package:nizecart/Screens/search_screen.dart';
 import 'package:nizecart/Widget/component.dart';
@@ -69,6 +70,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             AccountListTile(
               text: 'Manage Product',
               onTap: () => Get.to(ManageProducts()),
+            ),
+            AccountListTile(
+              text: 'Change password',
+              onTap: () => Get.to(ChangePassword()),
             ),
             AccountListTile(
                 text: 'Sign Out',

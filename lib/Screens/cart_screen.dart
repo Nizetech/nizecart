@@ -37,34 +37,11 @@ class _CartScreenState extends State<CartScreen> {
   int get totalAmount {
     var totalAmount = 0;
     for (var element in cartItems) {
-      totalAmount += int.parse(element['price']) * int.parse(element['qty']);
+      totalAmount += int.parse(element['price']) * element['qty'];
+      print(totalAmount);
     }
     return totalAmount;
   }
-
-  // double get totalAmount {
-  //   var totalAmount = 0.0;
-  //   if (cartItems.isNotEmpty) {
-  //     for (var i = 0; i < cartItems.length; i++) {
-  //       totalAmount += int.parse(cartItems[i]['price']) *
-  //           int.parse(cartItems[i]['quantity']);
-  //     }
-  //   }
-  //   return totalAmount.roundToDouble();
-  // }
-
-  // int get totalQuantity {
-  //   var totalQuantity = 0;
-  //   if (cartItems != null) {
-  //     for (var i = 0; i < cartItems.length; i++) {
-  //       totalQuantity += counter;
-  //       // box.add(totalQuantity);
-  //       counter = totalQuantity;
-  //     }
-  //   }
-  //   return totalQuantity;
-  // }
-  // Map data = cartItems[index];
 
   List cartItems = box.get('cart', defaultValue: []);
   @override
@@ -135,10 +112,7 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             // total quantity of all items in cart
                             Text(
-                              // '0',
-                              // 'Items 00',
-                              // 'Items ($totalAmount)',
-                              'Items ($totalQuantity)',
+                              '₦ ${totalAmount}',
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -156,18 +130,12 @@ class _CartScreenState extends State<CartScreen> {
                       padding: const EdgeInsets.only(left: 15, right: 15),
                       child: Row(
                         children: [
-                          Text('Subtotal', style: TextStyle(fontSize: 16)),
+                          Text('Total Quantity',
+                              style: TextStyle(fontSize: 16)),
                           Spacer(),
                           // total amount of all items in cart
                           Text(
-                            // '\$$totalAmount'.toString(),
-                            // 'total ' + '$totalAmount.',
-                            // totalAmount.toString(),
-                            // '0',
-                            // totalAmount.toString(),
                             totalQuantity.toString(),
-                            // '\$$totalAmount'.toString(),
-                            // '₦' + totalAmount.toString(),
                             style: TextStyle(fontSize: 16),
                           ),
                         ],
@@ -327,26 +295,6 @@ class _CartScreenState extends State<CartScreen> {
                                           showErrorToast(
                                               'Max quantity reached');
                                         }
-                                        // setState(
-                                        //   () {
-                                        //     if (cartItems[0]['qty'] < 10) {
-                                        //       cartItems[0]['qty']++;
-
-                                        //       // box.put('cartItem', cartItems);
-                                        //       showToast('Added to Cart');
-                                        // cartItems = [];
-                                        // } else if (cartItems.contains(
-                                        //   cartItems.elementAt(i),
-                                        // )) {
-                                        //   cartItems.addAll(
-                                        //     cartItems.elementAt(i),
-                                        //   );
-                                        //     } else {
-                                        //       showErrorToast(
-                                        //           'Item limit reached');
-                                        //     }
-                                        //   },
-                                        // );
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(6),
@@ -365,15 +313,24 @@ class _CartScreenState extends State<CartScreen> {
                                   ],
                                 ),
                                 SizedBox(height: 20),
-                                // CustomButton(
-                                //   onPressed: () => Get.to(CheckOutScreen()),
-                                // ),
                               ],
                             ),
                           );
                         },
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomButton(
+                        text: 'Checkout',
+                        onPressed: () {
+                          return Get.to(
+                            CheckOutScreen(totalAmount: totalAmount),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20),
                   ],
                 ),
     );

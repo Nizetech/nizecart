@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
           backgroundColor: white),
       home:
           // ProductsOverviewScreen(),
-          // isLoggedIn ? BottomNav() :
-          SignInSCreen(),
+          isLoggedIn ? BottomNav() : SignInSCreen(),
+      // SignInSCreen(),
       // ManageProducts(),
       //  AddUser('RossMarry', 'nizetech', 56),
     );

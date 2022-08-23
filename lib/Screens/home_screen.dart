@@ -11,6 +11,7 @@ import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Screens/product_screen.dart';
 import 'package:nizecart/Screens/profile.dart';
 import 'package:nizecart/Screens/search_screen.dart';
+import 'package:shimmer/shimmer.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -166,8 +167,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       future: ProductService().getProducts(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
-                          return Center(
-                            child: loader(),
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            enabled: true,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: loader(),
+                                ),
+                              ],
+                            ),
                           );
                         } else {
                           return snapshot.data[0].length == 0

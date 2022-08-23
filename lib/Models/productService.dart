@@ -69,7 +69,7 @@ class ProductService {
   }
 
 // add favproduct
-  void addFavourite(Map product) {
+  void addFavorite(Map product) {
     userCredential
         .doc(getUser().uid)
         .collection('favourite')
@@ -79,7 +79,7 @@ class ProductService {
   }
 
 // remove favProduct
-  void removeFavourite(Map product) {
+  void removeFavorite(Map product) {
     userCredential
         .doc(getUser().uid)
         .collection('favourite')
@@ -213,6 +213,49 @@ class ProductService {
     return url;
   }
 
+  //   Future<void> updateDisplayName(String displayName) async {
+  //   await userCredential.doc(getUser().uid).update({
+  //     'displayName': displayName,
+  //   });
+  // }
+
+//   void _changePassword(String yourPassword) async{
+//     FirebaseUser user = await FirebaseAuth.instance.currentUser();
+//     user.updatePassword(yourPassword).then((_){
+// Firestore.instance.collection("users").document(user.uid ).updateData(
+//          {
+//           "password" : _newpasswordController.text,
+//          }).then((_){
+//           print("Successfully changed password");
+//          });
+//     }).catchError((error){
+//       print("Error " + error.toString());
+//     });
+//   }
+
+// Change Password
+  void changePassword(String newPassword) async {
+    try {
+      await auth.currentUser.updatePassword(newPassword).then((_) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(auth.currentUser.uid)
+            .update({
+          'password': newPassword,
+        });
+        print('Email sent successfully');
+      });
+      // await userCredential.doc(getUser().uid).update({
+      //   'password': newPassword,
+      // });
+
+      // return true;
+    } catch (e) {
+      print({e.toString()});
+      // return false;
+    }
+  }
+
   Future<bool> signInWithGoogle() async {
     try {
       //Trigger the authentication flow
@@ -271,9 +314,9 @@ class ProductService {
       UserCredential user = await auth.createUserWithEmailAndPassword(
           email: email, password: pwd);
       if (user.user != null) {
+        user.user.sendEmailVerification();
         // user.user.updateDisplayName(fname);
-        // user.user.sendEmailVerification();
-        // List search = displayName.split(' ');
+        //List search = displayName.split(' ');
         // search.addAll(email.split('@'));
         // search.add(user.user.uid);
         // search.add(phone);
@@ -348,28 +391,6 @@ class ProductService {
   }
 
 // Reset Password
-
-  // Future<void> resetPwd(String email) async {
-  // String res = "Some error occurred";
-  // try {
-  //   FirebaseAuth auth = FirebaseAuth.instance;
-  //   await auth.sendPasswordResetEmail(email: email.trim());
-  //   return res = "Email sent";
-  // } catch (e) {
-  //   print(" Catch Reset Password Error: ${e.toString()}");
-
-  //   return res = e.message;
-  // } on FirebaseAuthException catch (e) {
-  //   print("Reset Password Error: ${e.toString()}");
-  // }
-  // return res;
-  //   await auth
-  //       .sendPasswordResetEmail(email: email)
-  //       .then((value) => _status = AuthStatus.successful)
-  //       .catchError(
-  //           (e) => _status = AuthExceptionHandler.handleAuthException(e));
-  //   return _status;
-  // }
 
   Future<String> resetPwd(String email) async {
     var status = '';

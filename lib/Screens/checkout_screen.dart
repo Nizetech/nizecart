@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/Screens/map_screen.dart';
 import '../Widget/component.dart';
 
 class CheckOutScreen extends StatefulWidget {
-  CheckOutScreen({Key key}) : super(key: key);
+  final int totalAmount;
+  CheckOutScreen({Key key, this.totalAmount}) : super(key: key);
 
   @override
   State<CheckOutScreen> createState() => _CheckOutScreenState();
@@ -11,8 +13,17 @@ class CheckOutScreen extends StatefulWidget {
 
 class _CheckOutScreenState extends State<CheckOutScreen> {
   int enable = 1;
+  final String shippingFee = '3109';
+
+  int get total {
+    int total = 0;
+    total += widget.totalAmount + int.parse(shippingFee.split(' ')[0]);
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(widget.totalAmount);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -33,7 +44,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 padding: const EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Text(
                       'Address Details',
                       style: TextStyle(
@@ -41,12 +52,15 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         color: Colors.black,
                       ),
                     ),
-                    Text(
-                      'Change',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: mainColor,
-                          fontWeight: FontWeight.w500),
+                    GestureDetector(
+                      onTap: () => Get.to(MapScreen()),
+                      child: Text(
+                        'Change',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: mainColor,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ],
                 ),
@@ -157,12 +171,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     ),
                     SizedBox(height: 5),
                     RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                       text: 'Delivery Fee: ',
                       style: TextStyle(color: Colors.grey, fontSize: 10),
                       children: [
                         TextSpan(
-                          text: '\$10',
+                          text: '₦ ${shippingFee}',
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
@@ -256,13 +270,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           'Sub Total',
                           style: TextStyle(fontSize: 16),
                         ),
                         Text(
-                          '\$10, 109',
+                          '₦ ${widget.totalAmount}',
                           style: TextStyle(fontSize: 16),
                         )
                       ],
@@ -278,8 +292,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               )
                             : SizedBox(),
                         enable == 0
-                            ? const Text(
-                                '\$3, 109',
+                            ? Text(
+                                '₦ ${shippingFee}',
                                 style: TextStyle(fontSize: 16),
                               )
                             : SizedBox(),
@@ -294,15 +308,15 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           style: TextStyle(fontSize: 16),
                         ),
                         enable == 0
-                            ? const Text(
-                                '\$13, 118',
+                            ? Text(
+                                '₦ ${total}',
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: mainColor,
                                     fontWeight: FontWeight.bold),
                               )
-                            : const Text(
-                                '\$10, 109',
+                            : Text(
+                                '₦ ${widget.totalAmount}',
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: mainColor,

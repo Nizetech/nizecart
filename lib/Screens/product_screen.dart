@@ -32,7 +32,7 @@ TextEditingController search = TextEditingController();
 class _ProductScreenState extends State<ProductScreen> {
   double rating;
   double userRating = 3.0;
-
+  bool isFavorite = false;
   int counter = 0;
   // bool fav = false;
   int quantity = 0;
@@ -235,12 +235,15 @@ class _ProductScreenState extends State<ProductScreen> {
                       itemCount: snapshot.data.length,
                       itemBuilder: (ctx, i) {
                         data = snapshot.data[i];
+                        bool favorite = snapshot.data[i]['favorite'];
                         return
                             //  Wrap(
                             // children: [
                             // child:
                             GestureDetector(
-                          // onTap: () => Get.to(ProductDetailsScreen())
+                          onTap: () => Get.to(
+                            ProductDetailsScreen(),
+                          ),
                           child: Stack(
                             children: [
                               Container(
@@ -270,30 +273,26 @@ class _ProductScreenState extends State<ProductScreen> {
                                       fit: BoxFit.contain,
                                     ),
                                     IconButton(
-                                      icon: snapshot.data[i]['favorite']
+                                      icon: !isFavorite
                                           ? const Icon(Iconsax.heart5)
                                           : const Icon(Iconsax.heart),
                                       onPressed: () {
-                                        if (snapshot.data[i]['favorite']) {
-                                          // ProductService().removeFavourite(
-                                          //     snapshot.data[i]);
-                                          // setState(() {
-                                          // fav = !fav;
-                                          snapshot.data[i]['favorite'] =
-                                              // true;
-                                              !snapshot.data[i]['favorite'];
-                                          // });
-                                        } else {
-                                          // ProductService()
-                                          //     .addFavourite(snapshot.data[i]);
+                                        if (!isFavorite) {
+                                          ProductService()
+                                              .removeFavorite(snapshot.data[i]);
                                           setState(() {
-                                            // fav = !fav;
-                                            snapshot.data[i]['favorite'] =
-                                                // false;
-                                                !snapshot.data[i]['favorite'];
-
-                                            // products.remove(
-                                            //     snapshot.data[i]['productID']);
+                                            isFavorite = false;
+                                            showErrorToast(
+                                                'Removed from favorites');
+                                          });
+                                        } else {
+                                          setState(() {
+                                            ProductService()
+                                                .addFavorite(snapshot.data[i]);
+                                            setState(() {
+                                              isFavorite = true;
+                                              showToast('Added to favorites');
+                                            });
                                           });
                                         }
                                       },
