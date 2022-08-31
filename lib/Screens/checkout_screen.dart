@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:nizecart/Screens/map_screen.dart';
 import '../Widget/component.dart';
 
@@ -15,20 +18,77 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   int enable = 1;
   final String shippingFee = '3109';
 
+  final formatter = intl.NumberFormat.decimalPattern();
   int get total {
     int total = 0;
-    total += widget.totalAmount + int.parse(shippingFee.split(' ')[0]);
+    total += widget.totalAmount + int.parse(shippingFee);
+    // print(formatter.format(total));
+    // print(formatter.format(int.parse(shippingFee)));
+    // print(shippingFee);
     return total;
+  }
+// final Geolocator geolocator = Geolocator.getCurrentPosition(desiredAccuracy: Loca);
+
+  Position _currentPosition;
+  String _currentAddress;
+
+  // getCurrentLocation() {
+  //   Geolocator.getCurrentPosition(
+  //           desiredAccuracy: LocationAccuracy.best,
+  //           forceAndroidLocationManager: true)
+  //       .then((Position position) {
+  //     setState(() {
+  //       currentPosition = position;
+  //     });
+  //     print(position);
+  //   }).catchError((e) {
+  //     print(e);
+  //   });
+  // }
+
+  _getCurrentLocation() {
+    Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+            forceAndroidLocationManager: true)
+        .then((Position position) {
+      if (mounted) {
+        setState(() {
+          _currentPosition = position;
+        });
+      }
+      print(_currentPosition);
+      print(_currentAddress);
+
+      _getAddressFromLatLng();
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  _getAddressFromLatLng() async {
+    try {
+      // to translate latititude and longitude into an address
+      List<Placemark> p = await placemarkFromCoordinates(
+          _currentPosition.latitude, _currentPosition.longitude);
+
+      Placemark place = p[0];
+
+      setState(() {
+        _currentAddress =
+            "${place.street}, ${place.administrativeArea}, ${place.subLocality}, ${place.name}, ${place.subThoroughfare}, ${place.locality}, ${place.postalCode}, ${place.country}";
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.totalAmount);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          'Category',
+          'Checkout',
           style: TextStyle(fontSize: 20),
         ),
       ),
@@ -118,13 +178,19 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             Container(
               width: double.infinity,
               color: Colors.grey.withOpacity(.2),
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.all(10),
-                child: Text(
-                  'Select Payment Method',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
+                child: GestureDetector(
+                  onTap: () {
+                    _getCurrentLocation();
+                    print('this is me');
+                  },
+                  child: Text(
+                    'Select Payment Method',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -276,7 +342,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           style: TextStyle(fontSize: 16),
                         ),
                         Text(
-                          '₦ ${widget.totalAmount}',
+                          // '₦ ${widget.totalAmount}',
+                          '₦ ' + formatter.format(widget.totalAmount),
+
                           style: TextStyle(fontSize: 16),
                         )
                       ],
@@ -294,6 +362,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         enable == 0
                             ? Text(
                                 '₦ ${shippingFee}',
+                                // formatter.format(shippingFee),
                                 style: TextStyle(fontSize: 16),
                               )
                             : SizedBox(),
@@ -309,14 +378,15 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         ),
                         enable == 0
                             ? Text(
-                                '₦ ${total}',
+                                // '₦ ${total}',
+                                '₦ ' + formatter.format(total),
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: mainColor,
                                     fontWeight: FontWeight.bold),
                               )
                             : Text(
-                                '₦ ${widget.totalAmount}',
+                                '₦ ' + formatter.format(widget.totalAmount),
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: mainColor,
@@ -327,7 +397,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     SizedBox(height: 10),
                     CustomButton(
                       text: 'Proceed to Payment',
-                      onPressed: () {},
+                      onPressed: () {
+                        _getCurrentLocation();
+                        print('this is me');
+                      },
                     ),
                   ],
                 ))

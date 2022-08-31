@@ -10,6 +10,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
 
 import '../Models/manage_product_screen.dart';
+import 'change_address.dart';
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key key}) : super(key: key);
@@ -74,6 +75,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             AccountListTile(
               text: 'Change password',
               onTap: () => Get.to(ChangePassword()),
+            ),
+            AccountListTile(
+              text: 'Change Address',
+              onTap: () => Get.to(ChangeAddress()),
             ),
             AccountListTile(
                 text: 'Sign Out',

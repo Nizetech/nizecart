@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
               color: secColor,
               foregroundColor: white),
           primarySwatch: Colors.red,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
           backgroundColor: white),
       home:
           // ProductsOverviewScreen(),

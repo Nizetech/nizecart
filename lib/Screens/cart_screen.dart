@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart' as intl;
+
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
@@ -23,6 +25,7 @@ class _CartScreenState extends State<CartScreen> {
   // int quantity = 0;
   // int subtotal = 0;
   static var box = Hive.box('name');
+  final formatter = intl.NumberFormat.decimalPattern();
 
   // Get total quantity
   int get totalQuantity {
@@ -64,7 +67,7 @@ class _CartScreenState extends State<CartScreen> {
       ),
       backgroundColor: white,
       body:
-          //  !cartItems.contains(0)
+          // !cartItems.contains(0)
           // cartItems.isEmpty
 
           cartItems.isEmpty
@@ -112,7 +115,7 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             // total quantity of all items in cart
                             Text(
-                              '₦ ${totalAmount}',
+                              '₦ ' + formatter.format(totalAmount),
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -319,20 +322,25 @@ class _CartScreenState extends State<CartScreen> {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: CustomButton(
-                        text: 'Checkout',
-                        onPressed: () {
-                          return Get.to(
-                            CheckOutScreen(totalAmount: totalAmount),
-                          );
-                        },
-                      ),
-                    ),
+
                     SizedBox(height: 20),
                   ],
                 ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 20,
+          left: 20,
+          right: 20,
+        ),
+        child: CustomButton(
+          text: 'Checkout',
+          onPressed: () {
+            return Get.to(
+              CheckOutScreen(totalAmount: totalAmount),
+            );
+          },
+        ),
+      ),
     );
   }
 }

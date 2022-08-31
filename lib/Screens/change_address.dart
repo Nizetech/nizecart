@@ -5,10 +5,11 @@ import 'package:nizecart/Models/productService.dart';
 
 import '../Widget/component.dart';
 
-class ChangePassword extends StatelessWidget {
-  ChangePassword({Key key}) : super(key: key);
-  TextEditingController nPwd = TextEditingController();
-  TextEditingController cPwd = TextEditingController();
+class ChangeAddress extends StatelessWidget {
+  ChangeAddress({Key key}) : super(key: key);
+  TextEditingController address = TextEditingController();
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +19,12 @@ class ChangePassword extends StatelessWidget {
           onPressed: () => Get.back(),
           icon: Icon(Icons.arrow_back_ios_new_rounded),
         ),
-        centerTitle: true,
         title: const Text(
-          'Change Password',
+          'Change Address',
           style: TextStyle(fontSize: 20),
         ),
+        centerTitle: true,
+        leadingWidth: 10,
       ),
       backgroundColor: white,
       body: Padding(
@@ -31,14 +33,12 @@ class ChangePassword extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
-                controller: nPwd,
+                controller: address,
                 obscureText: false,
-                obscuringCharacter: '*',
                 cursorColor: mainColor,
+                maxLines: 5,
                 decoration: InputDecoration(
-                  labelText: 'New password',
-                  hintText: 'Enter New password',
-                  // labelStyle: TextStyle(fontSize: 18),
+                  hintText: 'Enter New Address',
                   filled: true,
                   isDense: true,
                   prefixIconColor: mainColor,
@@ -49,44 +49,20 @@ class ChangePassword extends StatelessWidget {
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none),
-                )),
-            SizedBox(
-              height: 30,
-            ),
-            TextField(
-                controller: cPwd,
-                // obscureText: true,
-                // obscuringCharacter: '*',
-                cursorColor: mainColor,
-                decoration: InputDecoration(
-                  labelText: 'Confirm password',
-                  hintText: 'Confirm password',
-                  // labelStyle: TextStyle(fontSize: 18),
-                  filled: true,
-                  isDense: true,
-
-                  prefixIconColor: mainColor,
-                  iconColor: mainColor,
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: mainColor)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: mainColor)),
                 )),
             SizedBox(
               height: 20,
             ),
             CustomButton(
-                text: "Change Password",
+                text: "Change Address",
                 onPressed: () async {
-                  loading('Adding Product...');
+                  loading('Change Address..');
                   // print(storedImage);
-                  if (nPwd.text == cPwd.text) {
-                    ProductService().changePassword(cPwd.text);
+                  if (address.text != null) {
+                    ProductService().changeAddress(address.text);
                     Navigator.pop(context);
-                    print(cPwd.text);
-                    showToast('Password changed successfully');
+                    print(address.text);
+                    showToast('Address changed successfully');
                   } else {
                     showErrorToast('Password does not match');
                     Get.back();

@@ -176,13 +176,14 @@ class ProductService {
     }
   }
 
-//   //Get displayName
-//   Future<String> getDisplayName() async {
-//     QuerySnapshot snapshot = await userCredential.where('uid', isEqualTo: getUser().uid).get();
-//     List<QueryDocumentSnapshot> docs = snapshot.docs;
-//     String data = docs[0].data()['displayName'];
-//     return data;
-//   }
+  // //Get displayName
+  // Future<String> getProduct() async {
+  //   QuerySnapshot snapshot =
+  //       await userCredential.where('uid', isEqualTo: productID).get();
+  //   List<QueryDocumentSnapshot> docs = snapshot.docs;
+  //   String data = docs[0].data();
+  //   return data;
+  // }
 
 //   //Update displayName
 //   Future<void> updateDisplayName(String displayName) async {
@@ -203,9 +204,6 @@ class ProductService {
   Future<String> uploadFile(
     File file,
   ) async {
-    // if (file == null) {
-    //   return loader();
-    // }
     var ref = FirebaseStorage.instance.ref().child('images').child(productID);
     await ref.putFile(file);
     var url = await ref.getDownloadURL();
@@ -234,25 +232,20 @@ class ProductService {
 //   }
 
 // Change Password
-  void changePassword(String newPassword) async {
+  Future<bool> changePassword(String newPassword) async {
     try {
-      await auth.currentUser.updatePassword(newPassword).then((_) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(auth.currentUser.uid)
-            .update({
-          'password': newPassword,
-        });
-        print('Email sent successfully');
-      });
-      // await userCredential.doc(getUser().uid).update({
-      //   'password': newPassword,
-      // });
-
-      // return true;
+      await auth.currentUser.updatePassword(newPassword);
+      showToast('Password changed successfully');
+      print('Email sent successfully');
+      return true;
+    } on FirebaseAuthException catch (e) {
+      print(e.toString());
+      return false;
     } catch (e) {
-      print({e.toString()});
-      // return false;
+      print(
+        {e.toString()},
+      );
+      return false;
     }
   }
 
@@ -327,6 +320,7 @@ class ProductService {
             'phone': phone,
             'email': email,
             'uid': user.user.uid,
+            'uid': address ?? '',
             'date_created': Timestamp.now(),
             'date_updated': Timestamp.now(),
           },
@@ -342,6 +336,20 @@ class ProductService {
       FirebaseException ext = e;
       showErrorToast(ext.message);
       return false;
+    }
+  }
+
+  void changeAddress(String address) async {
+    try {
+      await userCredential.doc(getUser().uid).update(
+        {
+          'address': address,
+        },
+      );
+      showToast('Address changed successfully');
+    } catch (e) {
+      print(e.toString());
+      showErrorToast('Failed to change address');
     }
   }
 

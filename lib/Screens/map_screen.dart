@@ -1,17 +1,26 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../Models/place.dart';
 
 class MapScreen extends StatefulWidget {
   final bool isSelecting;
+  static const DefaultZoom = 18.4;
+  static const MyLocation = LatLng(
+    6.447260,
+    5.797580,
+  );
+  double initZoom;
+  LatLng initCoordinates;
+
+  LatLng value;
+
   MapScreen({
-    // this.initialLocation,
-    //  = const PlaceLocation(
-    //   latitude: 6.447260,
-    //   longitude: 5.797580,
-    //   // address: 'Unknown Place',
-    // ),
+    this.initZoom = DefaultZoom,
+    this.initCoordinates = MyLocation,
     this.isSelecting = false,
   });
 
@@ -20,17 +29,49 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  TextEditingController address = TextEditingController();
   LatLng pickedLocation;
+
+  final Completer<GoogleMapController> mapController = Completer();
   void selectLocation(LatLng position) {
     setState(() {
       pickedLocation = position;
     });
   }
 
-  GoogleMapController mapController;
+  // GoogleMapController mapController;
+
+// Used to translate address to longitude AND latitude
+// List<Location> locations = await locationFromAddress("Gronausestraat 710, Enschede");
+
+// Used longitude AND latitude into address
+// List<Placemark> placemarks = await placemarkFromCoordinates(52.2165157, 6.9437819);
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    Position currentPosition;
+
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location service are disabled');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location Permission are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permission are permanently denied, we cannot request permission.');
+    }
+    return await Geolocator.getCurrentPosition();
+  }
 
   void onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    mapController.complete(controller);
   }
 
   static const CameraPosition initialLocation = CameraPosition(
@@ -38,8 +79,9 @@ class _MapScreenState extends State<MapScreen> {
       6.3344143,
       5.5998271,
     ),
-    zoom: 11,
+    zoom: 12,
   );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +90,23 @@ class _MapScreenState extends State<MapScreen> {
             elevation: 0,
             foregroundColor: Colors.black,
             backgroundColor: Colors.transparent,
-            title: Text('Map'),
+            title: TextField(
+              controller: address,
+              decoration: InputDecoration(
+                hintText: 'Enter Adresss',
+                hintStyle: TextStyle(color: Colors.black),
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.black, width: 2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.black, width: 2),
+                ),
+              ),
+            ),
             actions: [
               if (widget.isSelecting)
                 IconButton(
@@ -56,25 +114,63 @@ class _MapScreenState extends State<MapScreen> {
                   icon: Icon(Icons.check),
                 ),
             ]),
-        body: GoogleMap(
-          // mapType: MapType.hybrid,
-          onMapCreated: onMapCreated,
-          myLocationEnabled: true,
-          indoorViewEnabled: true,
-          initialCameraPosition: initialLocation,
-          onTap: widget.isSelecting ? selectLocation : null,
-          markers: (pickedLocation == null && widget.isSelecting)
-              ? {}
-              : {
-                  Marker(
-                    markerId: MarkerId('m1'),
-                    position: pickedLocation ??
-                        LatLng(
-                          initialLocation.target.latitude,
-                          initialLocation.target.longitude,
+        body: Stack(
+          children: [
+            GoogleMap(
+              // mapType: MapType.hybrid,
+              onMapCreated: onMapCreated,
+              onCameraMove: (CameraPosition newPosition) {
+                print(newPosition.target.toJson());
+                widget.value = newPosition.target;
+              },
+              myLocationEnabled: true,
+              indoorViewEnabled: true,
+              initialCameraPosition: initialLocation,
+              onTap: widget.isSelecting ? selectLocation : null,
+              markers: (pickedLocation == null && widget.isSelecting)
+                  ? {}
+                  : {
+                      Marker(
+                        markerId: MarkerId('m1'),
+                        position: pickedLocation ??
+                            LatLng(
+                              initialLocation.target.latitude,
+                              initialLocation.target.longitude,
+                            ),
+                      ),
+                    },
+            ),
+            Positioned(
+                bottom: 30,
+                left: 30,
+                child: Container(
+                  color: Colors.white,
+                  child: IconButton(
+                    icon: Icon(Icons.my_location),
+                    onPressed: () async {
+                      var position = await _determinePosition();
+                      final GoogleMapController controller =
+                          await mapController.future;
+                      controller.showMarkerInfoWindow(
+                        MarkerId('m2'),
+                      );
+                      controller.getScreenCoordinate(
+                        LatLng(position.latitude, position.longitude),
+                      );
+
+                      controller.animateCamera(
+                        CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                            target:
+                                LatLng(position.latitude, position.longitude),
+                            zoom: widget.initZoom,
+                          ),
                         ),
+                      );
+                    },
                   ),
-                },
+                ))
+          ],
         ));
   }
 }
