@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:nizecart/Auth/signInScreen.dart';
-import 'package:nizecart/Models/productService.dart';
-import 'package:nizecart/Widget/bottonNav.dart';
-import '../Widget/component.dart';
+import 'package:nizecart/Auth/screens/signInScreen.dart';
+import 'package:nizecart/bottonNav.dart';
+import '../../Widget/component.dart';
+import '../controller/auth_controller.dart';
 
-class ForgetPassword extends StatefulWidget {
+class ForgetPassword extends ConsumerWidget {
   ForgetPassword({Key key}) : super(key: key);
+  TextEditingController emailController = TextEditingController();
+
+  void resetPassword(WidgetRef ref) {
+    String email = emailController.text.trim();
+    if (email.isEmpty) {
+      showErrorToast('Please enter your email');
+    } else {
+      // ProductService().resetPwd(email.text.trim());
+      ref.read(authtControllerProvider).resetPwd(email);
+
+      showToast('Email sent');
+      Get.to(() => SignInScreen());
+    }
+  }
 
   @override
-  State<ForgetPassword> createState() => _ForgetPasswordState();
-}
-
-class _ForgetPasswordState extends State<ForgetPassword> {
-  TextEditingController email = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -47,7 +56,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             ),
             SizedBox(height: 20),
             TextField(
-                controller: email,
+                controller: emailController,
                 cursorColor: mainColor,
                 decoration: InputDecoration(
                   hintText: 'Email address',
@@ -68,15 +77,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             CustomButton(
                 text: 'Submit',
                 onPressed: () {
-                  print("email: ${email.text}");
-                  if (email.text.isEmpty) {
-                    showErrorToast('Please enter your email');
-                  } else {
-                    ProductService().resetPwd(email.text.trim());
-                    // ProductService().sendVerificationEmail();
-                    showToast('Email sent');
-                    Get.to(() => SignInSCreen());
-                  }
+                  resetPassword(ref);
                 }),
             Spacer(),
           ],

@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:nizecart/Models/productService.dart';
-import 'package:nizecart/Models/product_overview_screen.dart';
+import 'package:nizecart/Auth/controller/auth_controller.dart';
+import 'package:nizecart/Screens/product_overview_screen.dart';
 import 'package:nizecart/Screens/change_password_screen.dart';
-import 'package:nizecart/Screens/profile.dart';
+import 'package:nizecart/Screens/profile_screen.dart';
 import 'package:nizecart/Screens/search_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
 
-import '../Models/manage_product_screen.dart';
+import 'manage_product_screen.dart';
 import 'change_address.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerWidget {
   ProfileScreen({Key key}) : super(key: key);
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
   static var box = Hive.box('name');
   String name = box.get('displayName');
   final String lname = box.get('lname');
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         leading: const SizedBox(),
@@ -62,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const AccountListTile(text: 'Order'),
             AccountListTile(
               text: 'Profile',
-              onTap: () => Get.to(Profile()),
+              onTap: () => Get.to(ProfileScreen()),
             ),
             AccountListTile(
               text: 'Product Overview',
@@ -83,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             AccountListTile(
                 text: 'Sign Out',
                 onTap: () {
-                  ProductService().signOut();
+                  ref.read(authtControllerProvider).signOut();
                 }),
           ],
         ),

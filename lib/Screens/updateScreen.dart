@@ -1,24 +1,12 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
-// import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
-
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:nizecart/Models/image_input.dart';
-import 'package:nizecart/Models/productService.dart';
-// import 'package:nizecart/Models/product_overview_screen.dart';
 import '../Widget/component.dart';
 
 class UpdateScreen extends StatefulWidget {
@@ -38,7 +26,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
   TextEditingController newPrice = TextEditingController();
   TextEditingController price = TextEditingController();
-  // CollectionReference products = Firestore.instance.collecdsjmjljtion('products');
 //
   @override
   void initState() {

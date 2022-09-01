@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:nizecart/Auth/signInScreen.dart';
-import 'package:nizecart/Auth/signUp_screen.dart';
+import 'package:nizecart/Auth/screens/signInScreen.dart';
+import 'package:nizecart/Auth/screens/signUp_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 
-import '../Screens/account_screen.dart';
-import '../Screens/category_screen.dart';
-import '../Screens/favourite_screen.dart';
-import '../Screens/home_screen.dart';
+import 'Screens/account_screen.dart';
+import 'Screens/category_screen.dart';
+import 'Screens/favourite_screen.dart';
+import 'Screens/home_screen.dart';
 
 class BottomNav extends StatefulWidget {
   BottomNav({Key key}) : super(key: key);

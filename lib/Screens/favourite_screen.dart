@@ -1,23 +1,25 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:nizecart/Models/productService.dart';
+import 'package:nizecart/Auth/repository/auth_repository.dart';
 import 'package:nizecart/Widget/component.dart';
+import 'package:nizecart/products/product_controller.dart';
 
-class FavouriteScreen extends StatefulWidget {
+class FavouriteScreen extends ConsumerStatefulWidget {
   final Map data;
   FavouriteScreen({Key key, this.data}) : super(key: key);
 
   @override
-  State<FavouriteScreen> createState() => _FavouriteScreenState();
+  ConsumerState<FavouriteScreen> createState() => _FavouriteScreenState();
 }
 
-class _FavouriteScreenState extends State<FavouriteScreen> {
+class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,9 +91,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           //     );
           //   }
           // }),
-          future: Future.wait([
-            ProductService().getFavProduct(),
-          ]),
+          future: ref.read(productControllerProvider).getFavProduct(),
+
           builder: ((context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(
@@ -135,7 +136,9 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                   onPressed: (context) {
                                     // print('delete');
                                     Map data = snapshot.data[0];
-                                    ProductService().removeFavorite(data);
+                                    ref
+                                        .read(productControllerProvider)
+                                        .removeFavorite(data);
                                   },
                                   spacing: 2,
                                   backgroundColor: Colors.red,

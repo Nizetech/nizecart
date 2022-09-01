@@ -1,35 +1,80 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:nizecart/Auth/signUp_screen.dart';
+import 'package:nizecart/Auth/controller/auth_controller.dart';
+import 'package:nizecart/Auth/screens/signUp_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
 
-import '../Models/productService.dart';
-import '../Widget/bottonNav.dart';
+import '../../bottonNav.dart';
 import 'forgetPaassword.dart';
 
-enum AuthMode { signup, login }
-
-class SignInSCreen extends StatefulWidget {
-  SignInSCreen({Key key}) : super(key: key);
+class SignInScreen extends ConsumerStatefulWidget {
+  const SignInScreen({Key key}) : super(key: key);
 
   @override
-  State<SignInSCreen> createState() => _SignInSCreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignInScreenState();
 }
 
-class _SignInSCreenState extends State<SignInSCreen>
-    with SingleTickerProviderStateMixin {
-  TextEditingController email = TextEditingController();
+class _SignInScreenState extends ConsumerState<SignInScreen> {
+  TextEditingController emailController = TextEditingController();
   TextEditingController pwd = TextEditingController();
-  AuthMode authMode = AuthMode.login;
-  // final Map<String, String>
   FocusNode emailFocusNode = FocusNode();
   FocusNode pwdFocusNode = FocusNode();
-
   bool isVisible = true;
+
+  void signInWithGoogle() {
+    loading('Logging in...');
+    // isLoggedIn
+    // await ProductService().signInWithGoogle();
+    ref.read(authtControllerProvider).signInWithGoogle().then((value) {
+      if (value) {
+        Hive.box('name').put('isLoggedIn', true);
+        Get.offAll(BottomNav());
+      } else {
+        Get.back();
+      }
+    });
+  }
+  // Get.back();
+
+  void visible() {
+    setState(() {
+      isVisible = !isVisible;
+    });
+  }
+
+  void signIn() {
+    if (emailController.text.trim().isNotEmpty || pwd.text.trim().isNotEmpty) {
+      loading('Logging In....');
+      ref
+          .read(authtControllerProvider)
+          .signIn(
+            emailController.text.trim(),
+            pwd.text.trim(),
+          )
+          .then((value) {
+        (value) {
+          if (value) {
+            Hive.box('name').put('isLoggedIn', true);
+
+            Get.to(BottomNav());
+            showToast('Login Successful');
+          } else {
+            showErrorToast('Invalid Email or Password');
+            Get.back();
+          }
+        };
+      });
+    } else {
+      showErrorToast('Enter your Email and Password');
+      Get.back();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +100,7 @@ class _SignInSCreenState extends State<SignInSCreen>
                 ),
                 SizedBox(height: 30),
                 TextFormField(
-                  controller: email,
+                  controller: emailController,
                   cursorColor: mainColor,
                   focusNode: emailFocusNode,
                   textInputAction: TextInputAction.next,
@@ -74,10 +119,11 @@ class _SignInSCreenState extends State<SignInSCreen>
                         borderSide: BorderSide.none),
                   ),
                   onSaved: (value) {
-                    if (email.text.isEmpty || !email.text.contains('@')) {
-                      return 'Email is required';
+                    if (emailController.text.isEmpty ||
+                        emailController.text.contains('@')) {
+                      return;
                     }
-                    return null;
+                    return;
                   },
                 ),
                 SizedBox(height: 20),
@@ -93,9 +139,7 @@ class _SignInSCreenState extends State<SignInSCreen>
                           color: isVisible ? Colors.grey : mainColor,
                         ),
                         onPressed: () {
-                          setState(() {
-                            isVisible = !isVisible;
-                          });
+                          visible();
                         },
                       ),
                       hintText: 'Password',
@@ -132,17 +176,8 @@ class _SignInSCreenState extends State<SignInSCreen>
                   children: [
                     Expanded(
                       child: GestureDetector(
-                        onTap: () async {
-                          loading('Logging in...');
-                          bool isLoggedIn =
-                              await ProductService().signInWithGoogle();
-
-                          if (isLoggedIn) {
-                            Hive.box('name').put('isLoggedIn', true);
-                            Get.offAll(BottomNav());
-                          } else {
-                            Get.back();
-                          }
+                        onTap: () {
+                          signInWithGoogle();
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -206,28 +241,7 @@ class _SignInSCreenState extends State<SignInSCreen>
                 CustomButton(
                   text: 'Login',
                   onPressed: () {
-                    if (email.text.trim().isNotEmpty ||
-                        pwd.text.trim().isNotEmpty) {
-                      loading('Logging In....');
-                      ProductService()
-                          .signIn(email.text.trim(), pwd.text.trim())
-                          .then(
-                        (value) {
-                          if (value) {
-                            Hive.box('name').put('isLoggedIn', true);
-
-                            Get.to(BottomNav());
-                            showToast('Login Successful');
-                          } else {
-                            showErrorToast('Invalid Email or Password');
-                            Get.back();
-                          }
-                        },
-                      );
-                    } else {
-                      showErrorToast('Enter your Email and Password');
-                      Get.back();
-                    }
+                    signIn();
                   },
                 ),
                 SizedBox(height: 15),

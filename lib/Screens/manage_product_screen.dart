@@ -5,44 +5,30 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:nizecart/Models/image_input.dart';
-import 'package:nizecart/Models/productService.dart';
-import 'package:nizecart/Models/product_overview_screen.dart';
+import 'package:nizecart/Auth/controller/auth_controller.dart';
+import 'package:nizecart/Screens/image_input.dart';
+import 'package:nizecart/Screens/product_overview_screen.dart';
+import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
 
-class ManageProducts extends StatefulWidget {
+class ManageProducts extends ConsumerStatefulWidget {
   ManageProducts({Key key}) : super(key: key);
 
   @override
-  State<ManageProducts> createState() => _ManageProductsState();
+  ConsumerState<ManageProducts> createState() => _ManageProductsState();
 }
 
-class _ManageProductsState extends State<ManageProducts> {
+class _ManageProductsState extends ConsumerState<ManageProducts> {
   TextEditingController title = TextEditingController();
-
   TextEditingController description = TextEditingController();
-
   TextEditingController price = TextEditingController();
 
-  // var box = Hive.box('name');
-  // void selectImage(File storedImage2) {
-  //   image = storedImage2;
-  // }
-
   String url;
-
-  void removeProduct() {
-    // Create a CollectionReference called products that references the firestore collection
-    CollectionReference products =
-        FirebaseFirestore.instance.collection('products');
-    // to remove a product
-    products.doc('${title.text}').delete().catchError(
-        (error) => showErrorToast("Failed to delete product: $error"));
-  }
 
   void initValue() {
     title.text = "";
@@ -54,8 +40,53 @@ class _ManageProductsState extends State<ManageProducts> {
   File storedImage;
 
   CollectionReference imageRef;
+  // storage.Reference ref;
 
-  storage.Reference ref;
+  void pickImage() async {
+    XFile pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 40);
+    if (pickedFile != null) {
+      CroppedFile croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          compressQuality: 50,
+          uiSettings: [
+            AndroidUiSettings(
+              lockAspectRatio: false,
+            ),
+          ]);
+      if (croppedFile != null) {
+        setState(() {
+          storedImage = File(croppedFile.path);
+        });
+      } else {
+        return null;
+      }
+    }
+    Get.back();
+  }
+
+  // void addProduct() async {
+  //   loading('Adding Product...');
+  //   print(storedImage);
+  //   String imageUrl =
+  //       await ref.read(authtControllerProvider).uploadFile(storedImage);
+  //   //  ref.read(productControllerProvider).addProduct(
+  //   //       ;
+
+  //   ref.read(productControllerProvider).addProduct(
+  //         imageUrl,
+  //         title.text.trim(),
+  //         description.text.trim(),
+  //         int.parse(price.text),
+  //       );
+  //   initValue();
+  //   showToast('Product Added');
+  //   Get.back();
+  // }
+
+  // void jjj(){
+  //   ref.read
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -82,23 +113,23 @@ class _ManageProductsState extends State<ManageProducts> {
             SizedBox(
               height: 45,
               child: TextField(
-                  controller: title,
-                  cursorColor: mainColor,
-                  decoration: InputDecoration(
-                    labelText: 'Title',
-                    // labelStyle: TextStyle(fontSize: 18),
-                    filled: true,
-                    isDense: true,
+                controller: title,
+                cursorColor: mainColor,
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  // labelStyle: TextStyle(fontSize: 18),
+                  filled: true,
+                  isDense: true,
 
-                    iconColor: mainColor,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: mainColor)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: mainColor)),
-                  ),
-                  ),
+                  iconColor: mainColor,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: mainColor)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: mainColor)),
+                ),
+              ),
             ),
             SizedBox(height: 15),
             SizedBox(
@@ -178,28 +209,8 @@ class _ManageProductsState extends State<ManageProducts> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           GestureDetector(
-                            onTap: () async {
-                              XFile pickedFile = await ImagePicker().pickImage(
-                                  source: ImageSource.camera, imageQuality: 40);
-                              if (pickedFile != null) {
-                                CroppedFile croppedFile = await ImageCropper()
-                                    .cropImage(
-                                        sourcePath: pickedFile.path,
-                                        compressQuality: 50,
-                                        uiSettings: [
-                                      AndroidUiSettings(
-                                        lockAspectRatio: false,
-                                      ),
-                                    ]);
-                                if (croppedFile != null) {
-                                  setState(() {
-                                    storedImage = File(croppedFile.path);
-                                  });
-                                } else {
-                                  return null;
-                                }
-                              }
-                              Get.back();
+                            onTap: () {
+                              pickImage();
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -267,19 +278,10 @@ class _ManageProductsState extends State<ManageProducts> {
             ),
             SizedBox(height: 25),
             CustomButton(
-              text: "Add Product",
-              onPressed: () async {
-                loading('Adding Product...');
-                print(storedImage);
-                String imageUrl =
-                    await ProductService().uploadFile(storedImage);
-                ProductService().addProduct(
-                    imageUrl, title.text, description.text, price.text);
-                initValue();
-                showToast('Product Added');
-                Get.back();
-              },
-            ),
+                text: "Add Product",
+                onPressed: () {
+                  // addProduct(ref);
+                }),
           ],
         ),
       ),

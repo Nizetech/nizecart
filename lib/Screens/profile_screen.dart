@@ -3,23 +3,24 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:nizecart/Models/productService.dart';
 
+import '../Auth/controller/auth_controller.dart';
 import '../Widget/component.dart';
 
-class Profile extends StatefulWidget {
-  Profile({Key key}) : super(key: key);
+class ProfileScreen extends ConsumerStatefulWidget {
+  ProfileScreen({Key key}) : super(key: key);
 
   @override
-  State<Profile> createState() => _ProfileState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   User user;
   @override
   void initState() {
@@ -30,6 +31,26 @@ class _ProfileState extends State<Profile> {
   static var box = Hive.box('name');
   final String email = box.get('email');
   final String displayName = box.get('displayName');
+
+  void updateImage(ImageSource source) async {
+    ImagePicker picker = ImagePicker();
+    var file = await picker.pickImage(
+      source: source,
+      imageQuality: 30,
+    );
+
+    if (file != null) {
+      ref.read(authtControllerProvider).updateProfileImage(
+            File(file.path),
+          );
+      setState(() {
+        user.reload();
+      });
+      Get.back();
+    }
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
     user.reload();
@@ -140,24 +161,8 @@ class _ProfileState extends State<Profile> {
                                       ),
                                       const SizedBox(height: 20),
                                       TextButton.icon(
-                                        onPressed: () async {
-                                          ImagePicker picker = ImagePicker();
-                                          var file = await picker.pickImage(
-                                            source: ImageSource.gallery,
-                                            imageQuality: 30,
-                                          );
-
-                                          if (file != null) {
-                                            ProductService().updateProfileImage(
-                                              File(file.path),
-                                            );
-                                            setState(() {
-                                              user.reload();
-                                            });
-                                            Get.back();
-                                          }
-                                          return;
-
+                                        onPressed: () {
+                                          updateImage(ImageSource.gallery);
                                           // if (file == null) {
                                           //   return;
                                           // }
@@ -204,21 +209,7 @@ class _ProfileState extends State<Profile> {
                                       const SizedBox(height: 10),
                                       TextButton.icon(
                                         onPressed: () async {
-                                          ImagePicker picker = ImagePicker();
-                                          XFile file = await picker.pickImage(
-                                            source: ImageSource.camera,
-                                            imageQuality: 30,
-                                          );
-
-                                          if (file != null) {
-                                            ProductService().updateProfileImage(
-                                              File(file.path),
-                                            );
-                                            Get.back();
-                                            setState(() {
-                                              user.reload();
-                                            });
-                                          }
+                                          updateImage(ImageSource.camera);
                                         },
                                         icon: Icon(Iconsax.image),
                                         label: Text('Choose from camera'),

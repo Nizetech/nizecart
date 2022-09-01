@@ -28,7 +28,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 // import '../Widget/component.dart';
 
 // class ProductDetails extends StatelessWidget {
-//   const ProductDetails({Key key}) : super(key: key);
+//   const ProductDetails({Key  ?key}) : super(key: key);
  
 //   @override
 //   Widget build(BuildContext context) {

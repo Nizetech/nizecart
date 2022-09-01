@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:nizecart/Models/productService.dart';
-
+import 'package:nizecart/Auth/controller/auth_controller.dart';
 import '../Widget/component.dart';
 
-class ChangeAddress extends StatelessWidget {
+class ChangeAddress extends ConsumerWidget {
   ChangeAddress({Key key}) : super(key: key);
   TextEditingController address = TextEditingController();
 
-  
+  String init = '';
+  void updateAddress(WidgetRef ref) {
+    if (address.text != null) {
+      ref.read(authtControllerProvider).changeAddress(address.text.trim());
+      address.text = init;
+      Get.back();
+      showToast('Address changed successfully');
+    } else {
+      showErrorToast('Could not change address');
+      Get.back();
+    }
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -55,18 +66,8 @@ class ChangeAddress extends StatelessWidget {
             ),
             CustomButton(
                 text: "Change Address",
-                onPressed: () async {
-                  loading('Change Address..');
-                  // print(storedImage);
-                  if (address.text != null) {
-                    ProductService().changeAddress(address.text);
-                    Navigator.pop(context);
-                    print(address.text);
-                    showToast('Address changed successfully');
-                  } else {
-                    showErrorToast('Password does not match');
-                    Get.back();
-                  }
+                onPressed: () {
+                  updateAddress(ref);
                 }),
           ],
         ),

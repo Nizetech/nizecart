@@ -1,23 +1,25 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:nizecart/Auth/signInScreen.dart';
+import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/home_screen.dart';
 import 'package:nizecart/Screens/product_details.dart';
-import 'package:nizecart/Models/product_overview_screen.dart';
-import 'package:nizecart/Widget/bottonNav.dart';
+import 'package:nizecart/Screens/product_overview_screen.dart';
+import 'package:nizecart/bottonNav.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:path_provider/path_provider.dart' as path;
 
-import 'Models/manage_product_screen.dart';
+import 'Screens/manage_product_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Hive.initFlutter();
   await Hive.openBox('name');
-  runApp(MyApp());
+  // runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -42,8 +44,8 @@ class MyApp extends StatelessWidget {
           backgroundColor: white),
       home:
           // ProductsOverviewScreen(),
-          isLoggedIn ? BottomNav() : SignInSCreen(),
-      // SignInSCreen(),
+          // isLoggedIn ? BottomNav() : SignInScreen(),
+          SignInScreen(),
       // ManageProducts(),
       //  AddUser('RossMarry', 'nizetech', 56),
     );

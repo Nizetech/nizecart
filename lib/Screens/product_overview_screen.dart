@@ -3,26 +3,25 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:nizecart/Models/product.dart';
-import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Screens/updateScreen.dart';
-
+import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
 
-class ProductsOverviewScreen extends StatefulWidget {
+class ProductsOverviewScreen extends ConsumerStatefulWidget {
   // final productID;
   ProductsOverviewScreen({
     Key key,
   }) : super(key: key);
 
   @override
-  State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
+  ConsumerState<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
 }
 
-class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+class _ProductsOverviewScreenState extends ConsumerState<ProductsOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     // products = Hive.box('name')
@@ -34,9 +33,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             icon: Icon(Icons.arrow_back),
           )),
       body: FutureBuilder(
-        future: Future.wait([
-          ProductService().getProducts(),
-        ]),
+        future: ref.read(productControllerProvider).getProduct(),
         builder: (context, snapshot) {
           // print(snapshot.data);
           if (!snapshot.hasData) {

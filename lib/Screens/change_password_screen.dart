@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:nizecart/Models/productService.dart';
 
+import '../Auth/controller/auth_controller.dart';
 import '../Widget/component.dart';
 
-class ChangePassword extends StatelessWidget {
+class ChangePassword extends ConsumerWidget {
   ChangePassword({Key key}) : super(key: key);
   TextEditingController nPwd = TextEditingController();
   TextEditingController cPwd = TextEditingController();
 
+  String init = '';
+  void updatePassword(WidgetRef ref) {
+    if (nPwd.text != null) {
+      ref.read(authtControllerProvider).changePassword(nPwd.text.trim());
+      nPwd.text = init;
+      Get.back();
+      showToast('Password changed successfully');
+    } else {
+      showErrorToast('Password does not match');
+      Get.back();
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -61,10 +75,8 @@ class ChangePassword extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Confirm password',
                   hintText: 'Confirm password',
-                  // labelStyle: TextStyle(fontSize: 18),
                   filled: true,
                   isDense: true,
-
                   prefixIconColor: mainColor,
                   iconColor: mainColor,
                   enabledBorder: OutlineInputBorder(
@@ -79,18 +91,8 @@ class ChangePassword extends StatelessWidget {
             ),
             CustomButton(
                 text: "Change Password",
-                onPressed: () async {
-                  loading('Adding Product...');
-                  // print(storedImage);
-                  if (nPwd.text == cPwd.text) {
-                    ProductService().changePassword(cPwd.text);
-                    Navigator.pop(context);
-                    print(cPwd.text);
-                    showToast('Password changed successfully');
-                  } else {
-                    showErrorToast('Password does not match');
-                    Get.back();
-                  }
+                onPressed: () {
+                  updatePassword(ref);
                 }),
           ],
         ),

@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:nizecart/Models/productService.dart';
-// import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/Screens/search_screen.dart';
+import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -17,19 +17,19 @@ enum FilterOptions {
   All,
 }
 
-class ProductScreen extends StatefulWidget {
+class ProductScreen extends ConsumerStatefulWidget {
   ProductScreen({
     Key key,
   }) : super(key: key);
   // List<Map<String, dynamic>> selectedItems;
 
   @override
-  State<ProductScreen> createState() => _ProductScreenState();
+  ConsumerState<ProductScreen> createState() => _ProductScreenState();
 }
 
 TextEditingController search = TextEditingController();
 
-class _ProductScreenState extends State<ProductScreen> {
+class _ProductScreenState extends ConsumerState<ProductScreen> {
   double rating;
   double userRating = 3.0;
   bool isFavorite = false;
@@ -51,12 +51,30 @@ class _ProductScreenState extends State<ProductScreen> {
   var showOnlyFavourites = false;
   String value;
 
+  void favorite(Map map) {
+    if (!isFavorite) {
+      ref.read(productControllerProvider).removeFavorite(map);
+      // setState(() {
+      isFavorite = false;
+      showErrorToast('Removed from favorites');
+      // });
+    } else {
+      ref.read(productControllerProvider).addFavorite(map);
+      // setState(() {
+      isFavorite = true;
+      showToast('Added to favorites');
+      // });
+    }
+
+    //     ref.read(productControllerProvider).removeFavorite(map);
+    // // ref.read(productControllerProvider).addFavorite(map);
+    // setState(() {
+    //   isFavorite = !isFavorite;
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
-    //  widget.data['isFav'] = item['isfav'];
-
-    // products = box.get('products', defaultValue: []);
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -217,7 +235,7 @@ class _ProductScreenState extends State<ProductScreen> {
             ),
           ),
           FutureBuilder(
-            future: ProductService().getProducts(),
+            future: ref.read(productControllerProvider).getProduct(),
             builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (!snapshot.hasData) {
                 return Center(
@@ -277,24 +295,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                           ? const Icon(Iconsax.heart5)
                                           : const Icon(Iconsax.heart),
                                       onPressed: () {
-                                        if (!isFavorite) {
-                                          ProductService()
-                                              .removeFavorite(snapshot.data[i]);
-                                          setState(() {
-                                            isFavorite = false;
-                                            showErrorToast(
-                                                'Removed from favorites');
-                                          });
-                                        } else {
-                                          setState(() {
-                                            ProductService()
-                                                .addFavorite(snapshot.data[i]);
-                                            setState(() {
-                                              isFavorite = true;
-                                              showToast('Added to favorites');
-                                            });
-                                          });
-                                        }
+                                        // favorite(
+                                        //     snapshot.data[i], snapshot.data[i]);
+                                        // favorite();
                                       },
                                       color: mainColor,
                                     ),

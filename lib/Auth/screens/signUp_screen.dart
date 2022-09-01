@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:nizecart/Models/productService.dart';
+import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
-import 'package:nizecart/Widget/bottonNav.dart';
-import '../Widget/component.dart';
+import 'package:nizecart/bottonNav.dart';
+import '../../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter/src/material/radio_list_tile.dart';
 
 enum AuthMode { signup, login }
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   SignUpScreen({Key key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen>
+class _SignUpScreenState extends ConsumerState<SignUpScreen>
     with SingleTickerProviderStateMixin {
   int selected = 1;
 
@@ -30,14 +31,96 @@ class _SignUpScreenState extends State<SignUpScreen>
   TextEditingController pwd = TextEditingController();
   TextEditingController phone = TextEditingController();
 
-  // final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  void visible() {
+    setState(() {
+      visibility = !visibility;
+    });
+  }
 
-  // final AuthMode authMode = AuthMode.signup;
+  void sigIn() {
+    if (fname.text.isNotEmpty &&
+        lname.text.isNotEmpty &&
+        phone.text.isNotEmpty &&
+        pwd.text.isNotEmpty) {
+      if (pwd.text.length > 5) {
+        if (enable2) {
+          if (email.text.contains('@')) {
+            if (email.text.contains('.')) {
+              if (phone.text.length >= 11) {
+                loading('Loading...');
+                // showToast('Signed In Successful');
+              } else {
+                showErrorToast('phone number is not valid');
+                Get.back();
+                return;
+              }
+            } else {
+              showErrorToast('email is not valid');
+              Get.back();
 
-  FocusNode lastname;
-  FocusNode eml;
-  FocusNode password;
-  FocusNode number;
+              return;
+            }
+          } else {
+            showErrorToast('email is not valid');
+            Get.back();
+
+            return;
+          }
+        } else {
+          showErrorToast('you must agree with the terms and conditions');
+          Get.back();
+          Get.back();
+          return;
+        }
+        ref
+            .read(authtControllerProvider)
+            .signUp(
+              email.text,
+              pwd.text,
+              fname.text,
+              lname.text,
+              phone.text,
+            )
+            .then((value) {
+          print(email.text);
+          if (value) {
+            showToast('loggedIn in successfully');
+            Hive.box('name').put("isLoggedIn", true);
+            Get.to(BottomNav());
+          } else {
+            Get.back();
+            // Get.back();
+          }
+        });
+      } else {
+        // Get.to(BottomNav());
+        Get.back();
+        showErrorToast('password must be at least 6 characters');
+      }
+    } else {
+      // Get.to(BottomNav());
+      Get.back();
+      showErrorToast('Please fill all the fields');
+      // }
+    }
+  }
+
+  void enable() {
+    setState(() {
+      enable2 = !enable2;
+    });
+  }
+
+  void selectedV(int value) {
+    setState(() {
+      selected = value;
+    });
+  }
+
+  // FocusNode lastname;
+  // FocusNode eml;
+  // FocusNode password;
+  // FocusNode number;
 
   @override
   Widget build(BuildContext context) {
@@ -141,9 +224,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                       value: 1,
                       groupValue: selected,
                       title: Text("Female"),
-                      onChanged: (value) => setState(
-                        () => selected = value,
-                      ),
+                      onChanged: (value) {
+                        selectedV(value);
+                      },
                       activeColor: Colors.red,
                       selected: false,
                     ),
@@ -191,9 +274,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                       color: visibility ? Colors.grey : mainColor,
                     ),
                     onPressed: () {
-                      setState(() {
-                        visibility = !visibility;
-                      });
+                      visible();
                     },
                   ),
                   prefixIconColor: mainColor,
@@ -234,9 +315,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                       value: enable2,
                       activeColor: mainColor,
                       onChanged: (val) {
-                        setState(() {
-                          enable2 = !enable2;
-                        });
+                        enable();
                       }),
                   RichText(
                       text: const TextSpan(
@@ -253,69 +332,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               CustomButton(
                 text: 'Create',
                 onPressed: () {
-                  if (fname.text.isNotEmpty &&
-                      lname.text.isNotEmpty &&
-                      phone.text.isNotEmpty &&
-                      pwd.text.isNotEmpty) {
-                    if (pwd.text.length > 5) {
-                      if (enable2) {
-                        if (email.text.contains('@')) {
-                          if (email.text.contains('.')) {
-                            if (phone.text.length >= 11) {
-                              loading('Loading...');
-                              // showToast('Signed In Successful');
-                            } else {
-                              showErrorToast('phone number is not valid');
-                              Get.back();
-                              return;
-                            }
-                          } else {
-                            showErrorToast('email is not valid');
-                            Get.back();
-
-                            return;
-                          }
-                        } else {
-                          showErrorToast('email is not valid');
-                          Get.back();
-
-                          return;
-                        }
-                      } else {
-                        showErrorToast(
-                            'you must agree with the terms and conditions');
-                        Get.back();
-                        Get.back();
-
-                        return;
-                      }
-
-                      ProductService()
-                          .signUp(
-                        displayName: fname.text,
-                        lname: lname.text,
-                        email: email.text,
-                        pwd: pwd.text,
-                        phone: phone.text,
-                      )
-                          .then((value) {
-                        if (value) {
-                          showToast('loggedIn in successfully');
-                          Hive.box('name').put("isLoggedIn", true);
-                          // Hive.box('name').put('');
-                          Get.to(BottomNav());
-                        } else {
-                          Get.back();
-                          Get.back();
-                          // Get.to(BottomNav());
-                        }
-                      });
-                    } else {
-                      showErrorToast('password must be at least 6 characters');
-                    }
-                  } else {
-                    showErrorToast('Please fill all the fields');
-                  }
+                  sigIn();
                 },
               )
             ],

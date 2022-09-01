@@ -5,27 +5,28 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:nizecart/Models/productService.dart';
 import 'package:nizecart/Screens/product_screen.dart';
-import 'package:nizecart/Screens/profile.dart';
+import 'package:nizecart/Screens/profile_screen.dart';
 import 'package:nizecart/Screens/search_screen.dart';
+import 'package:nizecart/products/product_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 
 // ignore: must_be_immutable
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   HomeScreen({Key key, this.items}) : super(key: key);
   List<Map<String, dynamic>> items;
   static var box = Hive.box('name');
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   TextEditingController search = TextEditingController();
 
   List slideView = [
@@ -80,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.to(Profile());
+                        Get.to(ProfileScreen());
                       },
                       child: Container(
                         height: 40,
@@ -164,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     parent: BouncingScrollPhysics(),
                   ),
                   child: FutureBuilder(
-                      future: ProductService().getProducts(),
+                      future:ref.read(productControllerProvider).getProduct(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
                           return Shimmer.fromColors(
