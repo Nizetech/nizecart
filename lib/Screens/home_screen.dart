@@ -165,9 +165,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     parent: BouncingScrollPhysics(),
                   ),
                   child: FutureBuilder(
-                      future:ref.read(productControllerProvider).getProduct(),
+                      future: ref.read(productControllerProvider).getProduct(),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) {
+                          print('no data');
                           return Shimmer.fromColors(
                             baseColor: Colors.grey[300],
                             highlightColor: Colors.grey[100],
@@ -175,14 +176,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Center(
-                                  child: loader(),
-                                ),
+                                Container(
+                                    height: 40, width: 50, color: Colors.grey),
                               ],
                             ),
                           );
                         } else {
-                          return snapshot.data[0].length == 0
+                          return snapshot.data == null
                               ? const Center(
                                   child: Text(
                                     'No Products Found',

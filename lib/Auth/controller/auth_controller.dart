@@ -45,7 +45,7 @@ class AuthController {
 
   // Sign out
   void signOut() {
-    ref.read(authRepositoryProvider).signOut();
+    authRepository.signOut();
   }
 
   // Change Password

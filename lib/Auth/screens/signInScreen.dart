@@ -60,7 +60,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         (value) {
           if (value) {
             Hive.box('name').put('isLoggedIn', true);
-
             Get.to(BottomNav());
             showToast('Login Successful');
           } else {

@@ -30,7 +30,7 @@ class ProductController {
 
   // Get product
   Future<List> getProduct() {
-    return ref.read(productControllerProvider).getProduct();
+    return productRepository.getProducts();
   }
 
   // Update Product
@@ -54,12 +54,12 @@ class ProductController {
   }
 
   // Remove from favorite
- void removeFavorite(Map product) {
-     ref.read(productRepositoryProvider).removeFavorite(product);
+  void removeFavorite(Map product) {
+    ref.read(productRepositoryProvider).removeFavorite(product);
   }
 
   // get favProduct
   Future<List> getFavProduct() {
-    return ref.read(productRepositoryProvider).getFavProduct();
+    return productRepository.getFavProduct();
   }
 }
