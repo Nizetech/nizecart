@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
 import 'package:nizecart/products/product_repository.dart';
@@ -68,5 +70,10 @@ class ProductController {
   // search items
   Future<List> searchProduct(String query) {
     return productRepository.searchProduct(query);
+  }
+
+  // Upload File
+  Future<String> uploadFile(File file) {
+    return productRepository.uploadFile(file);
   }
 }

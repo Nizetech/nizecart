@@ -207,22 +207,11 @@ class AuthRepository {
     }
   }
 
-  // upload product image
-  Future<String> uploadFile(
-    File file,
-  ) async {
-    var ref = FirebaseStorage.instance.ref().child('images').child(productID);
-    await ref.putFile(file);
-    var url = await ref.getDownloadURL();
-    print(url);
-    return url;
-  }
-
   // Update Address
-  Future<void> changeAddress(String address) async {
+  Stream<void> changeAddress(String address) {
     CollectionReference userCredential = firestore.collection('Users');
     try {
-      await userCredential.doc(getUser().uid).update(
+      userCredential.doc(getUser().uid).update(
         {
           'address': address,
         },
@@ -248,7 +237,7 @@ class AuthRepository {
         value.ref.getDownloadURL().then((url) {
           photoUrl = url;
           userCredential.doc(getUser().uid).update({
-            'profileImage': photoUrl,
+            'photoUrl': photoUrl,
             'imageUploaded': true,
           });
         });

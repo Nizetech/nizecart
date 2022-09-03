@@ -27,7 +27,7 @@ class _BottomNavState extends State<BottomNav> {
     HomeScreen(),
     CategoryScreen(),
     FavouriteScreen(),
-    ProfileScreen(),
+    AccountScreen(),
   ];
 
   @override

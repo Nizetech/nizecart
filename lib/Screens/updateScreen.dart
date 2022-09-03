@@ -3,21 +3,24 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import '../Auth/controller/auth_controller.dart';
 import '../Widget/component.dart';
+import '../products/product_controller.dart';
 
-class UpdateScreen extends StatefulWidget {
+class UpdateScreen extends ConsumerStatefulWidget {
   final Map data;
   const UpdateScreen({Key key, this.data}) : super(key: key);
 
   @override
-  State<UpdateScreen> createState() => _UpdateScreenState();
+  ConsumerState<UpdateScreen> createState() => _UpdateScreenState();
 }
 
-class _UpdateScreenState extends State<UpdateScreen> {
+class _UpdateScreenState extends ConsumerState<UpdateScreen> {
   TextEditingController newTitle = TextEditingController();
   String title;
 
@@ -32,42 +35,61 @@ class _UpdateScreenState extends State<UpdateScreen> {
     // ProductService().getProduct().then((value) {
     // print(widget.data);
     setState(() {
-      widget.data['title'] = title;
-      widget.data['desciption'] = description;
-      widget.data['price'] = price;
+      newTitle.text = widget.data['title'];
+      newDescription.text = widget.data['description'];
+      price.text = widget.data['price'].toString();
     });
     // });
     super.initState();
   }
-  // CollectionReference products = firestore.collection('products');
 
-  String url;
-
-  // void removeProduct() {
-  //   // Create a CollectionReference called products that references the firestore collection
-  //   CollectionReference products =
-  //       FirebaseFirestore.instance.collection('products');
-  //   // to remove a product
-  //   products.doc('${title.text}').delete().catchError(
-  //       (error) => showErrorToast("Failed to delete product: $error"));
-  // }
-
-  // void initValue() {
-  //   title.text = "";
-  //   description.text = "";
-  //   price.text = "";
-  //   updateImage = null;
-  // }
+  void initValue() {
+    newTitle.text = "";
+    newDescription.text = "";
+    price.text = "";
+    updateImage = null;
+  }
 
   File updateImage;
 
-  CollectionReference imageRef;
-  // Map data = {};
+  void updateImages(
+    ImageSource source,
+  ) async {
+    XFile pickedFile =
+        await ImagePicker().pickImage(source: source, imageQuality: 40);
+    if (pickedFile != null) {
+      CroppedFile croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          compressQuality: 50,
+          uiSettings: [
+            AndroidUiSettings(
+              lockAspectRatio: false,
+            ),
+          ]);
+      if (croppedFile != null) {
+        setState(() {
+          updateImage = File(croppedFile.path);
+        });
+      } else {
+        return null;
+      }
+    }
+    Get.back();
+  }
 
-  // storage.Reference ref;
+  void UpdateProduct() async {
+    loading('Updating Product...');
+    // print(storedImage);
+    String imageUrl =
+        await ref.read(productControllerProvider).uploadFile(updateImage);
 
-  // FirebaseAuth auth = FirebaseAuth.instance;
-  // User getUser() => auth.currentUser;
+    ref.read(productControllerProvider).updateProduct(
+        imageUrl, newTitle.text, newDescription.text, price.text);
+
+    initValue();
+    showToast('Product Updated');
+    Get.back();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,27 +109,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
         ),
         centerTitle: true,
       ),
-      body:
-          // FutureBuilder(
-          // future: Future.wait([
-          //   ProductService().getProducts().then((value) {
-          //     return value.firstWhere(
-          //         (element) => element.prodId == 'foX2BEtBSQfKUOStDPxeEiHUCWD2');
-          //   }),
-          // ]),
-          // foX2BEtBSQfKUOStDPxeEiHUCWD2
-          // future: ProductService().getProduct(widget.data[0]['ProductId']),
-          // builder: (context, AsyncSnapshot<Map<dynamic, dynamic>> snapshot) {
-          //   // print(snapshot.data[0]);
-          //   print(widget.data[0]['ProductId']);
-          //   if (!snapshot.hasData) {
-          //     return loader();
-          //   } else {
-          // print(snapshot.data[0]);
-          // Map data =  snapshot.data[0];
-          // print(snapshot.data[0]);
-          // return
-          Padding(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
           children: [
@@ -115,16 +117,12 @@ class _UpdateScreenState extends State<UpdateScreen> {
             SizedBox(
               height: 45,
               child: TextField(
-                  // initialValue: widget.data['title'],
-                  controller: TextEditingController(text: widget.data['title']),
-                  // controller: newTitle,
+                  controller: newTitle,
                   cursorColor: mainColor,
                   decoration: InputDecoration(
                     labelText: 'Title',
-                    // labelStyle: TextStyle(fontSize: 18),
                     filled: true,
                     isDense: true,
-
                     iconColor: mainColor,
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -138,7 +136,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
             SizedBox(
               height: 45,
               child: TextField(
-                  // initialValue: TextEditingController(text: description),
                   controller:
                       TextEditingController(text: widget.data['description']),
                   cursorColor: mainColor,
@@ -161,11 +158,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
               height: 45,
               width: 150,
               child: TextFormField(
-                  // controller: newPrice,
-                  // controller: TextEditingController(text: widget.data['price']),
-                  // initialValue: widget.data[0]['price'],
                   cursorColor: mainColor,
                   keyboardType: TextInputType.number,
+                  controller: price,
                   decoration: InputDecoration(
                     labelText: 'Price',
                     filled: true,
@@ -197,29 +192,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 fit: BoxFit.cover,
               ),
             ),
-            // Container(
-            //   height: 200,
-            //   width: 200,
-            //   alignment: Alignment.center,
-            //   decoration: BoxDecoration(
-            //     border: Border.all(width: 1, color: Colors.grey),
-            //   ),
-            //   child: (updateImage == null && data['imageUrl'] == null)
-            //       ? const Text(
-            //           'No Image',
-            //           textAlign: TextAlign.center,
-            //           style: TextStyle(
-            //               fontWeight: FontWeight.bold, fontSize: 20),
-            //         )
-            //       : Image.file(
-            //           snapshot.data[0].isEmpty
-            //               ? storedImage
-            //               : File(data['imageUrl']),
-            //           height: 200,
-            //           width: 200,
-            //           fit: BoxFit.cover,
-            //         ),
-            // ),
             SizedBox(height: 5),
             Center(
               child: TextButton(
@@ -232,28 +204,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           GestureDetector(
-                            onTap: () async {
-                              XFile pickedFile = await ImagePicker().pickImage(
-                                  source: ImageSource.camera, imageQuality: 40);
-                              if (pickedFile != null) {
-                                CroppedFile croppedFile = await ImageCropper()
-                                    .cropImage(
-                                        sourcePath: pickedFile.path,
-                                        compressQuality: 50,
-                                        uiSettings: [
-                                      AndroidUiSettings(
-                                        lockAspectRatio: false,
-                                      ),
-                                    ]);
-                                if (croppedFile != null) {
-                                  setState(() {
-                                    updateImage = File(croppedFile.path);
-                                  });
-                                } else {
-                                  return null;
-                                }
-                              }
-                              Get.back();
+                            onTap: () {
+                              updateImages(ImageSource.camera);
+                              // Get.back();
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -270,29 +223,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
                                 ]),
                           ),
                           GestureDetector(
-                            onTap: () async {
-                              XFile pickedFile = await ImagePicker().pickImage(
-                                  source: ImageSource.gallery,
-                                  imageQuality: 40);
-                              if (pickedFile != null) {
-                                CroppedFile croppedFile = await ImageCropper()
-                                    .cropImage(
-                                        sourcePath: pickedFile.path,
-                                        compressQuality: 50,
-                                        uiSettings: [
-                                      AndroidUiSettings(
-                                        lockAspectRatio: false,
-                                      ),
-                                    ]);
-                                if (croppedFile != null) {
-                                  setState(() {
-                                    updateImage = File(croppedFile.path);
-                                  });
-                                } else {
-                                  return null;
-                                }
-                              }
-                              Get.back();
+                            onTap: () {
+                              updateImages(ImageSource.gallery);
+
+                              // Get.back();
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -323,21 +257,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
             CustomButton(
               text: "Update",
               onPressed: () async {
-                // loading('Updating Product...');
-                print(updateImage);
-                // String imageUrl =
-                //     await ProductService().uploadFile(updateImage);
-                // ProductService().updateProduct(
-                //   imageUrl,
-                //   title.text,
-                //   description.text,
-                //   price.text,
-                // );
-                // print(title.text);
-                // initValue();
-                // showToast('Product Updated');
-                // Get.back();
-                // print(snapshot.data[0][0]['id']);
+                UpdateProduct();
               },
             ),
           ],

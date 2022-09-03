@@ -59,14 +59,9 @@ class AuthController {
     return authRepository.resetPwd(email);
   }
 
-  // Upload File
-  Future<String> uploadFile(File file) {
-    return authRepository.uploadFile(file);
-  }
-
   // Change Address
-  Future<void> changeAddress(String address) {
-    authRepository.changeAddress(address);
+  Stream<void> changeAddress(String address) {
+    return authRepository.changeAddress(address);
   }
 
   // Update ProfileImage

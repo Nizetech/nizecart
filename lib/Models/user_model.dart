@@ -23,7 +23,7 @@ class UserModel {
       'fname': fname,
       'last_name': lname,
       'phone': phone,
-      'PhotoUrl': photoUrl,
+      'photoUrl': photoUrl,
       'address': address,
       'uid': uid,
     };

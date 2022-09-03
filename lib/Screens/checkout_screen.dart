@@ -27,12 +27,15 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
   int get total {
     int total = 0;
     total += widget.totalAmount + int.parse(shippingFee);
-    // print(formatter.format(total));
-    // print(formatter.format(int.parse(shippingFee)));
-    // print(shippingFee);
     return total;
   }
+
 // final Geolocator geolocator = Geolocator.getCurrentPosition(desiredAccuracy: Loca);
+  void changeAddress() {
+    ref.read(authtControllerProvider).changeAddress(address.text);
+    setState(() {});
+    Get.back();
+  }
 
   Position _currentPosition;
   String _currentAddress;
@@ -123,7 +126,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               'Address Details',
                               style: TextStyle(
                                 fontSize: 16,
@@ -132,7 +135,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                             ),
                             GestureDetector(
                               onTap: () => Get.to(MapScreen()),
-                              child: Text(
+                              child: const Text(
                                 'Map',
                                 style: TextStyle(
                                     fontSize: 18,
@@ -188,7 +191,6 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                             fontSize: 16, color: Colors.grey),
                                       ),
                                     ),
-                              Spacer(),
                               Icon(
                                 Icons.edit,
                                 color: mainColor,
@@ -224,12 +226,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                             CustomButton(
                                                 text: 'Update address',
                                                 onPressed: () {
-                                                  ref
-                                                      .read(
-                                                          authtControllerProvider)
-                                                      .changeAddress(
-                                                          address.text);
-                                                  Get.back();
+                                                  changeAddress();
                                                 })
                                           ],
                                         ),

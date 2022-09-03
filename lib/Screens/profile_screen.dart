@@ -163,34 +163,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       TextButton.icon(
                                         onPressed: () {
                                           updateImage(ImageSource.gallery);
-                                          // if (file == null) {
-                                          //   return;
-                                          // }
-                                          // CroppedFile croppedFile =
-                                          //     await ImageCropper().cropImage(
-                                          //         sourcePath: file.path,
-                                          //         compressQuality: 50,
-                                          //         uiSettings: [
-                                          //       AndroidUiSettings(
-                                          //         lockAspectRatio: true,
-                                          //       ),
-                                          //     ]);
-                                          // if (croppedFile != null) {
-                                          //   File(croppedFile.path);
-                                          //   setState(() {
-                                          //     // file = File(croppedFile.path);
-                                          //     file = croppedFile as XFile;
-                                          //   });
-
-                                          //   ProductService().updateProfileImage(
-                                          //       File(file.path));
-                                          //   Get.back();
-                                          //   setState(() {
-                                          //     user.reload();
-                                          //   });
-                                          // } else {
-                                          //   return;
-                                          // }
                                         },
                                         icon: const Icon(Iconsax.gallery),
                                         label:

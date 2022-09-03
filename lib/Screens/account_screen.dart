@@ -5,6 +5,7 @@ import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/product_overview_screen.dart';
 import 'package:nizecart/Screens/change_password_screen.dart';
 import 'package:nizecart/Screens/profile_screen.dart';
+// import 'package:nizecart/Screens/profile_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
@@ -12,8 +13,8 @@ import 'package:get/get.dart';
 import 'manage_product_screen.dart';
 import 'change_address.dart';
 
-class ProfileScreen extends ConsumerWidget {
-  ProfileScreen({Key key}) : super(key: key);
+class AccountScreen extends ConsumerWidget {
+  AccountScreen({Key key}) : super(key: key);
 
   static var box = Hive.box('name');
   String name = box.get('displayName');

@@ -39,9 +39,6 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
 
   File storedImage;
 
-  CollectionReference imageRef;
-  // storage.Reference ref;
-
   void pickImage(
     ImageSource source,
   ) async {
@@ -69,11 +66,9 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
 
   void addProduct() async {
     loading('Adding Product...');
-    print(storedImage);
+    // print(storedImage);
     String imageUrl =
-        await ref.read(authtControllerProvider).uploadFile(storedImage);
-    //  ref.read(productControllerProvider).addProduct(
-    //       ;
+        await ref.read(productControllerProvider).uploadFile(storedImage);
 
     ref.read(productControllerProvider).addProduct(
           imageUrl,

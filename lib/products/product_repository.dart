@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -47,10 +49,23 @@ class ProductRepository {
     }
   }
 
+  // upload product image
+  Future<String> uploadFile(
+    File file,
+  ) async {
+    final productID = '${DateTime.now().millisecondsSinceEpoch}';
+
+    var ref = FirebaseStorage.instance.ref().child('images').child(productID);
+    await ref.putFile(file);
+    var url = await ref.getDownloadURL();
+    print(url);
+    return url;
+  }
+
   // delete product
   void deleteProduct(String productID) async {
     CollectionReference products = firestore.collection('Products');
-    Reference storageReference = firebaseStorage.ref('profilePicture');
+    Reference storageReference = firebaseStorage.ref('p');
     await products.doc(productID).delete();
     await storageReference.child(productID).delete();
   }
@@ -98,7 +113,7 @@ class ProductRepository {
   }
 
   //Update product
-  void updateProduct({
+  Future<void> updateProduct({
     String imageUrl,
     String title,
     String description,
@@ -106,12 +121,18 @@ class ProductRepository {
   }) async {
     final productID = '${DateTime.now().millisecondsSinceEpoch}';
     CollectionReference products = firestore.collection('Products');
-    await products.doc(productID).update({
-      'title': title, // Apple
-      'description': description, // A fruit
-      'price': price, // 1.99
-      'image': imageUrl,
-    });
+    try {
+      await products.doc(productID).update({
+        'title': title, // Apple
+        'description': description, // A fruit
+        'price': price, // 1.99
+        'image': imageUrl,
+      });
+      showToast('Product updated successfully');
+    } catch (e) {
+      print(e.toString());
+      showErrorToast('Could not update product');
+    }
   }
 
   // add favproduct
