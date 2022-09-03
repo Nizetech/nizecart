@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Auth/screens/signUp_screen.dart';
 import 'package:nizecart/Widget/component.dart';
@@ -12,6 +14,12 @@ import 'package:get/get.dart';
 import '../../bottonNav.dart';
 import 'forgetPaassword.dart';
 
+enum _SupportState {
+  unknown,
+  supported,
+  unsupported,
+}
+
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({Key key}) : super(key: key);
 
@@ -20,6 +28,8 @@ class SignInScreen extends ConsumerStatefulWidget {
 }
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
+  final LocalAuthentication auth = LocalAuthentication();
+
   TextEditingController emailController = TextEditingController();
   TextEditingController pwd = TextEditingController();
   FocusNode emailFocusNode = FocusNode();
@@ -39,8 +49,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       }
     });
   }
-  // Get.back();
 
+  // Get.back();
   void visible() {
     setState(() {
       isVisible = !isVisible;
@@ -72,6 +82,130 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       showErrorToast('Enter your Email and Password');
       Get.back();
     }
+  }
+
+  _SupportState _supportState = _SupportState.unknown;
+  bool _canCheckBiometrics;
+  List<BiometricType> _availableBiometrics;
+  String _authorized = 'Not Authorized';
+  bool _isAuthenticating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    auth.isDeviceSupported().then(
+          (bool isSupported) => setState(() => _supportState = isSupported
+              ? _SupportState.supported
+              : _SupportState.unsupported),
+        );
+  }
+
+  Future<void> _checkBiometrics() async {
+    bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      canCheckBiometrics = false;
+      print(e);
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _canCheckBiometrics = canCheckBiometrics;
+    });
+  }
+
+  // Future<void> _getAvailableBiometrics() async {
+  //   List<BiometricType> availableBiometrics;
+  //   try {
+  //     availableBiometrics = await auth.getAvailableBiometrics();
+  //   } on PlatformException catch (e) {
+  //     availableBiometrics = <BiometricType>[];
+  //     print(e);
+  //   }
+  //   if (!mounted) {
+  //     return;
+  //   }
+
+  //   setState(() {
+  //     _availableBiometrics = availableBiometrics;
+  //   });
+  // }
+
+  Future<void> _authenticate() async {
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+      authenticated = await auth.authenticate(
+        localizedReason: 'Let OS determine authentication method',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+        ),
+      );
+      setState(() {
+        _isAuthenticating = false;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Error - ${e.message}';
+      });
+      return;
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(
+        () => _authorized = authenticated ? 'Authorized' : 'Not Authorized');
+  }
+
+  // Future<void> _authenticateWithBiometrics() async {
+  //   bool authenticated = false;
+  //   try {
+  //     setState(() {
+  //       _isAuthenticating = true;
+  //       _authorized = 'Authenticating';
+  //     });
+  //     authenticated = await auth.authenticate(
+  //       localizedReason:
+  //           'Scan your fingerprint (or face or whatever) to authenticate',
+  //       options: const AuthenticationOptions(
+  //         stickyAuth: true,
+  //         biometricOnly: true,
+  //       ),
+  //     );
+  //     setState(() {
+  //       _isAuthenticating = false;
+  //       _authorized = 'Authenticating';
+  //     });
+  //   } on PlatformException catch (e) {
+  //     print(e);
+  //     setState(() {
+  //       _isAuthenticating = false;
+  //       _authorized = 'Error - ${e.message}';
+  //     });
+  //     return;
+  //   }
+  //   if (!mounted) {
+  //     return;
+  //   }
+
+  //   final String message = authenticated ? 'Authorized' : 'Not Authorized';
+  //   setState(() {
+  //     _authorized = message;
+  //   });
+  // }
+
+  Future<void> _cancelAuthentication() async {
+    await auth.stopAuthentication();
+    setState(() => _isAuthenticating = false);
   }
 
   @override
@@ -264,6 +398,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         ),
                       ]),
                 ),
+                SizedBox(height: 10),
+                IconButton(
+                    onPressed: _authenticate,
+                    icon: Icon(
+                      Icons.fingerprint,
+                      color: mainColor,
+                      size: 40,
+                    ))
               ],
             ),
           ),

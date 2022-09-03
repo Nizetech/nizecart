@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:nizecart/Screens/search_screen.dart';
 import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart' as intl;
 
 import 'product_details.dart';
 
@@ -65,13 +65,24 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
       showToast('Added to favorites');
       // });
     }
-
-    //     ref.read(productControllerProvider).removeFavorite(map);
-    // // ref.read(productControllerProvider).addFavorite(map);
-    // setState(() {
-    //   isFavorite = !isFavorite;
-    // });
   }
+
+  void addFav(Map data) {
+    setState(() {
+      isFavorite = true;
+      ref.read(productControllerProvider).addFavorite(data);
+    });
+  }
+
+  void removeFav(Map data) {
+    setState(() {
+      isFavorite = false;
+      ref.read(productControllerProvider).removeFavorite(data);
+    });
+  }
+
+  final formatter = intl.NumberFormat.decimalPattern();
+  List cartItems = box.get('cart', defaultValue: []);
 
   @override
   Widget build(BuildContext context) {
@@ -82,19 +93,16 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
           onPressed: () => Get.back(),
         ),
         title: const Text(
-          'Airpods',
+          'Products',
           style: TextStyle(fontSize: 20),
         ),
         centerTitle: true,
         actions: [
           Row(
             children: [
-              IconButton(
-                icon: const Icon(
-                  Iconsax.search_normal,
-                  size: 20,
-                ),
-                onPressed: (() => Get.to(SearchScreen())),
+              const Icon(
+                Iconsax.search_normal,
+                size: 20,
               ),
               const SizedBox(width: 5),
               Padding(
@@ -244,169 +252,234 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
               } else {
                 // print(data);
                 return Expanded(
-                  child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, childAspectRatio: 0.55),
+                  child: ListView.builder(
                       shrinkWrap: true,
-                      // physics: BouncingScrollPhysics(),
+                      // physics: NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data.length,
                       itemBuilder: (ctx, i) {
-                        data = snapshot.data[i];
-                        bool favorite = snapshot.data[i]['favorite'];
-                        return
-                            //  Wrap(
-                            // children: [
-                            // child:
-                            GestureDetector(
-                          onTap: () => Get.to(
-                            ProductDetailsScreen(),
-                          ),
-                          child: Stack(
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                // width: MediaQuery.of(context).size.width * .43,
-                                width: 150,
-                                margin: const EdgeInsets.only(
-                                    left: 10, top: 15, right: 0),
-                                decoration: BoxDecoration(
-                                  color: white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: Offset(0, 3),
-                                      blurRadius: 5,
-                                      color: Colors.grey.withOpacity(.5),
-                                    ),
-                                  ],
+                        print(snapshot.data);
+                        return Stack(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              // width: MediaQuery.of(context).size.width * .43,
+                              width: double.infinity,
+                              margin: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20),
                                 ),
-                                padding: EdgeInsets.all(15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CachedNetworkImage(
-                                      imageUrl: snapshot.data[i]['imageUrl'],
-                                      width: 140,
-                                      height: 120,
-                                      fit: BoxFit.contain,
-                                    ),
-                                    IconButton(
-                                      icon: !isFavorite
-                                          ? const Icon(Iconsax.heart5)
-                                          : const Icon(Iconsax.heart),
-                                      onPressed: () {
-                                        // favorite(
-                                        //     snapshot.data[i], snapshot.data[i]);
-                                        // favorite();
-                                      },
-                                      color: mainColor,
-                                    ),
-                                    SizedBox(height: 3),
-                                    Text(
-                                      snapshot.data[i]['title'],
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    SizedBox(height: 3),
-                                    Text(
-                                      ' \$' + snapshot.data[i]['price'],
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(height: 3),
-                                    RatingBar.builder(
-                                      // initialRating: data['rating'],
-                                      updateOnDrag: true,
-                                      initialRating: 3,
-                                      allowHalfRating: true,
-                                      glow: false,
-                                      onRatingUpdate: (rating) {
-                                        setState(() {
-                                          rating = rating;
-                                        });
-                                      },
-                                      itemBuilder: (context, index) =>
-                                          const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                      itemCount: 5,
-                                      itemSize: 20,
-                                      direction: Axis.horizontal,
-                                    ),
-                                    SizedBox(height: 10),
-                                    SizedBox(
-                                      height: 40,
-                                      child: CustomButton(
-                                        text: 'Add to cart',
-                                        onPressed: () {
-                                          setState(
-                                            () {
-                                              if (!snapshot.data
-                                                      .contains('productID')
-                                                  // &&
-                                                  // !selectedItems.contains('id')
-                                                  ) {
-                                                quantity++;
-                                                // adding items to the cart list which will later be stored using a suitable backend service
-                                                Map productItem = {
-                                                  'id': snapshot.data[i]
-                                                      ['productID'],
-                                                  'title': snapshot.data[i]
-                                                      ['title'],
-                                                  'price': snapshot.data[i]
-                                                      ['price'],
-                                                  'imageUrl': snapshot.data[i]
-                                                      ['imageUrl'],
-                                                  'quantity': quantity,
-                                                  'rating': rating,
-                                                  'qty': quantity,
-                                                };
-                                                products.add(productItem);
-                                                box.put('cart', products);
-                                                // ignore: avoid_print
-                                                // print(products);
-                                                showToast('Added to cart');
-                                              } else {
-                                                showToast(
-                                                    'Item already added to cart');
-                                              }
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                color: white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: Offset(0, 3),
+                                    blurRadius: 5,
+                                    color: Colors.grey.withOpacity(.5),
+                                  ),
+                                ],
                               ),
-                              Positioned(
-                                top: 14,
-                                right: 20,
-                                child: Container(
-                                  height: 20,
-                                  width: 55,
-                                  alignment: Alignment.center,
-                                  decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.only(
+                              // padding: EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: CachedNetworkImage(
+                                      imageUrl: snapshot.data[i]['imageUrl'],
+                                      width: double.infinity,
+                                      height: 150,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        RatingBar.builder(
+                                          // initialRating: data['rating'],
+                                          updateOnDrag: true,
+                                          initialRating: 3,
+                                          allowHalfRating: true,
+                                          glow: false,
+                                          onRatingUpdate: (rating) {
+                                            setState(() {
+                                              rating = rating;
+                                            });
+                                          },
+                                          itemBuilder: (context, index) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          itemCount: 5,
+                                          itemSize: 15,
+                                          direction: Axis.horizontal,
+                                        ),
+                                        IconButton(
+                                          icon: isFavorite
+                                              ? const Icon(Iconsax.heart5)
+                                              : const Icon(Iconsax.heart),
+                                          onPressed: () {
+                                            !isFavorite
+                                                ? addFav(snapshot.data[i])
+                                                : removeFav(snapshot.data[i]);
+                                          },
+                                          color: mainColor,
+                                        ),
+                                        SizedBox(height: 3),
+                                        Text(
+                                          snapshot.data[i]['title'],
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+
+                                        SizedBox(height: 10),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.remove,
+                                                  size: 30,
+                                                  color: mainColor,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    // quantity--;
+                                                    cartItems[i]['qty']--;
+                                                    box.put(
+                                                        'cartItem', cartItems);
+                                                    showErrorToast(
+                                                        'Removed from cart');
+                                                  });
+                                                },
+                                              ),
+                                              Text(
+                                                '₦' +
+                                                    formatter
+                                                        .format(snapshot.data[i]
+                                                            ['price'])
+                                                        .toString(),
+                                                // '₦' +
+                                                //     formatter
+                                                //         .format(data['price'])
+                                                //         .toString(),
+                                                // '8',
+                                                style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              IconButton(
+                                                  icon: Icon(
+                                                    Icons.add,
+                                                    size: 30,
+                                                    color: mainColor,
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      if (!snapshot.data
+                                                              .contains(
+                                                                  'productID')
+                                                          // &&
+                                                          // !selectedItems.contains('id')
+                                                          ) {
+                                                        quantity++;
+                                                        // adding items to the cart list which will later be stored using a suitable backend service
+                                                        Map productItem = {
+                                                          'id': snapshot.data[i]
+                                                              ['productID'],
+                                                          'title': snapshot
+                                                              .data[i]['title'],
+                                                          'price': snapshot
+                                                              .data[i]['price']
+                                                              .toString(),
+                                                          'imageUrl':
+                                                              snapshot.data[i]
+                                                                  ['imageUrl'],
+                                                          'quantity': quantity,
+                                                          'rating': rating,
+                                                          'qty': quantity,
+                                                        };
+                                                        products
+                                                            .add(productItem);
+                                                        box.put(
+                                                            'cart', products);
+
+                                                        showToast(
+                                                            'Added to cart');
+                                                      } else {
+                                                        showToast(
+                                                            'Item already added to cart');
+                                                      }
+                                                    });
+                                                  }),
+                                            ]),
+                                        // SizedBox(
+                                        //   height: 40,
+                                        //   child: CustomButton(
+                                        //     text: 'Add to cart',
+                                        //     onPressed: () {},
+                                        //   ),
+                                        // )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              top: 20,
+                              right: 20,
+                              child: Container(
+                                height: 20,
+                                width: 55,
+                                alignment: Alignment.center,
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(0),
                                         bottomLeft: Radius.circular(10),
-                                      ),
-                                      color: priColor),
-                                  child: const Text(
-                                    'Express',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                        topRight: Radius.circular(20)),
+                                    color: priColor),
+                                child: const Text(
+                                  'Express',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         );
+                        //   } ,
+                        // );
+                        // Expanded(
+                        //   child: GridView.builder(
+                        //       gridDelegate:
+                        //           const SliverGridDelegateWithFixedCrossAxisCount(
+                        //               crossAxisCount: 2, childAspectRatio: 0.55),
+                        //       shrinkWrap: true,
+                        //       // physics: BouncingScrollPhysics(),
+                        //       itemCount: snapshot.data.length,
+                        //       itemBuilder: (ctx, i) {
+                        //         data = snapshot.data[i];
+                        //         return GestureDetector(
+                        //           onTap: () => Get.to(
+                        //             ProductDetailsScreen(),
+                        //           ),
+                        //           child:
+
+                        //         );
+                        // );
                       }),
                 );
               }

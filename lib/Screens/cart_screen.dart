@@ -199,9 +199,12 @@ class _CartScreenState extends State<CartScreen> {
                                           SizedBox(height: 3),
                                           Text(
                                             '₦' +
-                                                cartItems
-                                                    .elementAt(i)['price']
-                                                    .toString(),
+                                                cartItems.elementAt(i)['price'],
+                                            //   '₦' +
+                                            // formatter
+                                            //     .format(cartItems
+                                            //         .elementAt(i)['price'])
+                                            //     .toString(),
                                             style: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 16,

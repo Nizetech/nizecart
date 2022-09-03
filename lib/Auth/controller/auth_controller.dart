@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
 
 final authtControllerProvider = Provider((ref) {
@@ -64,7 +65,7 @@ class AuthController {
   }
 
   // Change Address
-  void changeAddress(String address) {
+  Future<void> changeAddress(String address) {
     authRepository.changeAddress(address);
   }
 
@@ -75,6 +76,16 @@ class AuthController {
 
   // get Userdetails
   Future<Map> getUserDetails() {
-    authRepository.getUserDetails();
+    return authRepository.getUserDetails();
   }
+
+  // Determine Position(Map)
+  Future<Position> determinePosition() {
+    return authRepository.determinePosition();
+  }
+
+  // GetCurrentUser
+//   Future<void> getUserDetails() {
+//     return authRepository.getUserDetails();
+//   }
 }

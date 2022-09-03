@@ -7,13 +7,13 @@
 //     'rating': 0,
 
 class Product {
-  final String title;
-  final String description;
-  final int price;
-  final String imageUrl;
-  final bool favorite;
-  final String productID;
-  final int rating;
+  String title;
+  String description;
+  int price;
+  String imageUrl;
+  bool favorite;
+  String productID;
+  int rating;
   Product({
     this.title,
     this.description,
@@ -24,27 +24,25 @@ class Product {
     this.rating,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'price': price,
-      'imageUrl': imageUrl,
-      'favorite': favorite,
-      'productID': productID,
-      'rating': rating,
-    };
+  Product.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    description = json['description'];
+    price = json['price'];
+    imageUrl = json['imageUrl'] ?? '';
+    favorite = json['favorite'];
+    productID = json['productID'];
+    rating = json['rating'];
   }
 
-  factory Product.fromMap(Map<String, dynamic> map) {
-    return Product(
-      title: map['title'],
-      description: map['description'],
-      price: map['price'],
-      imageUrl: map['imageUrl'] ?? '',
-      favorite: map['favorite'],
-      productID: map['productID'],
-      rating: map['rating'],
-    );
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['description'] = description;
+    data['price'] = price;
+    data['imageUrl'] = imageUrl;
+    data['favorite'] = favorite;
+    data['productID'] = productID;
+    data['rating'] = rating;
+    return data;
   }
 }

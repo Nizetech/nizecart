@@ -5,7 +5,6 @@ import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/product_overview_screen.dart';
 import 'package:nizecart/Screens/change_password_screen.dart';
 import 'package:nizecart/Screens/profile_screen.dart';
-import 'package:nizecart/Screens/search_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
@@ -31,12 +30,7 @@ class ProfileScreen extends ConsumerWidget {
         ),
         leadingWidth: 10,
         actions: [
-          IconButton(
-            icon: const Icon(Iconsax.search_normal),
-            onPressed: () => Get.to(
-              SearchScreen(),
-            ),
-          ),
+          Icon(Iconsax.search_normal),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Cart(),

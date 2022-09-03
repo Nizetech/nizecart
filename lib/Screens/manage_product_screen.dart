@@ -11,16 +11,16 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
-import 'package:nizecart/Screens/image_input.dart';
+// import 'package:nizecart/Screens/image_input.dart';
 import 'package:nizecart/Screens/product_overview_screen.dart';
 import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
 
 class ManageProducts extends ConsumerStatefulWidget {
-  ManageProducts({Key key}) : super(key: key);
+  const ManageProducts({Key key}) : super(key: key);
 
   @override
-  ConsumerState<ManageProducts> createState() => _ManageProductsState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ManageProductsState();
 }
 
 class _ManageProductsState extends ConsumerState<ManageProducts> {
@@ -42,9 +42,11 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
   CollectionReference imageRef;
   // storage.Reference ref;
 
-  void pickImage() async {
-    XFile pickedFile = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 40);
+  void pickImage(
+    ImageSource source,
+  ) async {
+    XFile pickedFile =
+        await ImagePicker().pickImage(source: source, imageQuality: 40);
     if (pickedFile != null) {
       CroppedFile croppedFile = await ImageCropper().cropImage(
           sourcePath: pickedFile.path,
@@ -65,28 +67,26 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
     Get.back();
   }
 
-  // void addProduct() async {
-  //   loading('Adding Product...');
-  //   print(storedImage);
-  //   String imageUrl =
-  //       await ref.read(authtControllerProvider).uploadFile(storedImage);
-  //   //  ref.read(productControllerProvider).addProduct(
-  //   //       ;
+  void addProduct() async {
+    loading('Adding Product...');
+    print(storedImage);
+    String imageUrl =
+        await ref.read(authtControllerProvider).uploadFile(storedImage);
+    //  ref.read(productControllerProvider).addProduct(
+    //       ;
 
-  //   ref.read(productControllerProvider).addProduct(
-  //         imageUrl,
-  //         title.text.trim(),
-  //         description.text.trim(),
-  //         int.parse(price.text),
-  //       );
-  //   initValue();
-  //   showToast('Product Added');
-  //   Get.back();
-  // }
-
-  // void jjj(){
-  //   ref.read
-  // }
+    ref.read(productControllerProvider).addProduct(
+          imageUrl,
+          title.text.trim(),
+          description.text.trim(),
+          int.parse(price.text),
+        );
+    print('title ${title.text}');
+    print(price.text);
+    initValue();
+    showToast('Product Added');
+    Get.back();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +210,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              pickImage();
+                              pickImage(ImageSource.camera);
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -228,28 +228,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              XFile pickedFile = await ImagePicker().pickImage(
-                                  source: ImageSource.gallery,
-                                  imageQuality: 40);
-                              if (pickedFile != null) {
-                                CroppedFile croppedFile = await ImageCropper()
-                                    .cropImage(
-                                        sourcePath: pickedFile.path,
-                                        compressQuality: 50,
-                                        uiSettings: [
-                                      AndroidUiSettings(
-                                        lockAspectRatio: false,
-                                      ),
-                                    ]);
-                                if (croppedFile != null) {
-                                  setState(() {
-                                    storedImage = File(croppedFile.path);
-                                  });
-                                } else {
-                                  return null;
-                                }
-                              }
-                              Get.back();
+                              pickImage(ImageSource.gallery);
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -280,7 +259,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
             CustomButton(
                 text: "Add Product",
                 onPressed: () {
-                  // addProduct(ref);
+                  addProduct();
                 }),
           ],
         ),

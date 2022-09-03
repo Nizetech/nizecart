@@ -27,18 +27,24 @@ class ProductRepository {
     CollectionReference products = firestore.collection('Products');
 
     /// get user id
-    var productData = Product(
-      title: title,
-      description: description,
-      price: price,
-      imageUrl: imageUrl,
-      favorite: false,
-      productID: productID,
-      rating: 0,
-    );
-    await products.doc(productID).set({
-      productData.toMap(),
-    });
+    try {
+      var productData = Product(
+        title: title,
+        description: description,
+        price: price,
+        imageUrl: imageUrl,
+        favorite: false,
+        productID: productID,
+        rating: 0,
+      );
+      await products.doc(productID).set(productData.toJson());
+
+      print(productData);
+    } catch (e) {
+      print(e.toString());
+      // FirebaseException ext = e;
+      showErrorToast(e.toString());
+    }
   }
 
   // delete product
@@ -67,6 +73,30 @@ class ProductRepository {
     }
   }
 
+  Future<List> searchProduct(String query) async {
+    CollectionReference products = firestore.collection('Products');
+    try {
+      // List<Product> items =
+      // QuerySnapshot snaps =
+      //     await products.where('title', isEqualTo: query).get();
+      //     snaps.docs.map((doc) => Product.fromJson(doc.data())).toList();
+      //     await products.where('title', isEqualTo: query).get();
+      // List<Product> items = [];
+      var snaps = await products.where('title', isEqualTo: query).get();
+      List<Map> items = [];
+      List<QueryDocumentSnapshot> docs = snaps.docs;
+      for (var item in snaps.docs) {
+        items.add(item.data());
+      }
+      print(items);
+      return items;
+    } catch (e) {
+      print(e.toString());
+      showErrorToast(e.toString());
+      return [];
+    }
+  }
+
   //Update product
   void updateProduct({
     String imageUrl,
@@ -86,13 +116,16 @@ class ProductRepository {
 
   // add favproduct
   void addFavorite(Map product) async {
+    final productID = '${DateTime.now().millisecondsSinceEpoch}';
     CollectionReference userCredential = firestore.collection('Users');
     userCredential
         .doc(getUser().uid)
         .collection('favourite')
-        .doc(product['productID'])
+        .doc(productID)
         .set(product)
-        .then((value) => showToast('Product added to favourites'));
+        .then((value) {
+      showToast('Product added to favourites');
+    });
     await userCredential.doc(getUser().uid).update({
       'favorite': true,
     });
@@ -108,11 +141,12 @@ class ProductRepository {
 
   // remove favProduct
   void removeFavorite(Map product) async {
+    final productID = '${DateTime.now().millisecondsSinceEpoch}';
     CollectionReference userCredential = firestore.collection('Users');
     userCredential
         .doc(getUser().uid)
         .collection('favourite')
-        .doc(product['productID'])
+        .doc(productID)
         .delete()
         .then((value) => showErrorToast('Product removed from favorites'));
     await userCredential.doc(getUser().uid).update({
@@ -134,7 +168,6 @@ class ProductRepository {
     return data;
   }
 }
-
 
 //   //Get product by title
 //   Future<Map> getProductByTitle(String title) async {

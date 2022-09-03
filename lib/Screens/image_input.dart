@@ -9,8 +9,8 @@ import 'package:path_provider/path_provider.dart';
 
 CollectionReference imageRef;
 storage.Reference ref;
-File storedImage;
-File storedImage2;
+// File storedImage;
+// File storedImage2;
 String imageUrl;
 XFile image;
 

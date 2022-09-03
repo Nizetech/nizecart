@@ -6,6 +6,8 @@ import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Screens/product_screen.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:intl/intl.dart' as intl;
 
 const white = Colors.white;
 const mainColor = Color(0xffEA4E4E);
@@ -42,10 +44,11 @@ class CustomButton extends StatelessWidget {
 class ShopListView extends StatelessWidget {
   final Map data;
 
-  const ShopListView({
+  ShopListView({
     Key key,
     this.data,
   }) : super(key: key);
+  final formatter = intl.NumberFormat.decimalPattern();
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +60,8 @@ class ShopListView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 130,
-            width: 150,
-            padding: EdgeInsets.all(7),
+            height: 180,
+            width: 200,
             decoration: BoxDecoration(
               color: Colors.grey.withOpacity(.1),
               borderRadius: BorderRadius.circular(10),
@@ -80,17 +82,17 @@ class ShopListView extends StatelessWidget {
             style: TextStyle(
               overflow: TextOverflow.ellipsis,
               color: Colors.black.withOpacity(.7),
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
             ),
           ),
           SizedBox(height: 5),
           Text(
-            data['price'],
+            '₦' + formatter.format(data['price']).toString(),
             style: const TextStyle(
               color: Color(0xff343a40),
               fontSize: 14,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
             ),
           )
         ],
@@ -102,10 +104,12 @@ class ShopListView extends StatelessWidget {
 class ShopListView2 extends StatelessWidget {
   final Map data;
 
-  const ShopListView2({
+  ShopListView2({
     Key key,
     this.data,
   }) : super(key: key);
+
+  final formatter = intl.NumberFormat.decimalPattern();
 
   @override
   Widget build(BuildContext context) {
@@ -117,9 +121,9 @@ class ShopListView2 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 70,
-            width: 90,
-            padding: EdgeInsets.all(7),
+            height: 125,
+            width: 145,
+            // padding: EdgeInsets.all(7),
             decoration: BoxDecoration(
               color: Colors.grey.withOpacity(.1),
               borderRadius: BorderRadius.circular(10),
@@ -140,17 +144,17 @@ class ShopListView2 extends StatelessWidget {
             style: TextStyle(
               overflow: TextOverflow.ellipsis,
               color: Colors.black.withOpacity(.7),
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
             ),
           ),
           SizedBox(height: 5),
           Text(
-            data['price'],
+            '₦' + formatter.format(data['price']).toString(),
             style: const TextStyle(
               color: Color(0xff343a40),
               fontSize: 14,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w500,
             ),
           )
         ],
@@ -329,4 +333,80 @@ class AccountListTile extends StatelessWidget {
       // onTap: () => Get.to(ManageProduct()),
     );
   }
+}
+
+Widget shimmer(BuildContext context) {
+  return Shimmer.fromColors(
+    baseColor: Colors.grey[300],
+    highlightColor: Colors.grey[100],
+    enabled: true,
+    child: Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 152,
+            width: MediaQuery.of(context).size.width * .95,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: Colors.grey),
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(height: 10, width: 50, color: Colors.grey),
+              Container(height: 10, width: 50, color: Colors.grey),
+            ],
+          ),
+          SizedBox(height: 15),
+          SizedBox(
+            height: 185,
+            child: ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: 5,
+              separatorBuilder: (ctx, i) => SizedBox(width: 10),
+              itemBuilder: (ctx, i) {
+                return Container(
+                  height: 185,
+                  width: 125,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(height: 10, width: 50, color: Colors.grey),
+              Container(height: 10, width: 50, color: Colors.grey),
+            ],
+          ),
+          SizedBox(height: 15),
+          SizedBox(
+            height: 185,
+            child: ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: 5,
+              separatorBuilder: (ctx, i) => SizedBox(width: 10),
+              itemBuilder: (ctx, i) {
+                return Container(
+                  height: 185,
+                  width: 125,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

@@ -5,10 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Screens/image_input.dart';
+import 'package:nizecart/bottonNav.dart';
 
 import '../../Models/user_model.dart';
 import '../../Widget/component.dart';
@@ -68,18 +70,6 @@ class AuthRepository {
           address: address,
         );
         await userCredential.doc(user.user.uid).set(userData.toMap());
-        // await userCredential.doc(user.user.uid).set(
-        //   {
-        //     'fname': fname,
-        //     'last_name': lname,
-        //     'phone': phone,
-        //     'email': email,
-        //     'uid': user.user.uid,
-        //     'date_created': Timestamp.now(),
-        //     'date_updated': Timestamp.now(),
-        //   },
-        // );
-
         // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
         Hive.box('name').put('displayName', fname);
         Hive.box('name').put('lname', lname);
@@ -101,6 +91,7 @@ class AuthRepository {
       UserCredential user =
           await auth.signInWithEmailAndPassword(email: email, password: pwd);
       Hive.box('name').put('email', user.user.email);
+      Get.to(BottomNav());
       return true;
     } catch (e) {
       FirebaseAuthException ext = e;
@@ -119,6 +110,30 @@ class AuthRepository {
       }
       return false;
     }
+  }
+
+  // Determine position(Map)
+  Future<Position> determinePosition() async {
+    bool serviceEnabled;
+    Position currentPosition;
+
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location service are disabled');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location Permission are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permission are permanently denied, we cannot request permission.');
+    }
+    return await Geolocator.getCurrentPosition();
   }
 
   // Sign in with google
@@ -204,7 +219,7 @@ class AuthRepository {
   }
 
   // Update Address
-  void changeAddress(String address) async {
+  Future<void> changeAddress(String address) async {
     CollectionReference userCredential = firestore.collection('Users');
     try {
       await userCredential.doc(getUser().uid).update(
@@ -257,6 +272,7 @@ class AuthRepository {
   Future<Map> getUserDetails() async {
     CollectionReference userCredential = firestore.collection('Users');
     DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
+    print(shot);
     return shot.data();
   }
 
