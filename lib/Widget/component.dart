@@ -370,7 +370,7 @@ Widget shimmer(BuildContext context) {
               itemBuilder: (ctx, i) {
                 return Container(
                   height: 185,
-                  width: 125,
+                  width: 200,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey),
@@ -396,8 +396,8 @@ Widget shimmer(BuildContext context) {
               separatorBuilder: (ctx, i) => SizedBox(width: 10),
               itemBuilder: (ctx, i) {
                 return Container(
-                  height: 185,
-                  width: 125,
+                  height: 125,
+                  width: 145,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey),
@@ -408,5 +408,132 @@ Widget shimmer(BuildContext context) {
         ],
       ),
     ),
+  );
+}
+
+class RecieverMsg extends StatelessWidget {
+  final String text;
+  final String time;
+  const RecieverMsg({Key key, this.text, this.time}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            padding: EdgeInsets.all(15),
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * .8),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(27),
+                topRight: Radius.circular(27),
+                bottomLeft: Radius.circular(2),
+                bottomRight: Radius.circular(27),
+              ),
+              color: Color(0xfff2f2f2),
+            ),
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Color(0xff3a3a41),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 13),
+        Text(
+          time,
+          style: TextStyle(
+            color: Color(0xff3a3a41),
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class SenderMsg extends StatelessWidget {
+  final String text;
+  final String time;
+  const SenderMsg({Key key, this.text, this.time}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Align(
+          alignment: Alignment.centerRight,
+          child: Container(
+            padding: EdgeInsets.all(15),
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * .7),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(27),
+                topRight: Radius.circular(27),
+                bottomLeft: Radius.circular(27),
+                bottomRight: Radius.circular(2),
+              ),
+              color: Color(0xff4b4b4b),
+            ),
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 13),
+        Text(
+          time,
+          style: TextStyle(
+            color: Color(0xff3a3a41),
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+          ),
+        )
+      ],
+    );
+  }
+}
+
+Widget photo() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      Container(
+        width: 332,
+        height: 158,
+        alignment: Alignment.center,
+        color: Color(0xffd9d9d9),
+        child: Text(
+          "Photo",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+        ),
+      ),
+      Text(
+        '10:58',
+        style: TextStyle(
+          color: Color(0xff3a3a41),
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+        ),
+      )
+    ],
   );
 }

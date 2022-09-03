@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
+import 'package:nizecart/Screens/chat_screen.dart';
 import 'package:nizecart/Screens/product_overview_screen.dart';
 import 'package:nizecart/Screens/change_password_screen.dart';
 import 'package:nizecart/Screens/profile_screen.dart';
@@ -11,7 +12,6 @@ import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
 
 import 'manage_product_screen.dart';
-import 'change_address.dart';
 
 class AccountScreen extends ConsumerWidget {
   AccountScreen({Key key}) : super(key: key);
@@ -64,12 +64,12 @@ class AccountScreen extends ConsumerWidget {
               onTap: () => Get.to(ManageProducts()),
             ),
             AccountListTile(
-              text: 'Change password',
-              onTap: () => Get.to(ChangePassword()),
+              text: 'Customer Support',
+              onTap: () => Get.to(ChatScreen()),
             ),
             AccountListTile(
-              text: 'Change Address',
-              onTap: () => Get.to(ChangeAddress()),
+              text: 'Change password',
+              onTap: () => Get.to(ChangePassword()),
             ),
             AccountListTile(
                 text: 'Sign Out',

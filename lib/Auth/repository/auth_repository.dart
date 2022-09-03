@@ -224,7 +224,7 @@ class AuthRepository {
   }
 
   // Update profileImage
-  void updateProfileImage(File image) async {
+  Future<String> updateProfileImage(File image) async {
     Reference storageReference = firebaseStorage.ref('profilePicture');
     CollectionReference userCredential = firestore.collection('Users');
     try {
@@ -242,6 +242,8 @@ class AuthRepository {
           });
         });
       });
+      print(photoUrl);
+      return photoUrl;
     } catch (e) {
       showErrorToast(e.toString());
     }

@@ -63,11 +63,18 @@ class ProductRepository {
   }
 
   // delete product
-  void deleteProduct(String productID) async {
+  void deleteProduct() async {
+    final productID = '${DateTime.now().millisecondsSinceEpoch}';
     CollectionReference products = firestore.collection('Products');
-    Reference storageReference = firebaseStorage.ref('p');
-    await products.doc(productID).delete();
-    await storageReference.child(productID).delete();
+    try {
+      Reference storageReference = firebaseStorage.ref('images');
+      await products.doc(productID).delete();
+      await storageReference.child(productID).delete();
+      showToast('Product deleted');
+    } catch (e) {
+      print(e.toString());
+      showErrorToast(e.toString());
+    }
   }
 
   // Get products

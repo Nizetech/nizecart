@@ -76,10 +76,10 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
           description.text.trim(),
           int.parse(price.text),
         );
-    print('title ${title.text}');
-    print(price.text);
+
     initValue();
     showToast('Product Added');
+    setState(() {});
     Get.back();
   }
 
@@ -158,7 +158,18 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
                     labelText: 'Price',
                     filled: true,
                     isDense: true,
-                    prefixIcon: const Icon(Iconsax.dollar_circle),
+                    prefixIcon: Transform.translate(
+                      offset: Offset(-4, 12),
+                      child: const Text(
+                        '₦',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: mainColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     prefixIconColor: mainColor,
                     iconColor: mainColor,
                     enabledBorder: OutlineInputBorder(
