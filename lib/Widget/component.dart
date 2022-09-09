@@ -342,79 +342,84 @@ Widget shimmer(BuildContext context) {
     enabled: true,
     child: Padding(
       padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 152,
-            width: MediaQuery.of(context).size.width * .95,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: Colors.grey),
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(height: 10, width: 50, color: Colors.grey),
-              Container(height: 10, width: 50, color: Colors.grey),
-            ],
-          ),
-          SizedBox(height: 15),
-          SizedBox(
-            height: 185,
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              separatorBuilder: (ctx, i) => SizedBox(width: 10),
-              itemBuilder: (ctx, i) {
-                return Container(
-                  height: 185,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey),
-                );
-              },
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 152,
+              width: MediaQuery.of(context).size.width * .95,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), color: Colors.grey),
             ),
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(height: 10, width: 50, color: Colors.grey),
-              Container(height: 10, width: 50, color: Colors.grey),
-            ],
-          ),
-          SizedBox(height: 15),
-          SizedBox(
-            height: 185,
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: 5,
-              separatorBuilder: (ctx, i) => SizedBox(width: 10),
-              itemBuilder: (ctx, i) {
-                return Container(
-                  height: 125,
-                  width: 145,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey),
-                );
-              },
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(height: 10, width: 50, color: Colors.grey),
+                Container(height: 10, width: 50, color: Colors.grey),
+              ],
             ),
-          ),
-        ],
+            SizedBox(height: 15),
+            SizedBox(
+              height: 185,
+              child: ListView.separated(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                separatorBuilder: (ctx, i) => SizedBox(width: 10),
+                itemBuilder: (ctx, i) {
+                  return Container(
+                    height: 185,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(height: 10, width: 50, color: Colors.grey),
+                Container(height: 10, width: 50, color: Colors.grey),
+              ],
+            ),
+            SizedBox(height: 15),
+            SizedBox(
+              height: 185,
+              child: ListView.separated(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                separatorBuilder: (ctx, i) => SizedBox(width: 10),
+                itemBuilder: (ctx, i) {
+                  return Container(
+                    height: 125,
+                    width: 145,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   );
 }
 
 class RecieverMsg extends StatelessWidget {
-  final String text;
-  final String time;
-  const RecieverMsg({Key key, this.text, this.time}) : super(key: key);
+  final String message;
+  final String date;
+  final String userName;
+
+  const RecieverMsg({Key key, this.message, this.date, this.userName})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -436,19 +441,29 @@ class RecieverMsg extends StatelessWidget {
               ),
               color: Color(0xfff2f2f2),
             ),
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Color(0xff3a3a41),
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  userName,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                SizedBox(height: 3),
+                Text(
+                  message,
+                  style: TextStyle(
+                    color: Color(0xff3a3a41),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
         SizedBox(height: 13),
         Text(
-          time,
+          date,
           style: TextStyle(
             color: Color(0xff3a3a41),
             fontSize: 10,
@@ -461,10 +476,12 @@ class RecieverMsg extends StatelessWidget {
 }
 
 class SenderMsg extends StatelessWidget {
-  final String text;
-  final String time;
-  const SenderMsg({Key key, this.text, this.time}) : super(key: key);
+  final String message;
+  final String date;
+  final String userName;
 
+  const SenderMsg({Key key, this.message, this.date, this.userName})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -485,19 +502,28 @@ class SenderMsg extends StatelessWidget {
               ),
               color: Color(0xff4b4b4b),
             ),
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
+            child: Column(
+              children: [
+                Text(
+                  userName,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                Text(
+                  message,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
         SizedBox(height: 13),
         Text(
-          time,
+          date,
           style: TextStyle(
             color: Color(0xff3a3a41),
             fontSize: 10,

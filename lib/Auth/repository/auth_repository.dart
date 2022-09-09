@@ -159,6 +159,8 @@ class AuthRepository {
           'last_name': user.user.displayName,
           'phone': user.user.phoneNumber,
           'email': user.user.email,
+          'address': '',
+          'photoUrl': '',
           'uid': user.user.uid,
           'date_created': Timestamp.now(),
         });
@@ -267,6 +269,16 @@ class AuthRepository {
     return shot.data();
   }
 
+  Future<UserModel> getUserCurrentUserData() async {
+    var userData =
+        await firestore.collection('Users').doc(auth.currentUser.uid).get();
+    UserModel user;
+    if (userData.data() != null) {
+      user = UserModel.fromMap(userData.data());
+    }
+    return user;
+  }
+
 // Send Email Verification
   void sendVerificationEmail() async {
     await auth.currentUser.sendEmailVerification();
@@ -274,6 +286,14 @@ class AuthRepository {
   }
 }
 
+
+//  Stream<UserModel> userData(String userId) {
+//     return firestore.collection('users').doc(userId).snapshots().map(
+//           (event) => UserModel.fromMap(
+//             event.data()!,
+//           ),
+//         );
+//   }
  // //Get displayName
   // Future<String> getProduct() async {
   //   QuerySnapshot snapshot =

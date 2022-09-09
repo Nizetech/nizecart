@@ -80,10 +80,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             future: ref.read(authtControllerProvider).getUserDetails(),
             builder: (context, snapshot) {
               // print(snapshot.data['photoUrl']);
-              String data = snapshot.data['photoUrl'];
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               } else {
+              String data = snapshot.data['photoUrl'];
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

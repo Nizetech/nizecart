@@ -75,6 +75,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             } else {
               Map details = snapshot.data[0];
               List searchProduct = snapshot.data[1];
+              print('Current search: ${searchProduct}');
               return Column(
                 children: [
                   Container(
@@ -186,7 +187,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   isSearch
                       ?
                       // print(snapshot.data);
-                      searchProduct == null
+                      searchProduct != null
                           ? const Padding(
                               padding: EdgeInsets.all(20),
                               child: Text(

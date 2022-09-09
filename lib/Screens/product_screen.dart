@@ -51,7 +51,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
   var showOnlyFavourites = false;
   String value;
 
-  void favorite(Map map) {
+  void favorite(map) {
     if (!isFavorite) {
       ref.read(productControllerProvider).removeFavorite(map);
       // setState(() {

@@ -4,9 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
 
+import '../../Models/user_model.dart';
+
 final authtControllerProvider = Provider((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return AuthController(authRepository: authRepository, ref: ref);
+});
+
+final userDataAuthProvider = FutureProvider((ref) {
+  final authController = ref.watch(authtControllerProvider);
+  return authController.getUserDetails();
 });
 
 class AuthController {
@@ -73,6 +80,12 @@ class AuthController {
   Future<Map> getUserDetails() {
     return authRepository.getUserDetails();
   }
+
+  // // Get UserData
+  // Future<UserModel> getUserCurrentUserData() async {
+  //   UserModel user = await authRepository.getUserCurrentUserData();
+  //   return user;
+  // }
 
   // Determine Position(Map)
   Future<Position> determinePosition() {

@@ -4,20 +4,37 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nizecart/Widget/chat_list.dart';
+import 'package:nizecart/chat/controller/controller.dart';
 
 import '../Auth/controller/auth_controller.dart';
+import '../Models/user_model.dart';
 import '../Widget/component.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
-  const ChatScreen({Key key}) : super(key: key);
+  final String receiverUserId;
+  ChatScreen({Key key, this.receiverUserId}) : super(key: key);
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
+  TextEditingController message = TextEditingController();
   static var box = Hive.box('name');
   String name = box.get('displayName');
+
+  // String get uid => null;
+  void sendTextMessage() {
+    ref.read(chatControllerProvider).sendTextMessages(
+          message.text.trim(),
+          widget.receiverUserId,
+        );
+    // print(_messageController.text.trim());
+    setState(() {
+      message.text = '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +49,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
           ),
           title: FutureBuilder(
-              future: Future.wait([
-                ref.read(authtControllerProvider).getUserDetails(),
-              ]),
+              future: ref.read(authtControllerProvider).getUserDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   Map data = snapshot.data;
-                  print(data[0]['photoUrl']);
+                  print(data['photoUrl']);
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -51,11 +66,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                               color: secColor,
                             )
                           : ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(25),
                               child: CachedNetworkImage(
                                 imageUrl: data['photoUrl'],
-                                height: 40,
-                                width: 40,
+                                height: 50,
+                                width: 50,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -83,8 +98,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SingleChildScrollView(
-              child: Column(
+          child: Column(
             children: [
               SizedBox(height: 20),
               const Align(
@@ -99,43 +113,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              RecieverMsg(
-                  text:
-                      "Shaun! How are you? I've been praying for you and your family today.",
-                  time: '10:58 PM'),
-              SizedBox(height: 13),
-              SenderMsg(
-                text:
-                    "Hey Philip! We got a new placement  and its going great. How are you?",
-                time: '11:06 AM',
-              ),
-              SizedBox(height: 13),
-              RecieverMsg(
-                  text:
-                      "That’s awesome! I’ll let the team know to be ready for support requests. Can’t wait to see how God uses you in their story.",
-                  time: '11:18 PM'),
-              SizedBox(height: 13),
-              SenderMsg(
-                text: "Me too!",
-                time: '11:20 AM',
-              ),
-              SizedBox(height: 13),
-              photo(),
-              SizedBox(height: 13),
-              RecieverMsg(
-                  text:
-                      "That’s awesome! I’ll let the team know to be ready for support requests. Can’t wait to see how God uses you in their story.",
-                  time: '11:18 PM'),
-              SizedBox(height: 13),
-              SenderMsg(
-                text: "Me too!",
-                time: '11:20 AM',
-              ),
-              SizedBox(height: 13),
-              RecieverMsg(
-                  text: "Charity is assigning you support!", time: '12:09 PM'),
+              Expanded(
+                  child: ChatList(
+                receiverUserId: widget.receiverUserId,
+              ))
             ],
-          )),
+          ),
         ),
         bottomNavigationBar: Container(
           height: 54,
@@ -144,31 +127,49 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             borderRadius: BorderRadius.circular(16),
             color: Color(0xffF5F5F5),
           ),
-          child: TextField(
-            decoration: InputDecoration(
-              fillColor: Color(0xffF5F5F5),
-              hintText: 'Type a Message',
-              suffixIcon: Icon(
-                Iconsax.camera,
-                color: secColor,
-              ),
-              hintStyle: TextStyle(
-                color: Color(0xffb7b7b7),
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-              enabled: true,
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    16,
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: message,
+                  decoration: InputDecoration(
+                    fillColor: Color(0xffF5F5F5),
+                    hintText: 'Type a Message',
+                    suffixIcon: Icon(
+                      Iconsax.camera,
+                      color: secColor,
+                    ),
+                    hintStyle: TextStyle(
+                      color: Color(0xffb7b7b7),
+                      fontSize: 16,
+                    ),
+                    enabled: true,
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          16,
+                        ),
+                        borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          16,
+                        ),
+                        borderSide: BorderSide.none),
                   ),
-                  borderSide: BorderSide.none),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    16,
+                ),
+              ),
+              SizedBox(width: 7),
+              CircleAvatar(
+                backgroundColor: Color(0xff128c7e),
+                radius: 25,
+                child: GestureDetector(
+                  onTap: sendTextMessage,
+                  child: Icon(
+                    Icons.send,
+                    color: Colors.white,
                   ),
-                  borderSide: BorderSide.none),
-            ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

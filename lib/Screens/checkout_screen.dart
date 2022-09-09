@@ -188,13 +188,15 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                             SizedBox(height: 5),
                             Row(
                               children: [
-                                address.text == null
-                                    ? Text(
-                                        'No adresss',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 3,
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.grey),
+                                snapshot.data['address'] == ''
+                                    ? Expanded(
+                                        child: Text(
+                                          'No adresss',
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 3,
+                                          style: TextStyle(
+                                              fontSize: 16, color: Colors.grey),
+                                        ),
                                       )
                                     : Expanded(
                                         child: Text(

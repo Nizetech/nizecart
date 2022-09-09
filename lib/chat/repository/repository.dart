@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,12 +33,14 @@ class ChatRepository {
         var userData =
             await firestore.collection('Users').doc(chat.chatId).get();
         var user = UserModel.fromMap(userData.data());
-        chatList.add(Chat(
-            name: user.fname,
-            profilePic: user.photoUrl,
-            chatId: chat.chatId,
-            timeSent: chat.timeSent,
-            lastMessages: chat.lastMessages));
+        chatList.add(
+          Chat(
+              name: user.fname,
+              profilePic: user.photoUrl,
+              chatId: chat.chatId,
+              timeSent: chat.timeSent,
+              lastMessages: chat.lastMessages),
+        );
       }
       return chatList;
     });
@@ -85,7 +85,7 @@ class ChatRepository {
         .doc(receiverUserId)
         .collection('chats')
         .doc(auth.currentUser.uid)
-        .set(receiverUserData.toMap());
+        .set(receiverChatContact.toJson());
 
     // Sender's end
     var senderChatContact = Chat(
@@ -95,12 +95,13 @@ class ChatRepository {
       timeSent: timeSent,
       lastMessages: text,
     );
+
     await firestore
         .collection('Users')
         .doc(auth.currentUser.uid)
         .collection('chats')
         .doc(receiverUserId)
-        .set(senderUserData.toMap());
+        .set(senderChatContact.toJson());
   }
 
   //(Saving this Data) this is the chat messages from both end(end to end --> Sender to Receiver)
@@ -119,6 +120,7 @@ class ChatRepository {
       messageId: messageId,
       isSeen: false,
     );
+
     // saving message to senders message collection
     await firestore
         .collection('Users')
@@ -128,6 +130,7 @@ class ChatRepository {
         .collection('messages')
         .doc(messageId)
         .set(message.toJson());
+
     // saving message to receiver's message collection
     await firestore
         .collection('Users')

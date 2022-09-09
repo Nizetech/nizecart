@@ -185,14 +185,14 @@ class ProductRepository {
   //get favProduct
   Future<List> getFavProduct() async {
     CollectionReference userCredential = firestore.collection('Users');
-
     QuerySnapshot snapshot =
-        await userCredential.doc(getUser().uid).collection('favorite').get();
+        await userCredential.doc(getUser().uid).collection('favourite').get();
     List<QueryDocumentSnapshot> docs = snapshot.docs;
     List<Map> data = [];
     for (var item in docs) {
       data.add(item.data());
     }
+    // print(data);
     return data;
   }
 }

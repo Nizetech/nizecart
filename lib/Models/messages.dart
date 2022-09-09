@@ -6,12 +6,14 @@ class Messages {
   final String text;
   final DateTime timeSent;
   final String messageId;
+  final String repliedTo;
   final bool isSeen;
   Messages(
       {this.senderId,
       this.receiverId,
       this.text,
       this.timeSent,
+      this.repliedTo,
       this.messageId,
       this.isSeen});
 
@@ -22,6 +24,7 @@ class Messages {
       'text': text,
       'timeSent': FieldValue.serverTimestamp(),
       'messageId': messageId,
+      'repliedTo': repliedTo,
       'isSeen': isSeen,
     };
   }
@@ -33,6 +36,7 @@ class Messages {
       text: data['text'] ?? '',
       timeSent: data[FieldValue.serverTimestamp()],
       messageId: data['messageId'] ?? '',
+      repliedTo: data['repliedTo'] ?? '',
       isSeen: data['isSeen'] ?? '',
     );
   }
