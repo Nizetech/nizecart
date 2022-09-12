@@ -8,6 +8,7 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/map_screen.dart';
+import 'package:nizecart/Screens/payment_screen.dart';
 import '../Widget/component.dart';
 
 class CheckOutScreen extends ConsumerStatefulWidget {
@@ -90,9 +91,17 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
     }
   }
 
+  List<String> delivery = [];
+
   void change(dynamic val) {
     setState(() {
       enable = val;
+      if (enable == 0) {
+        // delivery.add('Door Delivery');
+        box.put('method', 'Door Delivery');
+      } else {
+        box.put('method', 'Pickup Station');
+      }
     });
   }
 
@@ -286,7 +295,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                               print('this is me');
                             },
                             child: Text(
-                              'Select Payment Method',
+                              'Select Delivery Method',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -502,8 +511,21 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                               CustomButton(
                                 text: 'Proceed to Payment',
                                 onPressed: () {
-                                  _getCurrentLocation();
-                                  print('this is me');
+                                  if (snapshot.data['address'] == '') {
+                                    showErrorToast(
+                                        'Please fill in your address');
+                                    Get.back();
+                                  } else {
+                                    Map data = {
+                                      'address': snapshot.data['address'],
+                                      'total': total,
+                                      'shippingFee':
+                                          enable == 0 ? shippingFee : '',
+                                      'totalAmount': widget.totalAmount,
+                                    };
+
+                                    Get.to(PaymentMethod(data: data));
+                                  }
                                 },
                               ),
                             ],

@@ -1,17 +1,9 @@
-// 'title': title,
-//     'description': description,
-//     'price': price,
-//     'imageUrl': imageUrl,
-//     'favorite': false,
-//     'productID': productID,
-//     'rating': 0,
-
 class Product {
   String title;
   String description;
   int price;
   String imageUrl;
-  bool favorite;
+  List<dynamic> favorite;
   String productID;
   int rating;
   Product({
@@ -29,7 +21,9 @@ class Product {
     description = json['description'];
     price = json['price'];
     imageUrl = json['imageUrl'] ?? '';
-    favorite = json['favorite'];
+    favorite = json['favorite'] == null
+        ? []
+        : List<dynamic>.from(json['favorite'].map((e) => e));
     productID = json['productID'];
     rating = json['rating'];
   }
@@ -40,7 +34,7 @@ class Product {
     data['description'] = description;
     data['price'] = price;
     data['imageUrl'] = imageUrl;
-    data['favorite'] = favorite;
+    data['favorite'] == null ? [] : List<dynamic>.from(favorite.map((e) => e));
     data['productID'] = productID;
     data['rating'] = rating;
     return data;

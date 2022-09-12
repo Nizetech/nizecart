@@ -7,7 +7,7 @@ import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/home_screen.dart';
 import 'package:nizecart/Screens/product_details.dart';
 import 'package:nizecart/Screens/product_overview_screen.dart';
-import 'package:nizecart/bottonNav.dart';
+import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:path_provider/path_provider.dart' as path;
 

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
-import 'package:nizecart/bottonNav.dart';
+import 'package:nizecart/botton_nav.dart';
 import '../../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter/src/material/radio_list_tile.dart';

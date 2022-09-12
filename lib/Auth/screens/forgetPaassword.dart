@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/screens/signInScreen.dart';
-import 'package:nizecart/bottonNav.dart';
+import 'package:nizecart/botton_nav.dart';
 import '../../Widget/component.dart';
 import '../controller/auth_controller.dart';
 

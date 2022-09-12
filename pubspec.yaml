@@ -35,7 +35,11 @@ dependencies:
   geocoding: ^2.0.4
   flutter_riverpod: ^1.0.4
   local_auth: ^2.1.2
-
+  # flutter_paystack: ^1.0.5
+  flutter_paystack:
+   git:
+    url: https://github.com/definitelyme/flutter_paystack.git
+    ref: a4a33c3dd0a12f46d655a2e63d11e9f20ba82d01
   
 # firebase_core: ^1.17.0
   
@@ -48,6 +52,7 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   image_picker_for_web: ^2.1.8
+  # dependency_overrides:
 
 
 dev_dependencies:

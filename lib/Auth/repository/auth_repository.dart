@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Screens/image_input.dart';
-import 'package:nizecart/bottonNav.dart';
+import 'package:nizecart/botton_nav.dart';
 
 import '../../Models/user_model.dart';
 import '../../Widget/component.dart';

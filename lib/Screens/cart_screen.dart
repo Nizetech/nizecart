@@ -33,6 +33,7 @@ class _CartScreenState extends State<CartScreen> {
     for (var element in cartItems) {
       total += element['qty'];
     }
+    box.put('quantity', total);
     return total;
   }
 
@@ -155,6 +156,14 @@ class _CartScreenState extends State<CartScreen> {
                         itemCount: cartItems.length,
                         itemBuilder: (ctx, i) {
                           print(cartItems[0]);
+                          box.put(
+                            'title',
+                            cartItems.elementAt(i)['title'],
+                          );
+                          // box.put(
+                          //   'description',
+                          //   cartItems.elementAt(i)['description'],
+                          // );
                           return Container(
                             width: double.infinity,
                             alignment: Alignment.center,

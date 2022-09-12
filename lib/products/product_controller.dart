@@ -76,4 +76,25 @@ class ProductController {
   Future<String> uploadFile(File file) {
     return productRepository.uploadFile(file);
   }
+
+  // Create Order
+  Future<bool> orders({
+    String username,
+    String title,
+    String description,
+    int quantity,
+    int totalAmount,
+    String phoneNumber,
+    String address,
+  }) {
+    return productRepository.orders(
+      username: username,
+      title: title,
+      // description: description,
+      quantity: quantity,
+      totalAmount: totalAmount,
+      phoneNumber: phoneNumber,
+      address: address,
+    );
+  }
 }

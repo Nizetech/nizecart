@@ -11,7 +11,7 @@ import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
 
-import '../../bottonNav.dart';
+import '../../botton_nav.dart';
 import 'forgetPaassword.dart';
 
 enum _SupportState {

@@ -54,7 +54,9 @@ class ShopListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(ProductScreen());
+        Get.to(ProductScreen(
+          data: data,
+        ));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,7 +117,7 @@ class ShopListView2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(ProductScreen());
+        Get.to(ProductScreen(data: data));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

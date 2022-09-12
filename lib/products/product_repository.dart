@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nizecart/Models/orders.dart';
 import 'package:nizecart/Models/product_model.dart';
 
 import '../Widget/component.dart';
@@ -35,7 +36,7 @@ class ProductRepository {
         description: description,
         price: price,
         imageUrl: imageUrl,
-        favorite: false,
+        favorite: [],
         productID: productID,
         rating: 0,
       );
@@ -157,6 +158,41 @@ class ProductRepository {
     await userCredential.doc(getUser().uid).update({
       'favorite': true,
     });
+  }
+
+  Future<bool> orders({
+    String username,
+    String title,
+    // String description,
+    int quantity,
+    int totalAmount,
+    String phoneNumber,
+    String address,
+  }) async {
+    final orderId = '${DateTime.now().millisecondsSinceEpoch}';
+    CollectionReference userCredential = firestore.collection('Users');
+
+    try {
+      var orderData = OrderModel(
+        username: username,
+        title: title,
+        quantity: quantity,
+        phoneNumber: phoneNumber,
+        totalAmount: totalAmount,
+        address: address,
+      );
+      await userCredential
+          .doc(getUser().uid)
+          .collection('order')
+          .doc(orderId)
+          .set(orderData.toMap());
+      showToast('Order placed successfully');
+      return true;
+    } catch (e) {
+      print(e.toString());
+      showErrorToast('Something went wrong');
+      return false;
+    }
   }
 
   Future<Map> getProduct() async {
