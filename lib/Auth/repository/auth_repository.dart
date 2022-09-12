@@ -264,19 +264,30 @@ class AuthRepository {
 // Get user details
   Future<Map> getUserDetails() async {
     CollectionReference userCredential = firestore.collection('Users');
-    DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
-    print(shot);
-    return shot.data();
+    try {
+      DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
+      print('User details ${shot}');
+      return shot.data();
+    } catch (e) {
+      print(e.toString());
+      return {};
+    }
   }
 
   Future<UserModel> getUserCurrentUserData() async {
-    var userData =
-        await firestore.collection('Users').doc(auth.currentUser.uid).get();
-    UserModel user;
-    if (userData.data() != null) {
-      user = UserModel.fromMap(userData.data());
+    try {
+      var userData =
+          await firestore.collection('Users').doc(auth.currentUser.uid).get();
+      UserModel user;
+      if (userData.data() != null) {
+        user = UserModel.fromMap(userData.data());
+      }
+      print('User ${user}');
+      return user;
+    } catch (e) {
+      print(e.toString());
+      return null;
     }
-    return user;
   }
 
 // Send Email Verification

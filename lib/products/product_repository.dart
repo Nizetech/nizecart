@@ -160,6 +160,7 @@ class ProductRepository {
     });
   }
 
+// Make order
   Future<bool> orders({
     String username,
     String title,
@@ -175,6 +176,9 @@ class ProductRepository {
     try {
       var orderData = OrderModel(
         username: username,
+        orderID: orderId,
+        orderDate: DateTime.now(),
+        userID: auth.currentUser.uid,
         title: title,
         quantity: quantity,
         phoneNumber: phoneNumber,

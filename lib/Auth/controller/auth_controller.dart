@@ -81,11 +81,11 @@ class AuthController {
     return authRepository.getUserDetails();
   }
 
-  // // Get UserData
-  // Future<UserModel> getUserCurrentUserData() async {
-  //   UserModel user = await authRepository.getUserCurrentUserData();
-  //   return user;
-  // }
+  // Get UserData
+  Future<UserModel> getUserCurrentUserData() async {
+    UserModel user = await authRepository.getUserCurrentUserData();
+    return user;
+  }
 
   // Determine Position(Map)
   Future<Position> determinePosition() {

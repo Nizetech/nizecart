@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class OrderModel {
+  final String userID;
+  final String orderID;
+  final DateTime orderDate;
   final String username;
   final String title;
-  // final String description;
   final int quantity;
   final String address;
   // final bool paymentMethod;
@@ -9,8 +13,10 @@ class OrderModel {
   final int totalAmount;
   OrderModel({
     this.username,
+    this.orderID,
+    this.orderDate,
     this.title,
-    // this.description,
+    this.userID,
     this.quantity,
     this.phoneNumber,
     this.totalAmount,
@@ -20,8 +26,10 @@ class OrderModel {
   Map<String, dynamic> toMap() {
     return {
       'username': username,
+      'orderID': orderID,
       'title': title,
-      // 'description': description,
+      'userID': userID,
+      'ordered_date': Timestamp.now(),
       'quantity': quantity,
       'phoneNumber': phoneNumber,
       'address': address,
@@ -32,7 +40,9 @@ class OrderModel {
     return OrderModel(
       username: map['username'],
       title: map['title'],
-      // description: map['description'],
+      userID: map['userID'],
+      orderID: map['orderID'],
+      orderDate: map[Timestamp.now()],
       quantity: map['quantity'],
       phoneNumber: map['phoneNumber'],
       address: map['address'],

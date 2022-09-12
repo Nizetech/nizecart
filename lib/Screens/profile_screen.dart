@@ -52,7 +52,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    user.reload();
+    // user.reload();
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -83,7 +83,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               } else {
-              String data = snapshot.data['photoUrl'];
+                String data = snapshot.data['photoUrl'];
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

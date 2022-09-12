@@ -282,23 +282,33 @@ Widget loader() {
   );
 }
 
-void showToast(String label) {
-  Fluttertoast.showToast(
-    msg: label,
+dynamic showToast(String label) {
+  return Get.snackbar(
+    'Success',
+    label,
     backgroundColor: Colors.green,
-    gravity: ToastGravity.BOTTOM,
-    timeInSecForIosWeb: 1,
-    toastLength: Toast.LENGTH_SHORT,
+    colorText: white,
+    snackPosition: SnackPosition.BOTTOM,
+    margin: const EdgeInsets.only(
+      bottom: 20,
+      right: 20,
+      left: 20,
+    ),
   );
 }
 
-void showErrorToast(String label) {
-  Fluttertoast.showToast(
-    msg: label,
+dynamic showErrorToast(String label) {
+  return Get.snackbar(
+    'Error',
+    label,
     backgroundColor: Colors.red,
-    gravity: ToastGravity.BOTTOM,
-    timeInSecForIosWeb: 1,
-    toastLength: Toast.LENGTH_SHORT,
+    colorText: Colors.white,
+    snackPosition: SnackPosition.BOTTOM,
+    margin: const EdgeInsets.only(
+      bottom: 20,
+      right: 20,
+      left: 20,
+    ),
   );
 }
 

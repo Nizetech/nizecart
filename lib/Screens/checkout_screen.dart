@@ -129,8 +129,6 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
           child: FutureBuilder(
               future: ref.read(authtControllerProvider).getUserDetails(),
               builder: (context, snapshot) {
-                // print(snapshot.data['address']);
-
                 if (!snapshot.hasData) {
                   return const Center(
                       child: Padding(
@@ -138,6 +136,8 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                     child: CircularProgressIndicator(),
                   ));
                 } else {
+                  // print(snapshot.data['address']);
+                  // print('Here i  am ${snapshot.data}');
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -197,7 +197,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                             SizedBox(height: 5),
                             Row(
                               children: [
-                                snapshot.data['address'] == ''
+                                snapshot.data['address'] == null
                                     ? Expanded(
                                         child: Text(
                                           'No adresss',

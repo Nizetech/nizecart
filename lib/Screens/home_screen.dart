@@ -66,16 +66,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       backgroundColor: white,
       body: FutureBuilder(
           future: Future.wait([
-            ref.read(authtControllerProvider).getUserDetails(),
             ref.read(productControllerProvider).searchProduct(search.text),
+            ref.read(authtControllerProvider).getUserDetails(),
+            // ref.read(authtControllerProvider).getUserCurrentUserData(),
           ]),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return shimmer(context);
             } else {
-              Map details = snapshot.data[0];
-              List searchProduct = snapshot.data[1];
+              List searchProduct = snapshot.data[0];
+              Map details = snapshot.data[1];
               print('Current search: ${searchProduct}');
+              print('User details: ${details}');
               return Column(
                 children: [
                   Container(
