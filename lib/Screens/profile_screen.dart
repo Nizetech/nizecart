@@ -9,6 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:local_auth/local_auth.dart';
 
 import '../Auth/controller/auth_controller.dart';
 import '../Widget/component.dart';
@@ -49,6 +50,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
     return;
   }
+
+  bool isLocked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -247,6 +250,34 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       'Account Name: $displayName',
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                    ListTile(
+                      leading: Text(
+                        'Biomertrics : $displayName',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      trailing: Switch(
+                        trackColor:
+                            MaterialStateProperty.all(const Color(0xffD8D8D8)),
+                        activeColor: const Color(0xff34C759),
+                        value: isLocked,
+                        onChanged: (val) {
+                          LocalAuthentication()
+                              .authenticate(
+                            localizedReason: 'Please authenticate to continue',
+                          )
+                              .then((val) {
+                            if (val) {
+                              print(val);
+                              setState(() {
+                                isLocked = val;
+                              });
+                              Hive.box('yarlo').put('isLocked', isLocked);
+                            }
+                          });
+                        },
+                      ),
                     ),
                   ],
                 );

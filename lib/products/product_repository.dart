@@ -105,7 +105,8 @@ class ProductRepository {
       //     snaps.docs.map((doc) => Product.fromJson(doc.data())).toList();
       //     await products.where('title', isEqualTo: query).get();
       // List<Product> items = [];
-      var snaps = await products.where('title', isEqualTo: query).get();
+      QuerySnapshot snaps =
+          await products.where('title', isEqualTo: query).get();
       List<Map> items = [];
       List<QueryDocumentSnapshot> docs = snaps.docs;
       for (var item in snaps.docs) {

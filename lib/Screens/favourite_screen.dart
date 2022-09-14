@@ -118,57 +118,64 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                 ],
                               ),
                               padding: EdgeInsets.all(15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Row(
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: CachedNetworkImage(
                                       imageUrl: snapshot.data[i]['imageUrl'],
-                                      width: double.infinity,
-                                      height: 120,
+                                      width: 100,
+                                      height: 100,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: Icon(Iconsax.heart5),
-                                    // : const Icon(Iconsax.heart),
-                                    onPressed: () {
-                                      // setState(() {
-                                      //   item['isFav'] = !item['isFav'];
-                                      //   selectedItem.add(item);
-                                      //   box.put('fav', selectedItem);
-                                      // });
-                                    },
-                                    color: mainColor,
+                                  SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(Iconsax.heart5),
+                                        // : const Icon(Iconsax.heart),
+                                        onPressed: () {
+                                          // setState(() {
+                                          //   item['isFav'] = !item['isFav'];
+                                          //   selectedItem.add(item);
+                                          //   box.put('fav', selectedItem);
+                                          // });
+                                        },
+                                        color: mainColor,
+                                      ),
+                                      const SizedBox(height: 3),
+                                      Text(
+                                        snapshot.data[i]['title'],
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                      const SizedBox(height: 3),
+                                      Text(
+                                        '\$ ${snapshot.data[i]['price']}',
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(height: 3),
+                                      RatingBarIndicator(
+                                        rating: 2.75,
+                                        itemBuilder: (context, index) =>
+                                            const Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                        itemCount: 5,
+                                        itemSize: 15,
+                                        direction: Axis.horizontal,
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
                                   ),
-                                  const SizedBox(height: 3),
-                                  Text(
-                                    snapshot.data[i]['title'],
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  const SizedBox(height: 3),
-                                  Text(
-                                    '\$ ${snapshot.data[i]['price']}',
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(height: 3),
-                                  RatingBarIndicator(
-                                    rating: 2.75,
-                                    itemBuilder: (context, index) => const Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
-                                    itemCount: 5,
-                                    itemSize: 15,
-                                    direction: Axis.horizontal,
-                                  ),
-                                  const SizedBox(height: 10),
                                 ],
                               )),
                         );

@@ -257,13 +257,12 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                   children: [
                     Container(
                       alignment: Alignment.center,
+                      padding: EdgeInsets.all(15),
                       // width: MediaQuery.of(context).size.width * .43,
                       width: double.infinity,
-                      margin: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(20),
-                        ),
+                        borderRadius: BorderRadius.circular(20),
                         color: white,
                         boxShadow: [
                           BoxShadow(
@@ -277,14 +276,45 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: CachedNetworkImage(
-                              imageUrl: widget.data['imageUrl'],
-                              width: double.infinity,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
+                          Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.data['imageUrl'],
+                                  width: 120,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    icon: isFavorite
+                                        ? const Icon(Iconsax.heart5)
+                                        : const Icon(Iconsax.heart),
+                                    onPressed: () {
+                                      // !isFavorite
+                                      //     ? addFav(widget.data)
+                                      //     : removeFav(widget.data);
+                                    },
+                                    color: mainColor,
+                                  ),
+                                  SizedBox(height: 3),
+                                  Text(
+                                    widget.data['title'],
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
                           Padding(
                             padding: const EdgeInsets.all(10),
@@ -310,28 +340,6 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                   itemSize: 15,
                                   direction: Axis.horizontal,
                                 ),
-                                IconButton(
-                                  icon: isFavorite
-                                      ? const Icon(Iconsax.heart5)
-                                      : const Icon(Iconsax.heart),
-                                  onPressed: () {
-                                    // !isFavorite
-                                    //     ? addFav(widget.data)
-                                    //     : removeFav(widget.data);
-                                  },
-                                  color: mainColor,
-                                ),
-                                SizedBox(height: 3),
-                                Text(
-                                  widget.data['title'],
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600),
-                                ),
-
                                 SizedBox(height: 10),
                                 Row(
                                     mainAxisAlignment:
@@ -400,69 +408,38 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                             });
                                           }),
                                     ]),
-                                // SizedBox(
-                                //   height: 40,
-                                //   child: CustomButton(
-                                //     text: 'Add to cart',
-                                //     onPressed: () {},
-                                //   ),
-                                // )
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Positioned(
-                      top: 20,
-                      right: 20,
-                      child: Container(
-                        height: 20,
-                        width: 55,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(0),
-                                bottomLeft: Radius.circular(10),
-                                topRight: Radius.circular(20)),
-                            color: priColor),
-                        child: const Text(
-                          'Express',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Positioned(
+                    //   top: 20,
+                    //   right: 20,
+                    //   child: Container(
+                    //     height: 20,
+                    //     width: 55,
+                    //     alignment: Alignment.center,
+                    //     decoration: const BoxDecoration(
+                    //         borderRadius: BorderRadius.only(
+                    //             topLeft: Radius.circular(0),
+                    //             bottomLeft: Radius.circular(10),
+                    //             topRight: Radius.circular(20)),
+                    //         color: priColor),
+                    //     child: const Text(
+                    //       'Express',
+                    //       style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontWeight: FontWeight.w500,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ],
-              //   } ,
-              // );
-              // Expanded(
-              //   child: GridView.builder(
-              //       gridDelegate:
-              //           const SliverGridDelegateWithFixedCrossAxisCount(
-              //               crossAxisCount: 2, childAspectRatio: 0.55),
-              //       shrinkWrap: true,
-              //       // physics: BouncingScrollPhysics(),
-              //       itemCount: widget.data.length,
-              //       itemBuilder: (ctx, i) {
-              //         data = snapshot.data[i];
-              //         return GestureDetector(
-              //           onTap: () => Get.to(
-              //             ProductDetailsScreen(),
-              //           ),
-              //           child:
-
-              //         );
-              // );
-              // }
             ),
-            // );
-            //   }
-            // },
           ),
         ],
       ),

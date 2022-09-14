@@ -84,12 +84,12 @@ class _UpdateScreenState extends ConsumerState<UpdateScreen> {
         await ref.read(productControllerProvider).uploadFile(updateImage);
 
     ref.read(productControllerProvider).updateProduct(
-          imageUrl,
+          // 'imageUrl,'
+          '',
           newTitle.text.trim(),
           newDescription.text.trim(),
           int.parse(price.text.trim()),
         );
-
     initValue();
     showToast('Product Updated');
     Get.back();
