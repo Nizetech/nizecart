@@ -67,7 +67,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: FutureBuilder(
           future: Future.wait([
             ref.read(productControllerProvider).searchProduct(search.text),
-            ref.read(authtControllerProvider).getUserDetails(),
+            // ref.read(authtControllerProvider).getUserDetails(),
             // ref.read(authtControllerProvider).getUserCurrentUserData(),
           ]),
           builder: (context, snapshot) {
@@ -75,9 +75,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               return shimmer(context);
             } else {
               List searchProduct = snapshot.data[0];
-              Map details = snapshot.data[1];
               print('Current search: ${searchProduct}');
-              print('User details: ${details}');
               return Column(
                 children: [
                   Container(
@@ -94,49 +92,64 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Good ${greeting()} $name !',
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Get.to(ProfileScreen());
-                              },
-                              child: Container(
-                                height: 40,
-                                width: 40,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  color:
-                                      const Color.fromARGB(255, 221, 213, 213),
-                                ),
-                                child: details['photoUrl'] == null
-                                    ? const Icon(
-                                        Iconsax.user,
-                                        size: 30,
-                                        color: secColor,
-                                      )
-                                    : ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: CachedNetworkImage(
-                                          imageUrl: details['photoUrl'],
-                                          height: 40,
-                                          width: 40,
-                                          fit: BoxFit.cover,
-                                        ),
+                        StreamBuilder(
+                          stream:
+                              ref.read(authtControllerProvider).userDetails(),
+                          builder: (context, snapshot) {
+                            // Map details = snapshot.data;
+                            // print('User details: ${details}');
+                            if (!snapshot.hasData) {
+                              return shimmer(context);
+                            } else {
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Good ${greeting()} $name !',
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.to(ProfileScreen());
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(25),
+                                        color: const Color.fromARGB(
+                                            255, 221, 213, 213),
                                       ),
-                              ),
-                            ),
-                          ],
+                                      child: snapshot.data['photoUrl'] == null
+                                          ? const Icon(
+                                              Iconsax.user,
+                                              size: 30,
+                                              color: secColor,
+                                            )
+                                          : ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    snapshot.data['photoUrl'],
+                                                height: 40,
+                                                width: 40,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                          },
                         ),
                         const SizedBox(
                           height: 10,

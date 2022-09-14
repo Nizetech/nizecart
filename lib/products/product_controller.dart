@@ -42,7 +42,7 @@ class ProductController {
     String imageUrl,
     String title,
     String description,
-    String price,
+    int price,
   ) {
     productRepository.updateProduct(
       imageUrl: imageUrl,

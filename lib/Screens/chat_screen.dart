@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -48,18 +49,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               color: Colors.white,
             ),
           ),
-          title: FutureBuilder(
-              future: ref.read(authtControllerProvider).getUserDetails(),
+          title: StreamBuilder(
+              stream: ref.read(authtControllerProvider).userDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 } else {
-                  Map data = snapshot.data;
-                  print(data['photoUrl']);
+                  // DocumentSnapshot data = snapshot.data;
+                  // print(data['photoUrl']);
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      data['photoUrl'] == null
+                      snapshot.data['photoUrl'] == null
                           ? const Icon(
                               Iconsax.user,
                               size: 30,
@@ -68,7 +69,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(25),
                               child: CachedNetworkImage(
-                                imageUrl: data['photoUrl'],
+                                imageUrl: snapshot.data['photoUrl'],
                                 height: 50,
                                 width: 50,
                                 fit: BoxFit.cover,

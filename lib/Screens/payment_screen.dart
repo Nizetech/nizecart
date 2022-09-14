@@ -10,7 +10,7 @@ import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
 import '../keys/keys.dart';
-import 'package:flutterwave/flutterwave.dart';
+// import 'package:flutterwave/flutterwave.dart';
 
 class PaymentMethod extends ConsumerStatefulWidget {
   // final int totalAmount;
@@ -115,55 +115,55 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
 
   //Add a method to make the flutter wave payment
   //This Method includes all the values needed to create the Flutterwave Instance
-  void _makeFlutterwavePayment(
-      {BuildContext context,
-      String fullname,
-      String phone,
-      String email,
-      String amount}) async {
-    try {
-      Flutterwave flutterwave = Flutterwave.forUIPayment(
-          //the first 10 fields below are required/mandatory
-          context: this.context,
-          fullName: fullname,
-          phoneNumber: phone,
-          email: email,
-          amount: amount,
-          //Use your Public and Encription Keys from your Flutterwave account on the dashboard
-          encryptionKey: "FLWSECK_TESTcc5d33c6963a",
-          publicKey: "FLWPUBK_TEST-5440b97b8cee96f460db958b2e1064be-X",
-          currency: FlutterwaveCurrency.NGN,
-          txRef: DateTime.now().toIso8601String(),
-          //Setting DebugMode below to true since will be using test mode.
-          //You can set it to false when using production environment.
-          isDebugMode: false,
-          //configure the the type of payments that your business will accept
-          acceptCardPayment: true,
-          acceptUSSDPayment: true,
-          acceptBankTransfer: true,
-          acceptAccountPayment: true,
-          acceptFrancophoneMobileMoney: false,
-          acceptGhanaPayment: false,
-          acceptMpesaPayment: false,
-          acceptRwandaMoneyPayment: false,
-          acceptUgandaPayment: false,
-          acceptZambiaPayment: false);
+  // void _makeFlutterwavePayment(
+  //     {BuildContext context,
+  //     String fullname,
+  //     String phone,
+  //     String email,
+  //     String amount}) async {
+  //   try {
+  //     Flutterwave flutterwave = Flutterwave.forUIPayment(
+  //         //the first 10 fields below are required/mandatory
+  //         context: this.context,
+  //         fullName: fullname,
+  //         phoneNumber: phone,
+  //         email: email,
+  //         amount: amount,
+  //         //Use your Public and Encription Keys from your Flutterwave account on the dashboard
+  //         encryptionKey: "FLWSECK_TESTcc5d33c6963a",
+  //         publicKey: "FLWPUBK_TEST-5440b97b8cee96f460db958b2e1064be-X",
+  //         currency: FlutterwaveCurrency.NGN,
+  //         txRef: DateTime.now().toIso8601String(),
+  //         //Setting DebugMode below to true since will be using test mode.
+  //         //You can set it to false when using production environment.
+  //         isDebugMode: false,
+  //         //configure the the type of payments that your business will accept
+  //         acceptCardPayment: true,
+  //         acceptUSSDPayment: true,
+  //         acceptBankTransfer: true,
+  //         acceptAccountPayment: true,
+  //         acceptFrancophoneMobileMoney: false,
+  //         acceptGhanaPayment: false,
+  //         acceptMpesaPayment: false,
+  //         acceptRwandaMoneyPayment: false,
+  //         acceptUgandaPayment: false,
+  //         acceptZambiaPayment: false);
 
-      final response = await flutterwave.initializeForUiPayments();
-      if (response == null) {
-        print("Transaction Failed");
-      } else {
-        if (response.status == "Transaction successful") {
-          print(response.data);
-          print(response.message);
-        } else {
-          print(response.message);
-        }
-      }
-    } catch (error) {
-      print(error);
-    }
-  }
+  //     final response = await flutterwave.initializeForUiPayments();
+  //     if (response == null) {
+  //       print("Transaction Failed");
+  //     } else {
+  //       if (response.status == "Transaction successful") {
+  //         print(response.data);
+  //         print(response.message);
+  //       } else {
+  //         print(response.message);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     print(error);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -368,16 +368,16 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                         //       phoneNumber: '',
                         //       address: widget.data['address'],
                         //     );
-                        print(widget.data['totalAmount']);
-                        _makeFlutterwavePayment(
-                          context: context,
-                          fullname: name,
-                          phone: '09072026425',
-                          email: email,
-                          amount: widget.data['totalAmount'].toString(),
-                        );
+                        // print(widget.data['totalAmount']);
+                        // _makeFlutterwavePayment(
+                        //   context: context,
+                        //   fullname: name,
+                        //   phone: '09072026425',
+                        //   email: email,
+                        //   amount: widget.data['totalAmount'].toString(),
+                        // );
 
-                        // chargeCard();
+                        chargeCard();
                       },
                     ),
                   ],

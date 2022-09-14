@@ -38,6 +38,13 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
     Get.back();
   }
 
+  @override
+  void initState() {
+    ref.read(authtControllerProvider).userDetails();
+
+    super.initState();
+  }
+
   Position _currentPosition;
   String _currentAddress;
 
@@ -126,8 +133,8 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
         onRefresh: refresh,
         color: mainColor,
         child: SingleChildScrollView(
-          child: FutureBuilder(
-              future: ref.read(authtControllerProvider).getUserDetails(),
+          child: StreamBuilder(
+              stream: ref.read(authtControllerProvider).userDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(
@@ -198,7 +205,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                             Row(
                               children: [
                                 snapshot.data['address'] == null
-                                    ? Expanded(
+                                    ? const Expanded(
                                         child: Text(
                                           'No adresss',
                                           overflow: TextOverflow.ellipsis,
@@ -212,7 +219,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                           snapshot.data['address'],
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 3,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 16, color: Colors.grey),
                                         ),
                                       ),
@@ -228,7 +235,10 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                             children: [
                                               TextField(
                                                 maxLines: 5,
-                                                controller: address,
+                                                controller: address =
+                                                    TextEditingController(
+                                                        text: snapshot
+                                                            .data['address']),
                                                 decoration: InputDecoration(
                                                   hintText: 'Update Address',
                                                   enabled: true,
@@ -254,6 +264,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                                   text: 'Update address',
                                                   onPressed: () {
                                                     changeAddress();
+                                                    Navigator.of(context).pop();
                                                   })
                                             ],
                                           ),

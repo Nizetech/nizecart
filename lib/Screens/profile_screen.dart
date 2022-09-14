@@ -76,13 +76,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       backgroundColor: white,
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: FutureBuilder(
-            future: ref.read(authtControllerProvider).getUserDetails(),
+        child: StreamBuilder(
+            // future: ref.read(authtControllerProvider).getUserDetails(),
+            stream: ref.read(authtControllerProvider).userDetails(),
             builder: (context, snapshot) {
-              // print(snapshot.data['photoUrl']);
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               } else {
+                print(snapshot.data['photoUrl']);
                 String data = snapshot.data['photoUrl'];
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

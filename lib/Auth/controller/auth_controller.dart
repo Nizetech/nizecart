@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
@@ -13,7 +14,7 @@ final authtControllerProvider = Provider((ref) {
 
 final userDataAuthProvider = FutureProvider((ref) {
   final authController = ref.watch(authtControllerProvider);
-  return authController.getUserDetails();
+  return authController.userDetails();
 });
 
 class AuthController {
@@ -77,21 +78,25 @@ class AuthController {
   }
 
   // get Userdetails
-  Future<Map> getUserDetails() {
-    return authRepository.getUserDetails();
-  }
+  // Future<Map> getUserDetails() {
+  //   return authRepository.getUserDetails();
+  // }
 
   // Get UserData
-  Future<UserModel> getUserCurrentUserData() async {
-    UserModel user = await authRepository.getUserCurrentUserData();
-    return user;
-  }
+  // Future<UserModel> getUserCurrentUserData() async {
+  //   UserModel user = await authRepository.getUserCurrentUserData();
+  //   return user;
+  // }
 
   // Determine Position(Map)
   Future<Position> determinePosition() {
     return authRepository.determinePosition();
   }
 
+//Get Stream userDetails
+  Stream<DocumentSnapshot> userDetails() {
+    return authRepository.userDetails();
+  }
   // GetCurrentUser
 //   Future<void> getUserDetails() {
 //     return authRepository.getUserDetails();

@@ -262,33 +262,47 @@ class AuthRepository {
   }
 
 // Get user details
-  Future<Map> getUserDetails() async {
+  // Future<Map> getUserDetails() async {
+  //   CollectionReference userCredential = firestore.collection('Users');
+  //   try {
+  //     DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
+  //     print('User details ${shot}');
+  //     return shot.data();
+  //   } catch (e) {
+  //     print(e.toString());
+  //     return {};
+  //   }
+  // }
+
+  /// stream userdetails
+  Stream<DocumentSnapshot> userDetails() {
     CollectionReference userCredential = firestore.collection('Users');
     try {
-      DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
-      print('User details ${shot}');
-      return shot.data();
-    } catch (e) {
-      print(e.toString());
-      return {};
-    }
-  }
-
-  Future<UserModel> getUserCurrentUserData() async {
-    try {
-      var userData =
-          await firestore.collection('Users').doc(auth.currentUser.uid).get();
-      UserModel user;
-      if (userData.data() != null) {
-        user = UserModel.fromMap(userData.data());
-      }
-      print('User ${user}');
-      return user;
+      var snap = userCredential.doc(getUser().uid).snapshots();
+      print('User details ${snap}');
+      // return shot.data();
+      return snap;
     } catch (e) {
       print(e.toString());
       return null;
     }
   }
+
+  // Future<UserModel> getUserCurrentUserData() async {
+  //   try {
+  //     var userData =
+  //         await firestore.collection('Users').doc(auth.currentUser.uid).get();
+  //     UserModel user;
+  //     if (userData.data() != null) {
+  //       user = UserModel.fromMap(userData.data());
+  //     }
+  //     print('User ${user}');
+  //     return user;
+  //   } catch (e) {
+  //     print(e.toString());
+  //     return null;
+  //   }
+  // }
 
 // Send Email Verification
   void sendVerificationEmail() async {

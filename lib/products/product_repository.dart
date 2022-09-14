@@ -125,7 +125,7 @@ class ProductRepository {
     String imageUrl,
     String title,
     String description,
-    String price,
+    int price,
   }) async {
     final productID = '${DateTime.now().millisecondsSinceEpoch}';
     CollectionReference products = firestore.collection('Products');

@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/home_screen.dart';
@@ -42,12 +42,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           backgroundColor: white),
-      home:
-          // ProductsOverviewScreen(),
-          isLoggedIn ? BottomNav() : SignInScreen(),
-      // SignInScreen(),
-      // ManageProducts(),
-      //  AddUser('RossMarry', 'nizetech', 56),
+      home: isLoggedIn ? BottomNav() : SignInScreen(),
     );
   }
 }
