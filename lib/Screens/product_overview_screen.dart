@@ -29,11 +29,12 @@ class _ProductsOverviewScreenState
     // products = Hive.box('name')
     return Scaffold(
       appBar: AppBar(
-          title: Text('Products'),
-          leading: IconButton(
-            onPressed: (() => Get.back()),
-            icon: Icon(Icons.arrow_back),
-          )),
+        title: Text('Products'),
+        // leading: IconButton(
+        // onPressed: (() => Get.back()),
+        // icon: Icon(Icons.arrow_back),
+        // )
+      ),
       body: FutureBuilder<List<dynamic>>(
         future: ref.read(productControllerProvider).getProduct(),
         builder: (context, snapshot) {

@@ -84,6 +84,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     }
   }
 
+
+// Finger Print
   _SupportState _supportState = _SupportState.unknown;
   bool _canCheckBiometrics;
   List<BiometricType> _availableBiometrics;

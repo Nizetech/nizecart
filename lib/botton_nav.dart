@@ -18,8 +18,8 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
-  static Box box = Hive.box('name');
-  bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
+  // static Box box = Hive.box('name');
+  // bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
   int index = 0;
   int currentIndex = 0;
   List<Widget> body = [
@@ -56,7 +56,7 @@ class _BottomNavState extends State<BottomNav> {
               label: 'Category'),
           BottomNavigationBarItem(
             icon: Icon(Iconsax.heart),
-            label: 'Favourite',
+            label: 'Favorite',
           ),
           BottomNavigationBarItem(
             icon: Icon(Iconsax.user),

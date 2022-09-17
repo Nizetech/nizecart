@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/Screens/product_details.dart';
+import 'package:nizecart/Screens/products_list.dart';
+import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
 
-class CategoryScreen extends StatefulWidget {
+class CategoryScreen extends ConsumerStatefulWidget {
   CategoryScreen({Key key}) : super(key: key);
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  ConsumerState<CategoryScreen> createState() => _CategoryScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
+class _CategoryScreenState extends ConsumerState<CategoryScreen> {
+  List<String> cat = [
+    'Grocery',
+    'Homes & Garden',
+    'Phones & Tablets',
+    'Computing',
+    'Electronics',
+    'Fashion',
+    'Baby Products',
+    'Gaming',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,112 +36,35 @@ class _CategoryScreenState extends State<CategoryScreen> {
         centerTitle: true,
       ),
       backgroundColor: white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-              decoration: BoxDecoration(color: white, boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 3),
-                  blurRadius: 5,
-                  color: Colors.grey.withOpacity(.2),
-                )
-              ]),
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () {},
-                    contentPadding: EdgeInsets.only(left: 10, right: 10),
-                    title: const Text(
-                      'Grocery',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+      body: FutureBuilder(
+        future: ref.read(productControllerProvider).getFavProduct(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return loader();
+          } else {
+            List product = snapshot.data;
+            return ListView.separated(
+              itemCount: cat.length,
+              separatorBuilder: (ctx, i) => Divider(),
+              itemBuilder: (ctx, i) {
+                return ListTile(
+                  onTap: () => Get.to(
+                    ProductList(
+                      data: product,
+                      productName: cat[i],
                     ),
-                    trailing: Icon(Icons.navigate_next),
                   ),
-                  Divider(),
-                  ListTile(
-                    onTap: () {},
-                    contentPadding: EdgeInsets.only(left: 10, right: 10),
-                    title: const Text(
-                      'Homes & Garden',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                    ),
-                    trailing: Icon(Icons.navigate_next),
+                  contentPadding: EdgeInsets.only(left: 10, right: 10),
+                  title: Text(
+                    cat[i],
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                   ),
-                  Divider(),
-                  ListTile(
-                    onTap: () {},
-                    contentPadding: EdgeInsets.only(left: 10, right: 10),
-                    title: const Text(
-                      'Phones & Tablets',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                    ),
-                    trailing: Icon(Icons.navigate_next),
-                  ),
-                  Divider(),
-                  ListTile(
-                    onTap: () {},
-                    contentPadding: EdgeInsets.only(left: 10, right: 10),
-                    title: const Text(
-                      'Computing',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                    ),
-                    trailing: Icon(Icons.navigate_next),
-                  ),
-                  Divider(),
-                  ListTile(
-                    onTap: () {},
-                    contentPadding: EdgeInsets.only(left: 10, right: 10),
-                    title: const Text(
-                      'Electronics',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                    ),
-                    trailing: Icon(Icons.navigate_next),
-                  ),
-                  Divider(),
-                  ListTile(
-                    onTap: () {},
-                    contentPadding: EdgeInsets.only(left: 10, right: 10),
-                    title: const Text(
-                      'Fashion',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                    ),
-                    trailing: Icon(Icons.navigate_next),
-                  ),
-                  Divider(),
-                  ListTile(
-                    onTap: () {},
-                    contentPadding: EdgeInsets.only(left: 10, right: 10),
-                    title: const Text(
-                      'Baby Poducts',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                    ),
-                    trailing: Icon(Icons.navigate_next),
-                  ),
-                  Divider(),
-                  ListTile(
-                    onTap: () {},
-                    contentPadding: EdgeInsets.only(left: 10, right: 10),
-                    title: Text(
-                      'Gaming',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                    ),
-                    trailing: Icon(Icons.navigate_next),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+                  trailing: Icon(Icons.navigate_next),
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }

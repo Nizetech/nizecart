@@ -9,6 +9,7 @@ import 'package:nizecart/Screens/product_details.dart';
 import 'package:nizecart/Screens/product_overview_screen.dart';
 import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/Widget/component.dart';
+import 'package:nizecart/custom_nav_bar.dart';
 import 'package:path_provider/path_provider.dart' as path;
 
 import 'Screens/manage_product_screen.dart';
@@ -39,10 +40,15 @@ class MyApp extends StatelessWidget {
               elevation: 0,
               color: secColor,
               foregroundColor: white),
+          scaffoldBackgroundColor: Colors.grey[100],
           primarySwatch: Colors.red,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           backgroundColor: white),
-      home: isLoggedIn ? BottomNav() : SignInScreen(),
+      home: isLoggedIn
+          ?
+          // BottomNav()
+          CustomNavBar()
+          : SignInScreen(),
     );
   }
 }

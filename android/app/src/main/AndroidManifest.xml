@@ -15,10 +15,8 @@
         android:icon="@mipmap/ic_launcher">
          <meta-data android:name="com.google.android.geo.API_KEY"
               android:value="AIzaSyCoqB6HQyUYRqF8b85frFi9OKYyXfU7Q3U"/>  
-       <!-- android:name="io.flutter.embedding.android.FlutterFragmentActivity"  -->
         <activity
             android:name=".MainActivity"
-             android:name="io.flutter.embedding.android.FlutterFragmentActivity"
             android:exported="true" 
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

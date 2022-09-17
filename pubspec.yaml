@@ -30,6 +30,7 @@ dependencies:
   geocoding: ^2.0.4
   flutter_riverpod: ^1.0.4
   local_auth: ^2.1.2
+  persistent_bottom_nav_bar_v2: ^4.2.5
   # flutter_paystack: ^1.0.5
   flutter_paystack:
    git:

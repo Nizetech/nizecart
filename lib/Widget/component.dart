@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:nizecart/Screens/product_screen.dart';
+import 'package:nizecart/Screens/product_details.dart';
+import 'package:nizecart/products/product_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intl;
 
@@ -41,13 +44,19 @@ class CustomButton extends StatelessWidget {
   }
 }
 
-class ShopListView extends StatelessWidget {
+class TopViews extends StatefulWidget {
   final Map data;
 
-  ShopListView({
+  TopViews({
     Key key,
     this.data,
   }) : super(key: key);
+
+  @override
+  State<TopViews> createState() => _TopViewsState();
+}
+
+class _TopViewsState extends State<TopViews> {
   final formatter = intl.NumberFormat.decimalPattern();
 
   @override
@@ -55,111 +64,232 @@ class ShopListView extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(ProductScreen(
-          data: data,
+          data: widget.data,
         ));
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 180,
-            width: 200,
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImage(
-                imageUrl: data['imageUrl'],
-                width: double.infinity,
-                fit: BoxFit.cover,
+      child: Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 150,
+              width: 180,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl: widget.data['imageUrl'],
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            data['title'],
-            maxLines: 1,
-            style: TextStyle(
-              overflow: TextOverflow.ellipsis,
-              color: Colors.black.withOpacity(.7),
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
+            SizedBox(height: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.data['title'],
+                  textAlign: TextAlign.left,
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '₦' + formatter.format(widget.data['price']).toString(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ],
             ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            '₦' + formatter.format(data['price']).toString(),
-            style: const TextStyle(
-              color: Color(0xff343a40),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class ShopListView2 extends StatelessWidget {
+class MainView extends ConsumerStatefulWidget {
   final Map data;
 
-  ShopListView2({
+  MainView({
     Key key,
     this.data,
   }) : super(key: key);
 
+  @override
+  ConsumerState<MainView> createState() => _MainViewState();
+}
+
+class _MainViewState extends ConsumerState<MainView> {
   final formatter = intl.NumberFormat.decimalPattern();
+  bool enable = false;
+
+  // final Map data;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(ProductScreen(data: data));
+        Get.to(ProductScreen(data: widget.data));
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 125,
-            width: 145,
-            // padding: EdgeInsets.all(7),
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(.1),
-              borderRadius: BorderRadius.circular(10),
+      child: Container(
+        height: 250,
+        width: double.infinity,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Transform.translate(
+                  offset: Offset(-9, -12),
+                  child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          enable = !enable;
+                        });
+                        if (enable) {
+                          ref
+                              .read(productControllerProvider)
+                              .addFavorite(widget.data);
+                        } else {
+                          ref
+                              .read(productControllerProvider)
+                              .removeFavorite(widget.data);
+                        }
+                      },
+                      icon: Icon(
+                        // fav.contains(
+                        enable
+                            // )
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: Colors.red[600],
+                      )),
+                ),
+                Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(3),
+                    color: secColor,
+                  ),
+                  child: Text(
+                    '20%',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              ],
             ),
-            child: ClipRRect(
+            ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: data['imageUrl'],
-                width: double.infinity,
+                imageUrl: widget.data['imageUrl'],
+                height: 100,
                 fit: BoxFit.cover,
+                width: double.infinity,
               ),
             ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            data['title'],
-            maxLines: 1,
-            style: TextStyle(
-              overflow: TextOverflow.ellipsis,
-              color: Colors.black.withOpacity(.7),
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
+            SizedBox(height: 10),
+            Divider(
+              thickness: 2,
             ),
-          ),
-          SizedBox(height: 5),
-          Text(
-            '₦' + formatter.format(data['price']).toString(),
-            style: const TextStyle(
-              color: Color(0xff343a40),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+            SizedBox(height: 10),
+            Text(
+              widget.data['title'],
+              textAlign: TextAlign.left,
+              maxLines: 2,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          )
-        ],
+            SizedBox(height: 10),
+            RatingBar.builder(
+              // initialRating: widget.dataating'],
+              updateOnDrag: true,
+              initialRating: 3,
+              allowHalfRating: true,
+              glow: false,
+              onRatingUpdate: (rating) {
+                setState(() {
+                  rating = rating;
+                });
+              },
+              itemBuilder: (context, index) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              itemCount: 5,
+              itemSize: 15,
+              direction: Axis.horizontal,
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '₦' + formatter.format(widget.data['price']),
+                      textAlign: TextAlign.left,
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const Text(
+                      '₦ 978',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        decoration: TextDecoration.lineThrough,
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: mainColor,
+                  ),
+                  child: Text(
+                    'Shop Now',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -352,74 +482,90 @@ Widget shimmer(BuildContext context) {
     baseColor: Colors.grey[300],
     highlightColor: Colors.grey[100],
     enabled: true,
-    child: Padding(
-      padding: const EdgeInsets.all(20),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 152,
-              width: MediaQuery.of(context).size.width * .95,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: Colors.grey),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(height: 10, width: 50, color: Colors.grey),
-                Container(height: 10, width: 50, color: Colors.grey),
-              ],
-            ),
-            SizedBox(height: 15),
-            SizedBox(
-              height: 185,
-              child: ListView.separated(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                separatorBuilder: (ctx, i) => SizedBox(width: 10),
-                itemBuilder: (ctx, i) {
-                  return Container(
+    child: SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            height: 150,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(40)),
+                color: Colors.grey),
+          ),
+          SizedBox(height: 7),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 152,
+                    width: MediaQuery.of(context).size.width * .95,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(height: 10, width: 50, color: Colors.grey),
+                      Container(height: 10, width: 50, color: Colors.grey),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  SizedBox(
                     height: 185,
-                    width: 200,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey),
-                  );
-                },
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      separatorBuilder: (ctx, i) => SizedBox(width: 10),
+                      itemBuilder: (ctx, i) {
+                        return Container(
+                          height: 185,
+                          width: 200,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(height: 10, width: 50, color: Colors.grey),
+                      Container(height: 10, width: 50, color: Colors.grey),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  SizedBox(
+                    height: 185,
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      separatorBuilder: (ctx, i) => SizedBox(width: 10),
+                      itemBuilder: (ctx, i) {
+                        return Container(
+                          height: 125,
+                          width: 145,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(height: 10, width: 50, color: Colors.grey),
-                Container(height: 10, width: 50, color: Colors.grey),
-              ],
-            ),
-            SizedBox(height: 15),
-            SizedBox(
-              height: 185,
-              child: ListView.separated(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                separatorBuilder: (ctx, i) => SizedBox(width: 10),
-                itemBuilder: (ctx, i) {
-                  return Container(
-                    height: 125,
-                    width: 145,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.grey),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );

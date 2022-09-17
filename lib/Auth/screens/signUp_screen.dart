@@ -37,7 +37,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     });
   }
 
-  void sigIn() {
+  void signUp() {
     if (fname.text.isNotEmpty &&
         lname.text.isNotEmpty &&
         phone.text.isNotEmpty &&
@@ -332,7 +332,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
               CustomButton(
                 text: 'Create',
                 onPressed: () {
-                  sigIn();
+                  signUp();
                 },
               )
             ],

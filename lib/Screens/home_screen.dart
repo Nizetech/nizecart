@@ -4,13 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
+import 'package:intl/intl.dart' as intl;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
-import 'package:nizecart/Screens/product_screen.dart';
+import 'package:nizecart/Screens/product_details.dart';
+import 'package:nizecart/Screens/products_list.dart';
 import 'package:nizecart/Screens/profile_screen.dart';
 import 'package:nizecart/products/product_controller.dart';
 import 'package:shimmer/shimmer.dart';
@@ -60,11 +62,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   String name = HomeScreen.box.get('displayName');
   // static FirebaseAuth auth = FirebaseAuth.instance;
   // User user = auth.currentUser;
+  final formatter = intl.NumberFormat.decimalPattern();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: white,
       body: FutureBuilder(
           future: Future.wait([
             ref.read(productControllerProvider).searchProduct(search.text),
@@ -125,26 +127,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Expanded(
-                                      child: Text(
-                                        'Good ${greeting()} $name !',
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      ),
-                                    ),
                                     GestureDetector(
                                       onTap: () {
                                         Get.to(ProfileScreen());
                                       },
                                       child: Container(
-                                        height: 40,
-                                        width: 40,
+                                        height: 50,
+                                        width: 50,
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(25),
+                                              BorderRadius.circular(30),
                                           color: const Color.fromARGB(
                                               255, 221, 213, 213),
                                         ),
@@ -156,15 +149,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               )
                                             : ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(20),
+                                                    BorderRadius.circular(30),
                                                 child: CachedNetworkImage(
                                                   imageUrl:
                                                       snapshot.data['photoUrl'],
-                                                  height: 40,
-                                                  width: 40,
+                                                  height: 50,
+                                                  width: 50,
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 15),
+                                    Expanded(
+                                      child: Text(
+                                        'Good ${greeting()} $name !',
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
                                       ),
                                     ),
                                   ],
@@ -269,7 +272,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             SizedBox(
                                               height: 152,
@@ -388,39 +391,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               ),
                                             ),
                                             SizedBox(height: 20),
-                                            Padding(
+                                            const Padding(
                                               padding: EdgeInsets.only(
                                                   left: 15, right: 15),
-                                              child: Row(
-                                                children: const [
-                                                  Text(
-                                                    'Top Deals',
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Spacer(),
-                                                  Text(
-                                                    "SEE ALL",
-                                                    style: TextStyle(
-                                                      color: priColor,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 2),
-                                                  Icon(
-                                                    Icons
-                                                        .arrow_forward_ios_sharp,
-                                                    size: 13,
-                                                    color: priColor,
-                                                  )
-                                                ],
+                                              child: Text(
+                                                'Top Deals',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                             SizedBox(
-                                              height: 235,
+                                              height: 240,
                                               child: ListView.separated(
                                                 padding: const EdgeInsets.only(
                                                     left: 15,
@@ -429,74 +412,90 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                 shrinkWrap: true,
                                                 scrollDirection:
                                                     Axis.horizontal,
+                                                reverse: true,
                                                 itemCount: product.length,
                                                 separatorBuilder: (ctx, i) =>
                                                     SizedBox(width: 20),
                                                 itemBuilder: (ctx, i) {
                                                   Map data = product[i];
-                                                  return ShopListView(
+                                                  return TopViews(
                                                     data: data,
                                                   );
                                                 },
                                               ),
                                             ),
                                             SizedBox(height: 20),
-                                            const Padding(
+                                            Padding(
                                               padding:
                                                   EdgeInsets.only(left: 15),
                                               child: Align(
                                                 alignment: Alignment.bottomLeft,
-                                                child: Text(
-                                                  'Shop from collections!',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      'Shop from collections!',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    GestureDetector(
+                                                      onTap: () =>
+                                                          Get.to(ProductList(
+                                                        data: product,
+                                                      )),
+                                                      child: const Text(
+                                                        "SEE ALL",
+                                                        style: TextStyle(
+                                                          color: priColor,
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 2),
+                                                    const Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_sharp,
+                                                      size: 13,
+                                                      color: priColor,
+                                                    ),
+                                                    SizedBox(width: 20),
+                                                  ],
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(
-                                              height: 185,
-                                              child: ListView.separated(
-                                                padding: const EdgeInsets.only(
-                                                    left: 15,
-                                                    right: 15,
-                                                    top: 15),
-                                                shrinkWrap: true,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount: product.length,
-                                                separatorBuilder: (ctx, i) =>
-                                                    SizedBox(width: 20),
-                                                itemBuilder: (ctx, i) {
-                                                  Map data = product[i];
+                                            GridView.builder(
+                                              itemCount: product.length < 4
+                                                  ? product.length
+                                                  : 4,
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 20, horizontal: 10),
+                                              shrinkWrap: true,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              gridDelegate:
+                                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                                childAspectRatio: 0.57,
+                                                crossAxisSpacing: 10,
+                                                mainAxisSpacing: 20,
+                                                crossAxisCount: 2,
+                                              ),
+                                              itemBuilder: (ctx, i) {
+                                                Map data = product[i];
 
-                                                  return ShopListView2(
-                                                    data: data,
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 185,
-                                              child: ListView.separated(
-                                                padding: const EdgeInsets.only(
-                                                    left: 15,
-                                                    right: 15,
-                                                    top: 15),
-                                                shrinkWrap: true,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount: product.length,
-                                                separatorBuilder: (ctx, i) =>
-                                                    SizedBox(width: 20),
-                                                itemBuilder: (ctx, i) {
-                                                  Map data = product[i];
-                                                  return ShopListView2(
-                                                    data: data,
-                                                  );
-                                                },
-                                              ),
+                                                // List fav = [products[i]];
+                                                // bool enable = favItems.contains(fav);
+                                                return MainView(
+                                                  data: data,
+                                                );
+                                              },
                                             ),
                                           ],
                                         ),
