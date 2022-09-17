@@ -84,9 +84,12 @@ class _ProductsOverviewScreenState
                                 SlidableAction(
                                   padding: EdgeInsets.zero,
                                   onPressed: (context) {
-                                    // print('delete');
-                                    // ProductService()
-                                    //     .deleteProduct(widget.productID);
+                                    ref
+                                        .read(productControllerProvider)
+                                        .deleteProduct(
+                                          data[index]['productID'],
+                                        );
+                                    setState(() {});
                                   },
                                   spacing: 2,
                                   backgroundColor: Colors.red,
@@ -105,19 +108,36 @@ class _ProductsOverviewScreenState
                                     ? ClipRRect(
                                         borderRadius: BorderRadius.circular(50),
                                         child: CachedNetworkImage(
-                                            imageUrl:
-                                                // 'https://firebasestorage.googleapis.com/v0/b/nizecart-255f9.appspot.com/o/images%2FShFwoLUXSsUzIbjtwi88L59AVFc2.jpg?alt=media&token=f946ea96-31ba-47bb-a681-2845a7665ac4',
-                                                data[index]['imageUrl'],
+                                            imageUrl: data[index]['imageUrl'],
                                             width: 50,
                                             height: 50,
                                             fit: BoxFit.cover),
                                       )
                                     : const Text('No Image'),
-                                // Image.network(data[index]['image']),
                               ),
                               title: Text(data[index]['title']),
                               subtitle: Text(data[index]['description']),
-                              trailing: Text(data[index]['price'].toString()),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    data[index]['price'].toString(),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      ref
+                                          .read(productControllerProvider)
+                                          .deleteProduct(
+                                              data[index]['productID']);
+                                      setState(() {});
+                                    },
+                                    icon: Icon(
+                                      Icons.delete_outline,
+                                      color: mainColor,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),

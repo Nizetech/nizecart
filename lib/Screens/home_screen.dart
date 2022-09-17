@@ -15,6 +15,7 @@ import 'package:nizecart/Screens/product_details.dart';
 import 'package:nizecart/Screens/products_list.dart';
 import 'package:nizecart/Screens/profile_screen.dart';
 import 'package:nizecart/products/product_controller.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
@@ -44,7 +45,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     }
   ];
 
-  Future<void> refresh() async => setState(() {});
+  Future<void> _deleteCacheDir() async {
+    var tempDir = await getTemporaryDirectory();
+
+    if (tempDir.existsSync()) {
+      tempDir.deleteSync(recursive: true);
+    }
+  }
+
+  Future<void> refresh() async {
+    await _deleteCacheDir();
+    setState(() {});
+  }
+
   bool isSearch = false;
 
   void issearch(String value) {
@@ -109,7 +122,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       return Column(
                         children: [
                           Container(
-                            height: 150,
+                            height: 170,
                             padding: const EdgeInsets.only(
                                 left: 20, right: 20, bottom: 20),
                             width: double.infinity,
@@ -123,6 +136,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                SizedBox(height: 20),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -397,9 +411,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               child: Text(
                                                 'Top Deals',
                                                 style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black),
                                               ),
                                             ),
                                             SizedBox(
@@ -441,6 +455,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.bold,
+                                                        color: Colors.black,
                                                       ),
                                                     ),
                                                     Spacer(),
@@ -482,7 +497,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                   NeverScrollableScrollPhysics(),
                                               gridDelegate:
                                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                                childAspectRatio: 0.57,
+                                                childAspectRatio: 0.54,
                                                 crossAxisSpacing: 10,
                                                 mainAxisSpacing: 20,
                                                 crossAxisCount: 2,
@@ -497,6 +512,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                 );
                                               },
                                             ),
+                                            SizedBox(height: 40),
                                           ],
                                         ),
                                       ),

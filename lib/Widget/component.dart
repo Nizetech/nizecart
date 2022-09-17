@@ -82,7 +82,7 @@ class _TopViewsState extends State<TopViews> {
                 child: CachedNetworkImage(
                   imageUrl: widget.data['imageUrl'],
                   width: double.infinity,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
@@ -205,7 +205,7 @@ class _MainViewState extends ConsumerState<MainView> {
               child: CachedNetworkImage(
                 imageUrl: widget.data['imageUrl'],
                 height: 100,
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
                 width: double.infinity,
               ),
             ),

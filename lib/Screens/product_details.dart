@@ -144,277 +144,314 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
         ],
       ),
       backgroundColor: Color(0xffF0F0F0),
-      body: Column(
-        children: [
-          SizedBox(height: 55),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * .3,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImage(
-                imageUrl: widget.data['imageUrl'],
-                width: 150,
-                height: 100,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-          SizedBox(height: 25),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(20),
-                ),
-                color: Colors.white,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.data['title'],
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
+      body: SafeArea(
+        child:
+            // CustomScrollView
+            // (
+            //   slivers: [
+            //     SliverFillRemaining(
+            //       hasScrollBody: true,
+            //       fillOverscroll: true,
+            //       child:
+            LayoutBuilder(builder: (context, snapshot) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: Get.height / .9),
+              child: IntrinsicHeight(
+                child: Stack(children: [
+                  Column(
                     children: [
-                      RatingBar.builder(
-                        // initialRating: widget.dataating'],
-                        updateOnDrag: true,
-                        initialRating: 3,
-                        allowHalfRating: false,
-                        glow: false,
-                        onRatingUpdate: (rating) {
-                          setState(() {
-                            rating = rating;
-                          });
-                        },
-                        itemBuilder: (context, index) => const Icon(
-                          Icons.star,
-                          color: Colors.amber,
-                        ),
-                        itemCount: 5,
-                        itemSize: 15,
-                        direction: Axis.horizontal,
-                      ),
-                      SizedBox(width: 3),
-                      Text(
-                        '(24 Reviews)',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: secColor,
-                    ),
-                    child: Text(
-                      '20%',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '₦' + formatter.format(widget.data['price']),
-                        textAlign: TextAlign.left,
-                        maxLines: 2,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      const Text(
-                        '₦12,000',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          decoration: TextDecoration.lineThrough,
-                          fontSize: 12,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Spacer(),
-                      InkWell(
-                        splashColor: mainColor,
-                        onTap: () {
-                          setState(() {
-                            quantity++;
-                          });
-                          products.add(widget.data);
-                          box.put('cart', products);
-
-                          showToast('Added to cart');
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: mainColor),
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            'Add To Cart',
-                            style: TextStyle(
-                              color: mainColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      Expanded(
+                        flex: 4,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 8,
+                          height: MediaQuery.of(context).size.height * 15,
+                          child: CachedNetworkImage(
+                            imageUrl: widget.data['imageUrl'],
                           ),
                         ),
                       ),
-                      SizedBox(width: 10),
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                          decoration: BoxDecoration(
-                              color: mainColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            'Shop Now',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
+                      Spacer(flex: 5),
                     ],
                   ),
-                  SizedBox(height: 10),
-                  Divider(
-                    thickness: 2,
-                    color: Colors.grey[200],
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Description :',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    widget.data['description'],
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      // fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+                  Positioned(
+                      top: MediaQuery.of(context).size.height / 2 - 68,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.all(20),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 3,
+                            ),
+                          ],
+                          color: Colors.white,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.data['title'],
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                RatingBar.builder(
+                                  // initialRating: widget.dataating'],
+                                  updateOnDrag: true,
+                                  initialRating: 3,
+                                  allowHalfRating: false,
+                                  glow: false,
+                                  onRatingUpdate: (rating) {
+                                    setState(() {
+                                      rating = rating;
+                                    });
+                                  },
+                                  itemBuilder: (context, index) => const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  itemCount: 5,
+                                  itemSize: 15,
+                                  direction: Axis.horizontal,
+                                ),
+                                SizedBox(width: 3),
+                                Text(
+                                  '(24 Reviews)',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: secColor,
+                              ),
+                              child: Text(
+                                '20%',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '₦' + formatter.format(widget.data['price']),
+                                  textAlign: TextAlign.left,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                const Text(
+                                  '₦12,000',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    decoration: TextDecoration.lineThrough,
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Spacer(),
+                                InkWell(
+                                  splashColor: mainColor,
+                                  onTap: () {
+                                    setState(() {
+                                      quantity++;
+                                    });
+                                    products.add(widget.data);
+                                    box.put('cart', products);
+
+                                    showToast('Added to cart');
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 7),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: mainColor),
+                                        color: Colors.transparent,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Text(
+                                      'Add To Cart',
+                                      style: TextStyle(
+                                        color: mainColor,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 7),
+                                    decoration: BoxDecoration(
+                                        color: mainColor,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Text(
+                                      'Shop Now',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Divider(
+                              thickness: 2,
+                              color: Colors.grey[200],
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              'Description :',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              widget.data['description'],
+                              // 'knoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc minHeight: constraint.maxHeightminHeight: constraint.maxHeightminHeight: constraint.maxHeightminHeight: constraint.maxHeightminHeight: constraint.maxHeightminHeight: constraint.maxHeightminHeight: constraint.maxHeightminHeight: constraint.maxHeightminHeight: constraint.maxHeightvjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkh knoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhvvvknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkhknoinhuiohougougfyuyifyicyifcyifyucutcuycutucyvtucuycuc vjhvyivhvivhvihvhviyhvkhviyhvkhviyhvyiivhvyivhkvyivkh',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                // fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                ]),
               ),
             ),
-          )
-
-          //           Padding(
-          //             padding: const EdgeInsets.all(10),
-          //             child: Column(
-          //               crossAxisAlignment: CrossAxisAlignment.start,
-          //               children: [
-          //
-          //                 SizedBox(height: 10),
-          //                 Row(
-          //                     mainAxisAlignment:
-          //                         MainAxisAlignment.spaceBetween,
-          //                     children: [
-          //                       IconButton(
-          //                         icon: Icon(
-          //                           Icons.remove,
-          //                           size: 30,
-          //                           color: mainColor,
-          //                         ),
-          //                         onPressed: () {
-          //                           setState(() {
-          //                             quantity--;
-          //                             cartItems[quantity];
-          //                             box.put('cartItem', cartItems);
-          //                             showErrorToast('Removed from cart');
-          //                           });
-          //                         },
-          //                       ),
-          //                       Text(
-          //                         '₦' +
-          //                             formatter
-          //                                 .format(widget.data['price'])
-          //                                 .toString(),
-          //                         style: const TextStyle(
-          //                             color: Colors.black,
-          //                             fontSize: 16,
-          //                             fontWeight: FontWeight.bold),
-          //                       ),
-          //                       IconButton(
-          //                           icon: Icon(
-          //                             Icons.add,
-          //                             size: 30,
-          //                             color: mainColor,
-          //                           ),
-          //                           onPressed: () {
-          //                             setState(() {
-          //                               // if (!widget.data                                               //         (
-          //                               //             'productID')
-          //                               // &&
-          //                               // !selectedItems.contains('id')
-          //                               // )
-          //                               // {
-          //                               quantity++;
-          //                               // adding items to the cart list which will later be stored using a suitable backend service
-          //                               Map productItem = {
-          //                                 'id': widget.data['productID'],
-          //                                 'title': widget.data['title'],
-          //                                 'price':
-          //                                     widget.data['price'].toString(),
-          //                                 'imageUrl': widget.data['imageUrl'],
-          //                                 'quantity': quantity,
-          //                                 'rating': rating,
-          //                                 'qty': quantity,
-          //                               };
-          //                               products.add(productItem);
-          //                               box.put('cart', products);
-
-          //                               showToast('Added to cart');
-          //                               // } else {
-          //                               //   showToast(
-          //                               //       'Item already added to cart');
-          //                               // }
-          //                             });
-          //                           }),
-          //                     ]),
-          //               ],
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
-        ],
+          );
+        }),
       ),
+      //   ],
+      // ),
+      // ),
+      //////Custom
+
+      // SizedBox(height: 25),
+
+      //           Padding(
+      //             padding: const EdgeInsets.all(10),
+      //             child: Column(
+      //               crossAxisAlignment: CrossAxisAlignment.start,
+      //               children: [
+      //
+      //                 SizedBox(height: 10),
+      //                 Row(
+      //                     mainAxisAlignment:
+      //                         MainAxisAlignment.spaceBetween,
+      //                     children: [
+      //                       IconButton(
+      //                         icon: Icon(
+      //                           Icons.remove,
+      //                           size: 30,
+      //                           color: mainColor,
+      //                         ),
+      //                         onPressed: () {
+      //                           setState(() {
+      //                             quantity--;
+      //                             cartItems[quantity];
+      //                             box.put('cartItem', cartItems);
+      //                             showErrorToast('Removed from cart');
+      //                           });
+      //                         },
+      //                       ),
+      //                       Text(
+      //                         '₦' +
+      //                             formatter
+      //                                 .format(widget.data['price'])
+      //                                 .toString(),
+      //                         style: const TextStyle(
+      //                             color: Colors.black,
+      //                             fontSize: 16,
+      //                             fontWeight: FontWeight.bold),
+      //                       ),
+      //                       IconButton(
+      //                           icon: Icon(
+      //                             Icons.add,
+      //                             size: 30,
+      //                             color: mainColor,
+      //                           ),
+      //                           onPressed: () {
+      //                             setState(() {
+      //                               // if (!widget.data                                               //         (
+      //                               //             'productID')
+      //                               // &&
+      //                               // !selectedItems.contains('id')
+      //                               // )
+      //                               // {
+      //                               quantity++;
+      //                               // adding items to the cart list which will later be stored using a suitable backend service
+      //                               Map productItem = {
+      //                                 'id': widget.data['productID'],
+      //                                 'title': widget.data['title'],
+      //                                 'price':
+      //                                     widget.data['price'].toString(),
+      //                                 'imageUrl': widget.data['imageUrl'],
+      //                                 'quantity': quantity,
+      //                                 'rating': rating,
+      //                                 'qty': quantity,
+      //                               };
+      //                               products.add(productItem);
+      //                               box.put('cart', products);
+
+      //                               showToast('Added to cart');
+      //                               // } else {
+      //                               //   showToast(
+      //                               //       'Item already added to cart');
+      //                               // }
+      //                             });
+      //                           }),
+      //                     ]),
+      //               ],
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
+      //   ],
+      // ),
     );
   }
 }

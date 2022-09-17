@@ -10,6 +10,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:nizecart/products/product_controller.dart';
+import 'package:intl/intl.dart' as intl;
 
 class FavouriteScreen extends ConsumerStatefulWidget {
   // final Map data;
@@ -21,6 +22,8 @@ class FavouriteScreen extends ConsumerStatefulWidget {
 
 class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
   bool isFav;
+  final formatter = intl.NumberFormat.decimalPattern();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +82,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                   : ListView.builder(
                       shrinkWrap: true,
                       itemCount: snapshot.data.length,
-                      padding: EdgeInsets.only(bottom: 20),
+                      padding: EdgeInsets.only(bottom: 20, top: 20),
                       itemBuilder: (ctx, i) {
                         return Slidable(
                           startActionPane: ActionPane(
@@ -117,16 +120,25 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                   ),
                                 ],
                               ),
-                              padding: EdgeInsets.all(15),
+                              padding: EdgeInsets.all(10),
                               child: Row(
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: CachedNetworkImage(
-                                      imageUrl: snapshot.data[i]['imageUrl'],
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.fill,
+                                  Container(
+                                    height: 100,
+                                    width: 100,
+                                    // padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: snapshot.data[i]['imageUrl'],
+                                        // width: 100,
+                                        // height: 100,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: 10),
@@ -134,46 +146,56 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      IconButton(
-                                        icon: Icon(Iconsax.heart5),
-                                        // : const Icon(Iconsax.heart),
-                                        onPressed: () {
-                                          // setState(() {
-                                          //   item['isFav'] = !item['isFav'];
-                                          //   selectedItem.add(item);
-                                          //   box.put('fav', selectedItem);
-                                          // });
-                                        },
-                                        color: mainColor,
-                                      ),
-                                      const SizedBox(height: 3),
                                       Text(
                                         snapshot.data[i]['title'],
-                                        maxLines: 3,
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: Colors.grey),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      const SizedBox(height: 3),
+                                      const SizedBox(height: 10),
                                       Text(
-                                        '\$ ${snapshot.data[i]['price']}',
+                                        '\₦ ' +
+                                            formatter.format(
+                                                snapshot.data[i]['price']),
                                         style: const TextStyle(
-                                            color: Colors.black,
+                                            color: Colors.grey,
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      SizedBox(height: 3),
-                                      RatingBarIndicator(
-                                        rating: 2.75,
-                                        itemBuilder: (context, index) =>
-                                            const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        itemCount: 5,
-                                        itemSize: 15,
-                                        direction: Axis.horizontal,
+                                      SizedBox(height: 20),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 5),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              color: mainColor,
+                                            ),
+                                            child: const Text(
+                                              'Shop Now',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            'REMOVE',
+                                            style: TextStyle(
+                                              color: mainColor,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(height: 10),
                                     ],
                                   ),
                                 ],

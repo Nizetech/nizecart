@@ -28,8 +28,8 @@ class ProductController {
   }
 
   // Delete Product
-  void deleteProduct() {
-    productRepository.deleteProduct();
+  void deleteProduct(String productID) {
+    productRepository.deleteProduct(productID);
   }
 
   // Get product
