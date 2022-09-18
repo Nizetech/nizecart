@@ -76,15 +76,15 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
     });
   }
 
-  void removeFav(Map data) {
+  void removeFav(String productID) {
     setState(() {
       isFavorite = false;
-      ref.read(productControllerProvider).removeFavorite(data);
+      ref.read(productControllerProvider).removeFavorite(productID);
     });
   }
 
   final formatter = intl.NumberFormat.decimalPattern();
-  List cartItems = box.get('cart', defaultValue: []);
+  // List cartItems = box.get('cart', defaultValue: []);
   bool enable = false;
 
   @override
@@ -133,7 +133,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                   } else {
                     ref
                         .read(productControllerProvider)
-                        .removeFavorite(widget.data);
+                        .removeFavorite(widget.data['productID']);
                   }
                 },
                 icon: Icon(
@@ -156,7 +156,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
             LayoutBuilder(builder: (context, snapshot) {
           return SingleChildScrollView(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: Get.height / .9),
+              constraints: BoxConstraints(maxHeight: Get.height / .98),
               child: IntrinsicHeight(
                 child: Stack(children: [
                   Column(
@@ -175,9 +175,9 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                     ],
                   ),
                   Positioned(
-                      top: MediaQuery.of(context).size.height / 2 - 68,
+                      top: MediaQuery.of(context).size.height / 2 - 78,
                       child: Container(
-                        height: MediaQuery.of(context).size.height,
+                        height: MediaQuery.of(context).size.height * .8,
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.all(20),
                         decoration: const BoxDecoration(

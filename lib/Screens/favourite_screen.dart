@@ -126,7 +126,6 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                   Container(
                                     height: 100,
                                     width: 100,
-                                    // padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: Colors.grey[300],
                                       borderRadius: BorderRadius.circular(10),
@@ -135,68 +134,71 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       child: CachedNetworkImage(
                                         imageUrl: snapshot.data[i]['imageUrl'],
-                                        // width: 100,
-                                        // height: 100,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        snapshot.data[i]['title'],
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                                  SizedBox(width: 15),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          snapshot.data[i]['title'],
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        '\₦ ' +
-                                            formatter.format(
-                                                snapshot.data[i]['price']),
-                                        style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SizedBox(height: 20),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 5),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              color: mainColor,
-                                            ),
-                                            child: const Text(
-                                              'Shop Now',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12,
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          '\₦ ' +
+                                              formatter.format(
+                                                  snapshot.data[i]['price']),
+                                          style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 20),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10, vertical: 5),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                                color: mainColor,
+                                              ),
+                                              child: const Text(
+                                                'Shop Now',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Text(
-                                            'REMOVE',
-                                            style: TextStyle(
-                                              color: mainColor,
-                                              fontSize: 16,
+                                            Spacer(),
+                                            const Text(
+                                              'REMOVE',
+                                              style: TextStyle(
+                                                color: mainColor,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               )),

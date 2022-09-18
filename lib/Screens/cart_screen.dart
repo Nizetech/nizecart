@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -10,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
 import '../Widget/component.dart';
 
-class CartScreen extends StatefulWidget {
+class CartScreen extends ConsumerStatefulWidget {
   CartScreen({
     Key key,
     // this.items
@@ -18,49 +19,52 @@ class CartScreen extends StatefulWidget {
   // List<Map<String, dynamic>> items;
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
+  ConsumerState<CartScreen> createState() => _CartScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class _CartScreenState extends ConsumerState<CartScreen> {
   // int quantity = 0;
   // int subtotal = 0;
   static var box = Hive.box('name');
   final formatter = intl.NumberFormat.decimalPattern();
 
-  // Get total quantity
-  int get totalQuantity {
-    var total = 0;
-    for (var element in cartItems) {
-      total += element['qty'];
-    }
-    box.put('quantity', total);
-    return total;
-  }
+  List cartItems = box.get('cart', defaultValue: []);
 
   // Get total Amount
   int get totalAmount {
     var totalAmount = 0;
     for (var element in cartItems) {
-      totalAmount += int.parse(element['price']) * element['qty'];
+      totalAmount += element['price'] * element['counter'];
       print(totalAmount);
     }
     return totalAmount;
   }
 
-  List cartItems = box.get('cart', defaultValue: []);
+  // Get total quantity
+  int get totalQuantity {
+    var total = 0;
+    for (var element in cartItems) {
+      // total += counter;
+      total += element['counter'];
+    }
+    box.put('quantity', total);
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Map data = cartItems[0];
     print(cartItems);
+    // print(totalAmount);
+    print('TotalQuantity $totalQuantity');
+    // print(counter);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         foregroundColor: white,
         backgroundColor: secColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Get.back(),
-        ),
+        centerTitle: true,
         title: const Text(
           'Cart',
           style: TextStyle(fontSize: 20),
@@ -116,7 +120,8 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             // total quantity of all items in cart
                             Text(
-                              '₦ ' + formatter.format(totalAmount),
+                              '₦ ' + formatter.format(totalAmount).toString(),
+                              // 'pp',
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -134,13 +139,14 @@ class _CartScreenState extends State<CartScreen> {
                       padding: const EdgeInsets.only(left: 15, right: 15),
                       child: Row(
                         children: [
-                          Text('Total Quantity',
+                          const Text('Total Items',
                               style: TextStyle(fontSize: 16)),
-                          Spacer(),
+                          const Spacer(),
                           // total amount of all items in cart
                           Text(
                             totalQuantity.toString(),
-                            style: TextStyle(fontSize: 16),
+                            // 'ii',
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ],
                       ),
@@ -167,167 +173,229 @@ class _CartScreenState extends State<CartScreen> {
                           return Container(
                             width: double.infinity,
                             alignment: Alignment.center,
-                            margin:
-                                EdgeInsets.only(left: 10, top: 15, right: 10),
-                            decoration: BoxDecoration(color: white, boxShadow: [
-                              BoxShadow(
-                                offset: const Offset(0, 3),
-                                blurRadius: 5,
-                                color: Colors.grey.withOpacity(.5),
-                              ),
-                            ]),
-                            padding: const EdgeInsets.all(15),
+                            margin: const EdgeInsets.only(
+                              left: 10,
+                              top: 15,
+                              right: 10,
+                            ),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: const Offset(0, 3),
+                                    blurRadius: 5,
+                                    color: Colors.grey.withOpacity(.5),
+                                  ),
+                                ]),
+                            padding: const EdgeInsets.all(10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    CachedNetworkImage(
-                                      imageUrl:
-                                          cartItems.elementAt(i)['imageUrl'],
-                                      width: 140,
-                                      height: 120,
-                                      fit: BoxFit.contain,
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            cartItems.elementAt(i)['imageUrl'],
+                                        width: 120,
+                                        height: 120,
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
-                                    const SizedBox(width: 0),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            cartItems.elementAt(i)['title'],
-                                            // '9',
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
-                                            style:
-                                                TextStyle(color: Colors.grey),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  cartItems
+                                                      .elementAt(i)['title'],
+                                                  // '9',
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 20),
+                                              Expanded(
+                                                child: Text(
+                                                  '₦' +
+                                                      formatter
+                                                          .format(cartItems
+                                                              .elementAt(
+                                                                  i)['price'])
+                                                          .toString(),
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(height: 3),
-                                          Text(
-                                            '₦' +
-                                                cartItems.elementAt(i)['price'],
-                                            //   '₦' +
-                                            // formatter
-                                            //     .format(cartItems
-                                            //         .elementAt(i)['price'])
-                                            //     .toString(),
-                                            style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
+                                          const SizedBox(height: 15),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              // To remove item
+                                              Container(
+                                                // height: 35,
+                                                // width: 50,
+                                                padding: const EdgeInsets.all(
+                                                  3,
+                                                ),
+
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                  color:
+                                                      mainColor.withOpacity(.3),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        if (cartItems[i]
+                                                                ['qty'] >
+                                                            1) {
+                                                          setState(() {
+                                                            cartItems[i]
+                                                                ['qty']--;
+                                                            box.put('cartItem',
+                                                                cartItems);
+                                                            Fluttertoast
+                                                                .showToast(
+                                                              msg:
+                                                                  'Removed from cart',
+                                                              toastLength: Toast
+                                                                  .LENGTH_SHORT,
+                                                              gravity:
+                                                                  ToastGravity
+                                                                      .BOTTOM,
+                                                              timeInSecForIosWeb:
+                                                                  1,
+                                                              backgroundColor:
+                                                                  Colors.red,
+                                                              textColor:
+                                                                  Colors.white,
+                                                              fontSize: 16.0,
+                                                            );
+                                                          });
+                                                        }
+                                                      },
+                                                      child: const Icon(
+                                                        Icons.remove,
+                                                        size: 25,
+                                                        color: secColor,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 5),
+
+                                                    Text(
+                                                      cartItems[i]['qty']
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: secColor,
+                                                      ),
+                                                    ),
+                                                    // To Add item
+                                                    SizedBox(width: 5),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        if (cartItems[i]
+                                                                ['qty'] <
+                                                            10) {
+                                                          setState(
+                                                            () {
+                                                              cartItems[i]
+                                                                  ['qty']++;
+                                                              box.put(
+                                                                  'cartItem',
+                                                                  cartItems);
+                                                              showToast(
+                                                                  'Added to cart');
+                                                            },
+                                                          );
+                                                        } else {
+                                                          showErrorToast(
+                                                              'Max quantity reached');
+                                                        }
+                                                      },
+                                                      child: const Icon(
+                                                        Icons.add,
+                                                        size: 25,
+                                                        color: secColor,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+//
+                                              GestureDetector(
+                                                onTap: () {
+                                                  // cartItems.elementAt(i)['quantity'] == 0
+                                                  //     ? null
+                                                  //      :
+                                                  setState(() {
+                                                    cartItems.removeAt(i);
+                                                    box.put(
+                                                        'cartItem', cartItems);
+                                                    Fluttertoast.showToast(
+                                                      msg:
+                                                          'Item removed from cart',
+                                                      toastLength:
+                                                          Toast.LENGTH_SHORT,
+                                                      gravity:
+                                                          ToastGravity.BOTTOM,
+                                                      timeInSecForIosWeb: 1,
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      textColor: Colors.white,
+                                                      fontSize: 16.0,
+                                                    );
+                                                  });
+                                                },
+                                                child: const Text(
+                                                  'Remove',
+                                                  style: TextStyle(
+                                                      color: mainColor,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Icon(Iconsax.trash, color: mainColor),
-                                    SizedBox(width: 10),
-                                    GestureDetector(
-                                      onTap: () {
-                                        // cartItems.elementAt(i)['quantity'] == 0
-                                        //     ? null
-                                        //      :
-                                        setState(() {
-                                          cartItems.removeAt(i);
-                                          box.put('cartItem', cartItems);
-                                          Fluttertoast.showToast(
-                                            msg: 'Item removed from cart',
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.BOTTOM,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.red,
-                                            textColor: Colors.white,
-                                            fontSize: 16.0,
-                                          );
-                                        });
-                                      },
-                                      child: const Text(
-                                        'Remove',
-                                        style: TextStyle(
-                                            color: mainColor,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    // To remove item
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (cartItems[i]['qty'] > 1) {
-                                          setState(() {
-                                            cartItems[i]['qty']--;
-                                            box.put('cartItem', cartItems);
-                                            Fluttertoast.showToast(
-                                              msg: 'Removed from cart',
-                                              toastLength: Toast.LENGTH_SHORT,
-                                              gravity: ToastGravity.BOTTOM,
-                                              timeInSecForIosWeb: 1,
-                                              backgroundColor: Colors.red,
-                                              textColor: Colors.white,
-                                              fontSize: 16.0,
-                                            );
-                                          });
-                                        }
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(6),
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            color: mainColor),
-                                        child: const Icon(
-                                          Icons.remove,
-                                          size: 18,
-                                          color: white,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 17),
-                                    Text(
-                                      cartItems[i]['qty'].toString(),
-                                    ),
-                                    SizedBox(width: 17),
-                                    // To Add item
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (cartItems[i]['qty'] < 10) {
-                                          setState(
-                                            () {
-                                              cartItems[i]['qty']++;
-                                              box.put('cartItem', cartItems);
-                                              showToast('Added to cart');
-                                            },
-                                          );
-                                        } else {
-                                          showErrorToast(
-                                              'Max quantity reached');
-                                        }
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(6),
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            color: mainColor),
-                                        child: const Icon(
-                                          Icons.add,
-                                          size: 18,
-                                          color: white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 20),
                               ],
                             ),
                           );
@@ -335,7 +403,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 ),
       bottomNavigationBar: Padding(

@@ -76,6 +76,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   // static FirebaseAuth auth = FirebaseAuth.instance;
   // User user = auth.currentUser;
   final formatter = intl.NumberFormat.decimalPattern();
+  int quantity = 0;
+
+  // static box = Hive.box('name');
 
   @override
   Widget build(BuildContext context) {

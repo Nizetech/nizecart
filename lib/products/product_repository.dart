@@ -63,21 +63,6 @@ class ProductRepository {
     return url;
   }
 
-  // delete product
-  void deleteProduct(String productID) async {
-    // final productID = '${DateTime.now().millisecondsSinceEpoch}';
-    CollectionReference products = firestore.collection('Products');
-    try {
-      Reference storageReference = firebaseStorage.ref('images');
-      await products.doc(productID).delete();
-      // await storageReference.child(productID).delete();
-      showToast('Product deleted');
-    } catch (e) {
-      print(e.toString());
-      showErrorToast(e.toString());
-    }
-  }
-
   // Get products
   Future<List> getProducts() async {
     CollectionReference products = firestore.collection('Products');
@@ -209,18 +194,33 @@ class ProductRepository {
   }
 
   // remove favProduct
-  void removeFavorite(Map product) async {
-    final productID = '${DateTime.now().millisecondsSinceEpoch}';
+  void removeFavorite(String productID) async {
     CollectionReference userCredential = firestore.collection('Users');
     userCredential
         .doc(getUser().uid)
         .collection('favourite')
         .doc(productID)
-        .delete()
-        .then((value) => showErrorToast('Product removed from favorites'));
+        .delete();
+
+    showErrorToast('Product removed from favorites');
     await userCredential.doc(getUser().uid).update({
       'favorite': false,
     });
+  }
+
+  // delete product
+  void deleteProduct(String productID) async {
+    // final productID = '${DateTime.now().millisecondsSinceEpoch}';
+    CollectionReference products = firestore.collection('Products');
+    try {
+      Reference storageReference = firebaseStorage.ref('images');
+      await products.doc(productID).delete();
+      // await storageReference.child(productID).delete();
+      showToast('Product deleted');
+    } catch (e) {
+      print(e.toString());
+      showErrorToast(e.toString());
+    }
   }
 
   //get favProduct

@@ -119,6 +119,8 @@ class _TopViewsState extends State<TopViews> {
   }
 }
 
+final counterStateProvider = StateProvider<int>((ref) => 1);
+
 class MainView extends ConsumerStatefulWidget {
   final Map data;
 
@@ -136,9 +138,17 @@ class _MainViewState extends ConsumerState<MainView> {
   bool enable = false;
 
   // final Map data;
+  List products = [];
+  // int counterNum;
+
+  int quantity = 0;
+  static var box = Hive.box('name');
+  // final counterStateProvider = StateProvider<int>((ref) => 0);
 
   @override
   Widget build(BuildContext context) {
+    final counter = ref.watch(counterStateProvider);
+
     return GestureDetector(
       onTap: () {
         Get.to(ProductScreen(data: widget.data));
@@ -172,7 +182,7 @@ class _MainViewState extends ConsumerState<MainView> {
                         } else {
                           ref
                               .read(productControllerProvider)
-                              .removeFavorite(widget.data);
+                              .removeFavorite(widget.data['productID']);
                         }
                       },
                       icon: Icon(
@@ -272,17 +282,35 @@ class _MainViewState extends ConsumerState<MainView> {
                     ),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: mainColor,
-                  ),
-                  child: Text(
-                    'Shop Now',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
+                GestureDetector(
+                  onTap: () {
+                    // setState(() {
+                    //   quantity++;
+                    // });
+                    ref.read(counterStateProvider.notifier).state++;
+                    Map productValue = {
+                      'counter': counter,
+                      'price': widget.data['price'],
+                      'title': widget.data['title'],
+                      'imageUrl': widget.data['imageUrl'],
+                    };
+                    products.add(productValue);
+                    box.put('cart', products);
+                    print('Here are my :$products');
+                    Get.to(CartScreen());
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: mainColor,
+                    ),
+                    child: Text(
+                      'Shop Now',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 )

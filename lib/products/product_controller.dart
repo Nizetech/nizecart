@@ -58,8 +58,8 @@ class ProductController {
   }
 
   // Remove from favorite
-  void removeFavorite(Map product) {
-    productRepository.removeFavorite(product);
+  void removeFavorite(String productID) {
+    productRepository.removeFavorite(productID);
   }
 
   // get favProduct
