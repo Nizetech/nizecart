@@ -119,7 +119,7 @@ class _TopViewsState extends State<TopViews> {
   }
 }
 
-final counterStateProvider = StateProvider<int>((ref) => 1);
+final counterStateProvider = StateProvider<int>((ref) => 2);
 
 class MainView extends ConsumerStatefulWidget {
   final Map data;
@@ -296,7 +296,7 @@ class _MainViewState extends ConsumerState<MainView> {
                     };
                     products.add(productValue);
                     box.put('cart', products);
-                    print('Here are my :$products');
+                    // print('Here are my :$products');
                     Get.to(CartScreen());
                   },
                   child: Container(
@@ -305,7 +305,7 @@ class _MainViewState extends ConsumerState<MainView> {
                       borderRadius: BorderRadius.circular(50),
                       color: mainColor,
                     ),
-                    child: Text(
+                    child: const Text(
                       'Shop Now',
                       style: TextStyle(
                         color: Colors.white,
@@ -323,21 +323,23 @@ class _MainViewState extends ConsumerState<MainView> {
   }
 }
 
-class Cart extends StatefulWidget {
+class Cart extends ConsumerWidget {
   Cart({Key key, this.items}) : super(key: key);
   List<Map<String, dynamic>> items;
 
-  @override
-  State<Cart> createState() => _CartState();
-}
+//   @override
+//   State<Cart> createState() => _CartState();
+// }
 
-class _CartState extends State<Cart> {
+// class _CartState extends State<Cart> {
   static var box = Hive.box('name');
   List selectedItems = box.get('cart');
 
   ValueNotifier _counter = ValueNotifier(0);
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final counter = ref.watch(counterStateProvider);
+
     return GestureDetector(
       onTap: () => Get.to(
         CartScreen(),
@@ -378,7 +380,8 @@ class _CartState extends State<Cart> {
                               fontWeight: FontWeight.bold),
                         )
                       : Text(
-                          quantity.length.toString(),
+                          // '$counter',
+                          ' ${quantity.length}',
                           style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -444,6 +447,7 @@ dynamic showToast(String label) {
   return Get.snackbar(
     'Success',
     label,
+    duration: Duration(seconds: 1),
     backgroundColor: Colors.green,
     colorText: white,
     snackPosition: SnackPosition.BOTTOM,

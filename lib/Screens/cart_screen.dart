@@ -34,8 +34,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   int get totalAmount {
     var totalAmount = 0;
     for (var element in cartItems) {
-      totalAmount += element['price'] * element['counter'];
-      print(totalAmount);
+      totalAmount += element['price'] * element['qty'];
+      // print(totalAmount);
+      // print('runt time ${element['price'].runtimeType}');
     }
     return totalAmount;
   }
@@ -45,7 +46,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     var total = 0;
     for (var element in cartItems) {
       // total += counter;
-      total += element['counter'];
+      total += element['qty'];
     }
     box.put('quantity', total);
     return total;
@@ -53,10 +54,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final counter = ref.watch(counterStateProvider);
+
     // Map data = cartItems[0];
-    print(cartItems);
-    // print(totalAmount);
-    print('TotalQuantity $totalQuantity');
+    // print(cartItems);
+    print('Total Amount: $totalAmount');
+    print('Total Cart: ${cartItems}');
+    // print('TotalQuantity $totalQuantity');
     // print(counter);
 
     return Scaffold(
@@ -144,9 +148,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           const Spacer(),
                           // total amount of all items in cart
                           Text(
-                            totalQuantity.toString(),
+                            '( ${totalQuantity.toString()} )',
+                            // '$counter',
                             // 'ii',
-                            style: const TextStyle(fontSize: 16),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
                           ),
                         ],
                       ),
@@ -158,14 +167,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
-                        // itemCount: 2,
                         itemCount: cartItems.length,
                         itemBuilder: (ctx, i) {
-                          print(cartItems[0]);
-                          box.put(
-                            'title',
-                            cartItems.elementAt(i)['title'],
-                          );
+                          // print(cartItems[0]);
+                          // box.put(
+                          //   'title',
+                          //   cartItems.elementAt(i)['title'],
+                          // );
                           // box.put(
                           //   'description',
                           //   cartItems.elementAt(i)['description'],
@@ -202,11 +210,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       child: CachedNetworkImage(
                                         imageUrl:
                                             cartItems.elementAt(i)['imageUrl'],
-                                        width: 120,
-                                        height: 120,
+                                        // cartItems.elementAt(i)
+                                        width: 100,
+                                        height: 100,
                                         fit: BoxFit.contain,
                                       ),
                                     ),
+                                    SizedBox(width: 10),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
@@ -231,20 +241,25 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                               ),
                                               SizedBox(width: 20),
                                               Expanded(
-                                                child: Text(
-                                                  '₦' +
-                                                      formatter
-                                                          .format(cartItems
-                                                              .elementAt(
-                                                                  i)['price'])
-                                                          .toString(),
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    '₦' +
+                                                        formatter
+                                                            .format(cartItems
+                                                                .elementAt(
+                                                                    i)['price'])
+                                                            .toString(),
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -257,12 +272,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                             children: [
                                               // To remove item
                                               Container(
-                                                // height: 35,
-                                                // width: 50,
                                                 padding: const EdgeInsets.all(
                                                   3,
                                                 ),
-
                                                 decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(4),
@@ -413,11 +425,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           right: 20,
         ),
         child: CustomButton(
-          text: 'Checkout',
+          text: 'Checkout  (₦${formatter.format(totalAmount).toString()})',
           onPressed: () {
-            return Get.to(
-              CheckOutScreen(totalAmount: totalAmount),
-            );
+            // return Get.to(
+            // CheckOutScreen(totalAmount: totalAmount),
+            // );
           },
         ),
       ),

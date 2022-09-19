@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
@@ -84,8 +85,10 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
   }
 
   final formatter = intl.NumberFormat.decimalPattern();
-  // List cartItems = box.get('cart', defaultValue: []);
+
   bool enable = false;
+
+  List cartItems = box.get('cart', defaultValue: []);
 
   @override
   Widget build(BuildContext context) {
@@ -284,8 +287,26 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                     setState(() {
                                       quantity++;
                                     });
-                                    products.add(widget.data);
-                                    box.put('cart', products);
+
+                                    // ref
+                                    //     .read(counterStateProvider.notifier)
+                                    //     .state++;
+                                    Map productValue = {
+                                      'qty': quantity,
+                                      // 'counter': counter,
+                                      'price': widget.data['price'],
+                                      'title': widget.data['title'],
+                                      'imageUrl': widget.data['imageUrl'],
+                                    };
+                                    products.add(productValue);
+                                    cartItems.add(productValue);
+                                    // box.put('cart', products);
+
+                                    // print(
+                                    //     'Here are my cart product :$products');
+                                    // // Get.to(CartScreen());
+                                    // print('My cartItems :$cartItems');
+                                    // print('My productValue :$productValue');
 
                                     showToast('Added to cart');
                                   },
@@ -309,7 +330,28 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                 ),
                                 SizedBox(width: 10),
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    // ref
+                                    //     .read(counterStateProvider.notifier)
+                                    //     .state++;
+                                    setState(() {
+                                      quantity++;
+                                    });
+                                    Map productValue = {
+                                      'qty': quantity,
+
+                                      // 'counter': counter,
+                                      'price': widget.data['price'],
+                                      'title': widget.data['title'],
+                                      'imageUrl': widget.data['imageUrl'],
+                                    };
+                                    products.add(productValue);
+                                    // box.add(products);
+                                    cartItems.add(productValue);
+                                    print(
+                                        'Here are my shop now prdt :$products');
+                                    Get.to(CartScreen());
+                                  },
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 7),
