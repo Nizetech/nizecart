@@ -8,7 +8,7 @@ class OrderModel {
   final String title;
   final int quantity;
   final String address;
-  // final bool paymentMethod;
+  final List productDetails;
   final String phoneNumber;
   final int totalAmount;
   OrderModel({
@@ -21,6 +21,7 @@ class OrderModel {
     this.phoneNumber,
     this.totalAmount,
     this.address,
+    this.productDetails,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,6 +34,7 @@ class OrderModel {
       'quantity': quantity,
       'phoneNumber': phoneNumber,
       'address': address,
+      'productDetails': productDetails,
     };
   }
 
@@ -46,6 +48,7 @@ class OrderModel {
       quantity: map['quantity'],
       phoneNumber: map['phoneNumber'],
       address: map['address'],
+      productDetails: map['productDetails'],
     );
   }
 }

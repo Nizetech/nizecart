@@ -429,12 +429,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                 shrinkWrap: true,
                                                 scrollDirection:
                                                     Axis.horizontal,
-                                                reverse: true,
                                                 itemCount: product.length,
                                                 separatorBuilder: (ctx, i) =>
                                                     SizedBox(width: 20),
                                                 itemBuilder: (ctx, i) {
-                                                  Map data = product[i];
+                                                  Map data = product.reversed
+                                                      .toList()[i];
                                                   return TopViews(
                                                     data: data,
                                                   );

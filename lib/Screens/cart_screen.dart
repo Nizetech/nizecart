@@ -9,6 +9,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
+import 'package:path_provider/path_provider.dart';
 import '../Widget/component.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
@@ -28,6 +29,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   static var box = Hive.box('name');
   final formatter = intl.NumberFormat.decimalPattern();
 
+  Future<void> _deleteCacheDir() async {
+    var tempDir = await getTemporaryDirectory();
+
+    if (tempDir.existsSync()) {
+      tempDir.deleteSync(recursive: true);
+    }
+  }
+
   List cartItems = box.get('cart', defaultValue: []);
 
   // Get total Amount
@@ -36,7 +45,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     for (var element in cartItems) {
       totalAmount += element['price'] * element['qty'];
       // print(totalAmount);
-      // print('runt time ${element['price'].runtimeType}');
+      print('runt time ${element['price'].runtimeType}');
+      print('runt time ${element['qty'].runtimeType}');
     }
     return totalAmount;
   }
@@ -45,7 +55,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   int get totalQuantity {
     var total = 0;
     for (var element in cartItems) {
-      // total += counter;
       total += element['qty'];
     }
     box.put('quantity', total);
@@ -54,14 +63,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final counter = ref.watch(counterStateProvider);
-
     // Map data = cartItems[0];
     // print(cartItems);
-    print('Total Amount: $totalAmount');
+    // print('Total Amount: $totalAmount');
     print('Total Cart: ${cartItems}');
     // print('TotalQuantity $totalQuantity');
-    // print(counter);
 
     return Scaffold(
       appBar: AppBar(
@@ -124,8 +130,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             ),
                             // total quantity of all items in cart
                             Text(
-                              '₦ ' + formatter.format(totalAmount).toString(),
-                              // 'pp',
+                              // '₦ ' + formatter.format(totalAmount).toString(),
+                              'pp',
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -145,12 +151,12 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         children: [
                           const Text('Total Items',
                               style: TextStyle(fontSize: 16)),
+
                           const Spacer(),
                           // total amount of all items in cart
                           Text(
-                            '( ${totalQuantity.toString()} )',
-                            // '$counter',
-                            // 'ii',
+                            // '( ${totalQuantity.toString()} )',
+                            'ii',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -169,7 +175,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         shrinkWrap: true,
                         itemCount: cartItems.length,
                         itemBuilder: (ctx, i) {
-                          // print(cartItems[0]);
+                          print(cartItems[0]);
                           // box.put(
                           //   'title',
                           //   cartItems.elementAt(i)['title'],
@@ -210,7 +216,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       child: CachedNetworkImage(
                                         imageUrl:
                                             cartItems.elementAt(i)['imageUrl'],
-                                        // cartItems.elementAt(i)
                                         width: 100,
                                         height: 100,
                                         fit: BoxFit.contain,
@@ -367,16 +372,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                   ],
                                                 ),
                                               ),
-//
                                               GestureDetector(
-                                                onTap: () {
+                                                onTap: () async {
                                                   // cartItems.elementAt(i)['quantity'] == 0
                                                   //     ? null
                                                   //      :
+                                                  cartItems.clear();
+                                                  Hive.box('name').clear();
+                                                  // await _deleteCacheDir();
                                                   setState(() {
-                                                    cartItems.removeAt(i);
-                                                    box.put(
-                                                        'cartItem', cartItems);
+                                                    // box.put(
+                                                    //     'cartItem', cartItems);
                                                     Fluttertoast.showToast(
                                                       msg:
                                                           'Item removed from cart',
@@ -425,11 +431,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           right: 20,
         ),
         child: CustomButton(
-          text: 'Checkout  (₦${formatter.format(totalAmount).toString()})',
+          text: 'Checkout  (₦',
+          // ${formatter.format(totalAmount).toString()}
+          // )',
           onPressed: () {
-            // return Get.to(
-            // CheckOutScreen(totalAmount: totalAmount),
-            // );
+            return Get.to(
+              CheckOutScreen(totalAmount: totalAmount),
+            );
           },
         ),
       ),

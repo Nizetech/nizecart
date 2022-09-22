@@ -86,6 +86,7 @@ class ProductController {
     int totalAmount,
     String phoneNumber,
     String address,
+    List productDetails,
   }) {
     return productRepository.orders(
       username: username,
@@ -95,6 +96,7 @@ class ProductController {
       totalAmount: totalAmount,
       phoneNumber: phoneNumber,
       address: address,
+      productDetails: productDetails,
     );
   }
 }

@@ -97,7 +97,7 @@ class ProductRepository {
       for (var item in snaps.docs) {
         items.add(item.data());
       }
-      print(items);
+      print(' my search list $items');
       return items;
     } catch (e) {
       print(e.toString());
@@ -155,6 +155,7 @@ class ProductRepository {
     int totalAmount,
     String phoneNumber,
     String address,
+    List productDetails,
   }) async {
     final orderId = '${DateTime.now().millisecondsSinceEpoch}';
     CollectionReference userCredential = firestore.collection('Users');
@@ -170,6 +171,7 @@ class ProductRepository {
         phoneNumber: phoneNumber,
         totalAmount: totalAmount,
         address: address,
+        productDetails: productDetails,
       );
       await userCredential
           .doc(getUser().uid)

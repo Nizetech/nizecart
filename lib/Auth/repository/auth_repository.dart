@@ -91,23 +91,15 @@ class AuthRepository {
       UserCredential user =
           await auth.signInWithEmailAndPassword(email: email, password: pwd);
       Hive.box('name').put('email', user.user.email);
-      Get.to(BottomNav());
+      // Get.to(BottomNav());
       return true;
+    } on FirebaseAuthException catch (authException) {
+      Get.back();
+      showErrorToast(authException.message);
+      return false;
     } catch (e) {
-      FirebaseAuthException ext = e;
-      if (e.message ==
-          'The account is invalid or the user does not have a password.') {
-        showErrorToast('User not found');
-        Get.back();
-      } else if (e.message ==
-          'There is no user record corresponding to this identifier. The user may have been deleted.') {
-        showErrorToast('This email does not exist');
-        Get.back();
-      } else {
-        showErrorToast(ext.message);
-        Get.back();
-        Get.back();
-      }
+      print(e);
+      showErrorToast(e.toString());
       return false;
     }
   }

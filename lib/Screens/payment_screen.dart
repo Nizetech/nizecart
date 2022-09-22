@@ -71,8 +71,8 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
     var charge = Charge()
       ..amount = widget.data['shippingFee'] != ''
           ? widget.data['total']
-          : widget.data['totalAmount'] *
-              100 //the money should be in kobo hence the need to multiply the value by 100
+          : widget.data['totalAmount']
+      // 100 //the money should be in kobo hence the need to multiply the value by 100
       ..reference = _getReference()
       ..putCustomField(
           'custom_id',
@@ -87,15 +87,15 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
     );
 
     //check if the response is true or not
-    if (response.status == true) {
+    if (response.status != true) {
       ref.read(productControllerProvider).orders(
-            username: name,
-            title: title,
-            quantity: quantity,
-            totalAmount: widget.data['totalAmount'],
-            phoneNumber: '',
-            address: widget.data['address'],
-          );
+          username: name,
+          title: title,
+          quantity: quantity,
+          totalAmount: widget.data['totalAmount'],
+          phoneNumber: '',
+          address: widget.data['address'],
+          productDetails: cartItems);
       //you can send some data from the response to an API or use webhook to record the payment on a database
 
       showToast('Payment was successful!!!');
@@ -112,6 +112,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
   String email = box.get('email');
   String title = box.get('title');
   int quantity = box.get('quantity');
+  List cartItems = box.get('cart', defaultValue: []);
 
   //Add a method to make the flutter wave payment
   //This Method includes all the values needed to create the Flutterwave Instance

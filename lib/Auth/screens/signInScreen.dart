@@ -79,11 +79,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         };
       });
     } else {
-      showErrorToast('Enter your Email and Password');
+      showErrorToast('Please enter your email and password');
       Get.back();
     }
   }
-
 
 // Finger Print
   _SupportState _supportState = _SupportState.unknown;

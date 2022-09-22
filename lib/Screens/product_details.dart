@@ -36,7 +36,6 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
   double rating;
   double userRating = 3.0;
   bool isFavorite = false;
-  int counter = 0;
   // bool fav = false;
   int quantity = 0;
   int price = 0;
@@ -51,7 +50,6 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
   }
 
   static var box = Hive.box('name');
-  var showOnlyFavourites = false;
   String value;
 
   void favorite(map) {
@@ -230,7 +228,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                   direction: Axis.horizontal,
                                 ),
                                 SizedBox(width: 3),
-                                Text(
+                                const Text(
                                   '(24 Reviews)',
                                   style: TextStyle(
                                     fontSize: 10,
@@ -247,7 +245,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                 borderRadius: BorderRadius.circular(5),
                                 color: secColor,
                               ),
-                              child: Text(
+                              child: const Text(
                                 '20%',
                                 style: TextStyle(
                                   color: Colors.white,
@@ -263,7 +261,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                   '₦' + formatter.format(widget.data['price']),
                                   textAlign: TextAlign.left,
                                   maxLines: 2,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     overflow: TextOverflow.ellipsis,
@@ -288,12 +286,8 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                       quantity++;
                                     });
 
-                                    // ref
-                                    //     .read(counterStateProvider.notifier)
-                                    //     .state++;
                                     Map productValue = {
                                       'qty': quantity,
-                                      // 'counter': counter,
                                       'price': widget.data['price'],
                                       'title': widget.data['title'],
                                       'imageUrl': widget.data['imageUrl'],
@@ -331,16 +325,11 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                 SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
-                                    // ref
-                                    //     .read(counterStateProvider.notifier)
-                                    //     .state++;
                                     setState(() {
                                       quantity++;
                                     });
-                                    Map productValue = {
+                                    Map<String, dynamic> productValue = {
                                       'qty': quantity,
-
-                                      // 'counter': counter,
                                       'price': widget.data['price'],
                                       'title': widget.data['title'],
                                       'imageUrl': widget.data['imageUrl'],

@@ -119,8 +119,6 @@ class _TopViewsState extends State<TopViews> {
   }
 }
 
-final counterStateProvider = StateProvider<int>((ref) => 2);
-
 class MainView extends ConsumerStatefulWidget {
   final Map data;
 
@@ -139,16 +137,12 @@ class _MainViewState extends ConsumerState<MainView> {
 
   // final Map data;
   List products = [];
-  // int counterNum;
 
   int quantity = 0;
   static var box = Hive.box('name');
-  // final counterStateProvider = StateProvider<int>((ref) => 0);
 
   @override
   Widget build(BuildContext context) {
-    final counter = ref.watch(counterStateProvider);
-
     return GestureDetector(
       onTap: () {
         Get.to(ProductScreen(data: widget.data));
@@ -284,12 +278,11 @@ class _MainViewState extends ConsumerState<MainView> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // setState(() {
-                    //   quantity++;
-                    // });
-                    ref.read(counterStateProvider.notifier).state++;
+                    setState(() {
+                      quantity++;
+                    });
                     Map productValue = {
-                      'counter': counter,
+                      'qty': quantity,
                       'price': widget.data['price'],
                       'title': widget.data['title'],
                       'imageUrl': widget.data['imageUrl'],
@@ -333,13 +326,11 @@ class Cart extends ConsumerWidget {
 
 // class _CartState extends State<Cart> {
   static var box = Hive.box('name');
-  List selectedItems = box.get('cart');
+  // List selectedItems = box.get('cart');
 
-  ValueNotifier _counter = ValueNotifier(0);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final counter = ref.watch(counterStateProvider);
-
+    // print('Total quantity: ${selectedItems.length}');
     return GestureDetector(
       onTap: () => Get.to(
         CartScreen(),
@@ -361,6 +352,7 @@ class Cart extends ConsumerWidget {
                 'cart',
                 defaultValue: [],
               );
+
               return Positioned(
                 right: 0,
                 top: 0,
@@ -380,7 +372,6 @@ class Cart extends ConsumerWidget {
                               fontWeight: FontWeight.bold),
                         )
                       : Text(
-                          // '$counter',
                           ' ${quantity.length}',
                           style: const TextStyle(
                               color: Colors.white,

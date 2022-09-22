@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
-    final counterStateProvider = StateProvider<int>((ref) => 0);
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,

@@ -125,11 +125,38 @@ class _ProductsOverviewScreenState
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      ref
-                                          .read(productControllerProvider)
-                                          .deleteProduct(
-                                              data[index]['productID']);
-                                      setState(() {});
+                                      Get.dialog(AlertDialog(
+                                        content: Text(
+                                            'Are you sure you want  to delete this product?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Get.back(),
+                                            child: const Text(
+                                              'No',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.green),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              ref
+                                                  .read(
+                                                      productControllerProvider)
+                                                  .deleteProduct(
+                                                      data[index]['productID']);
+                                              setState(() {});
+                                            },
+                                            child: const Text(
+                                              'Yes',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: mainColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ));
                                     },
                                     icon: Icon(
                                       Icons.delete_outline,

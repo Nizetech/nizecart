@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
+import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:nizecart/products/product_controller.dart';
 import 'package:intl/intl.dart' as intl;
@@ -23,6 +24,11 @@ class FavouriteScreen extends ConsumerStatefulWidget {
 class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
   bool isFav;
   final formatter = intl.NumberFormat.decimalPattern();
+  int quantity = 0;
+  static var box = Hive.box('name');
+
+  List product = [];
+  List cartItems = box.get('cart', defaultValue: []);
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +90,11 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                       itemCount: snapshot.data.length,
                       padding: EdgeInsets.only(bottom: 20, top: 20),
                       itemBuilder: (ctx, i) {
+                        Map item = snapshot.data[i];
                         return Slidable(
                           startActionPane: ActionPane(
                               extentRatio: 0.25,
+                              dragDismissible: false,
                               motion: const ScrollMotion(),
                               children: [
                                 SlidableAction(
@@ -95,7 +103,8 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                     // List<Map> data = snapshot.data;
                                     ref
                                         .read(productControllerProvider)
-                                        .removeFavorite(snapshot.data);
+                                        .removeFavorite(item['productID']);
+                                    setState(() {});
                                   },
                                   spacing: 2,
                                   backgroundColor: Colors.red,
@@ -169,30 +178,61 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                               MainAxisAlignment.spaceBetween,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10, vertical: 5),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                color: mainColor,
-                                              ),
-                                              child: const Text(
-                                                'Shop Now',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  quantity++;
+                                                });
+                                                Map productValue = {
+                                                  'qty': quantity,
+                                                  'price': item['price'],
+                                                  'title': item['title'],
+                                                  'imageUrl': item['imageUrl'],
+                                                };
+                                                // product.add(productValue);
+                                                // box.add(products);
+                                                cartItems.add(productValue);
+                                                print(
+                                                  // 'Here are my shop now prdt :$product');
+                                                  Get.to(CartScreen()),
+                                                );
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 5),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  color: mainColor,
+                                                ),
+                                                child: const Text(
+                                                  'Shop Now',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                             Spacer(),
-                                            const Text(
-                                              'REMOVE',
-                                              style: TextStyle(
-                                                color: mainColor,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
+                                            GestureDetector(
+                                              onTap: () {
+                                                ref
+                                                    .read(
+                                                        productControllerProvider)
+                                                    .removeFavorite(
+                                                        item['productID']);
+                                                setState(() {});
+                                              },
+                                              child: const Text(
+                                                'REMOVE',
+                                                style: TextStyle(
+                                                  color: mainColor,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
                                             ),
                                           ],
