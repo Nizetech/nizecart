@@ -130,8 +130,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             ),
                             // total quantity of all items in cart
                             Text(
-                              // '₦ ' + formatter.format(totalAmount).toString(),
-                              'pp',
+                              '₦ ' + formatter.format(totalAmount).toString(),
+                              // 'pp',
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -155,8 +155,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           const Spacer(),
                           // total amount of all items in cart
                           Text(
-                            // '( ${totalQuantity.toString()} )',
-                            'ii',
+                            '( ${totalQuantity.toString()} )',
+                            // 'ii',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -377,26 +377,30 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                   // cartItems.elementAt(i)['quantity'] == 0
                                                   //     ? null
                                                   //      :
-                                                  cartItems.clear();
-                                                  Hive.box('name').clear();
+
                                                   // await _deleteCacheDir();
-                                                  setState(() {
-                                                    // box.put(
-                                                    //     'cartItem', cartItems);
-                                                    Fluttertoast.showToast(
-                                                      msg:
-                                                          'Item removed from cart',
-                                                      toastLength:
-                                                          Toast.LENGTH_SHORT,
-                                                      gravity:
-                                                          ToastGravity.BOTTOM,
-                                                      timeInSecForIosWeb: 1,
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      textColor: Colors.white,
-                                                      fontSize: 16.0,
-                                                    );
-                                                  });
+
+                                                  cartItems.removeAt(i);
+                                                  setState(() {});
+                                                  // cartItems.removeWhere(
+                                                  //   (element) =>
+                                                  //       cartItems.elementAt(
+                                                  //           i)['title'],
+                                                  // );
+                                                  // box.put(
+                                                  //     'cartItem', cartItems);
+                                                  Fluttertoast.showToast(
+                                                    msg:
+                                                        'Item removed from cart',
+                                                    toastLength:
+                                                        Toast.LENGTH_SHORT,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    timeInSecForIosWeb: 1,
+                                                    backgroundColor: Colors.red,
+                                                    textColor: Colors.white,
+                                                    fontSize: 16.0,
+                                                  );
                                                 },
                                                 child: const Text(
                                                   'Remove',
@@ -431,9 +435,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           right: 20,
         ),
         child: CustomButton(
-          text: 'Checkout  (₦',
-          // ${formatter.format(totalAmount).toString()}
-          // )',
+          text: 'Checkout  (₦${formatter.format(totalAmount).toString()})',
           onPressed: () {
             return Get.to(
               CheckOutScreen(totalAmount: totalAmount),

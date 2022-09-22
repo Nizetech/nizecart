@@ -71,10 +71,11 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
         await ref.read(productControllerProvider).uploadFile(storedImage);
 
     ref.read(productControllerProvider).addProduct(
-          imageUrl,
-          title.text.trim(),
-          description.text.trim(),
-          int.parse(price.text),
+          imageUrl: imageUrl,
+          title: title.text.trim(),
+          description: description.text.trim(),
+          price: int.parse(price.text),
+          tag: tag,
         );
 
     initValue();
@@ -82,6 +83,8 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
     setState(() {});
     Get.back();
   }
+
+  String tag;
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +184,56 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
                         borderSide: const BorderSide(color: mainColor)),
                   )),
             ),
+            SizedBox(height: 15),
+            DropdownButtonFormField(
+                isDense: true,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                ),
+                hint: Text('Category'),
+                items: [
+                  DropdownMenuItem(
+                    child: Text('Grocery'),
+                    value: 'Grocery',
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Homes & Garden'),
+                    value: 'Homes & Garden',
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Homes & Garden'),
+                    value: 'Phones & Tablets',
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Computing'),
+                    value: 'Computing',
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Fashion'),
+                    value: 'Fashion',
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Baby Products'),
+                    value: 'Baby Products',
+                  ),
+                  DropdownMenuItem(
+                    child: Text('Gaming'),
+                    value: 'Gaming',
+                  ),
+                ],
+                onChanged: (val) {
+                 
+                  setState(() {
+                    tag = val;
+                  });
+                }),
             SizedBox(height: 15),
             Container(
               height: 200,

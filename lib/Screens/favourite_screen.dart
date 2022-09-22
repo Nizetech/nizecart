@@ -189,8 +189,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                                   'title': item['title'],
                                                   'imageUrl': item['imageUrl'],
                                                 };
-                                                // product.add(productValue);
-                                                // box.add(products);
+
                                                 cartItems.add(productValue);
                                                 print(
                                                   // 'Here are my shop now prdt :$product');

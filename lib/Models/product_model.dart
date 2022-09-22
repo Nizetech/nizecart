@@ -6,6 +6,7 @@ class Product {
   List<dynamic> favorite;
   String productID;
   int rating;
+  String tag;
   Product({
     this.title,
     this.description,
@@ -14,6 +15,7 @@ class Product {
     this.favorite,
     this.productID,
     this.rating,
+    this.tag,
   });
 
   Product.fromJson(Map<String, dynamic> json) {
@@ -21,6 +23,7 @@ class Product {
     description = json['description'];
     price = json['price'];
     imageUrl = json['imageUrl'] ?? '';
+    tag = json['tag'];
     favorite = json['favorite'] == null
         ? []
         : List<dynamic>.from(json['favorite'].map((e) => e));
@@ -37,6 +40,7 @@ class Product {
     data['favorite'] == null ? [] : List<dynamic>.from(favorite.map((e) => e));
     data['productID'] = productID;
     data['rating'] = rating;
+    data['tag'] = tag;
     return data;
   }
 }

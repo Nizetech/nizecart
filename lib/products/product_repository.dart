@@ -24,7 +24,11 @@ class ProductRepository {
 
   //Add product
   void addProduct(
-      {String imageUrl, String title, String description, int price}) async {
+      {String imageUrl,
+      String title,
+      String description,
+      int price,
+      String tag}) async {
     //set document id
     final productID = '${DateTime.now().millisecondsSinceEpoch}';
     CollectionReference products = firestore.collection('Products');
@@ -39,6 +43,7 @@ class ProductRepository {
         favorite: [],
         productID: productID,
         rating: 0,
+        tag: tag,
       );
       await products.doc(productID).set(productData.toJson());
 
@@ -81,6 +86,33 @@ class ProductRepository {
     }
   }
 
+  // Get productCategory
+  Future<List> productCategory(String tag) async {
+    CollectionReference products = firestore.collection('Products');
+    try {
+      // var snapshot = await products.get();
+      // List<QueryDocumentSnapshot> docs = snapshot.docs;
+      // List<Map> data = [];
+      // for (var item in docs) {
+      //   data.add(item.data());
+      // }
+      // // print(data);
+      // return data;
+      QuerySnapshot snapshot =
+          await products.where('title', isEqualTo: tag).get();
+      print('My Tag $snapshot');
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot.docs.first.data() as List;
+      } else {
+        return [];
+      }
+      // .map((e) => e.data() as Map).toList();
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<List> searchProduct(String query) async {
     CollectionReference products = firestore.collection('Products');
     try {
@@ -90,15 +122,17 @@ class ProductRepository {
       //     snaps.docs.map((doc) => Product.fromJson(doc.data())).toList();
       //     await products.where('title', isEqualTo: query).get();
       // List<Product> items = [];
-      QuerySnapshot snaps =
-          await products.where('title', isEqualTo: query).get();
-      List<Map> items = [];
-      List<QueryDocumentSnapshot> docs = snaps.docs;
-      for (var item in snaps.docs) {
-        items.add(item.data());
-      }
-      print(' my search list $items');
-      return items;
+      QuerySnapshot snaps = await products
+          .where('title'.toLowerCase(), isEqualTo: query.toLowerCase())
+          .get();
+      // List<Map> items = [];
+      // List<QueryDocumentSnapshot> docs = snaps.docs;
+      // for (var item in snaps.docs) {
+      //   items.add(item.data());
+      // }
+      // print(' my search list $items');
+      // return items;
+      return snaps.docs.map((e) => e.data() as Map).toList();
     } catch (e) {
       print(e.toString());
       showErrorToast(e.toString());

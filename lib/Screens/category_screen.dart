@@ -30,19 +30,20 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
       appBar: AppBar(
         leading: SizedBox(),
         title: const Text(
-          'Catergory',
+          'Category',
           style: TextStyle(fontSize: 20),
         ),
         centerTitle: true,
       ),
       backgroundColor: white,
       body: FutureBuilder(
-        future: ref.read(productControllerProvider).getFavProduct(),
+        future: ref.read(productControllerProvider).productCategory(cat.first),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return loader();
           } else {
             List product = snapshot.data;
+            print("Category: $product");
             return ListView.separated(
               itemCount: cat.length,
               separatorBuilder: (ctx, i) => Divider(),

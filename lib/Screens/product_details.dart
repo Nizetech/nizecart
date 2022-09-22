@@ -294,14 +294,6 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                     };
                                     products.add(productValue);
                                     cartItems.add(productValue);
-                                    // box.put('cart', products);
-
-                                    // print(
-                                    //     'Here are my cart product :$products');
-                                    // // Get.to(CartScreen());
-                                    // print('My cartItems :$cartItems');
-                                    // print('My productValue :$productValue');
-
                                     showToast('Added to cart');
                                   },
                                   child: Container(
@@ -337,8 +329,8 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                     products.add(productValue);
                                     // box.add(products);
                                     cartItems.add(productValue);
-                                    print(
-                                        'Here are my shop now prdt :$products');
+                                    setState(() {});
+
                                     Get.to(CartScreen());
                                   },
                                   child: Container(

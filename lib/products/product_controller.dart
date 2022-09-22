@@ -18,12 +18,17 @@ class ProductController {
 
 // Add product
   void addProduct(
-      String imageUrl, String title, String description, int price) {
+      {String imageUrl,
+      String title,
+      String description,
+      int price,
+      String tag}) {
     productRepository.addProduct(
       imageUrl: imageUrl,
       title: title,
       description: description,
       price: price,
+      tag: tag,
     );
   }
 
@@ -35,6 +40,11 @@ class ProductController {
   // Get product
   Future<List> getProduct() {
     return productRepository.getProducts();
+  }
+
+  // Get productCategory
+  Future<List> productCategory(String tag) {
+    return productRepository.productCategory(tag);
   }
 
   // Update Product

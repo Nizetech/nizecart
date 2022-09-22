@@ -98,24 +98,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             } else {
               List searchProduct = snapshot.data[0];
               List product = snapshot.data[1];
-              List<String> searchList = [];
+              // List<String> searchList = [];
               print('my Products: ${product}');
 
-              // product.where((element) => element.title.);
-
-              // List<Map<dynamic, dynamic>> searchItems = product;
-              // for (var item in searchItems) {
-              //   searchList.add(item[0]);
-              // }
-              //  List<Map<dynamic, dynamic>>
-              searchList
-                  .where((item) => product.contains(item.contains('title')));
-
-              // print('Current search: ${searchProduct == search.text}');
-              // for (var item in searchItems) {
-              //   searchList.contains(item);
-              // }
-              print('my search $searchList');
+              print('my search $searchProduct');
               return StreamBuilder(
                   stream: ref.read(authtControllerProvider).userDetails(),
                   builder: (context, snapshot) {
@@ -246,7 +232,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           isSearch
                               ?
                               // print(snapshot.data);
-                              searchList != []
+                              searchProduct == []
                                   ? const Padding(
                                       padding: EdgeInsets.all(20),
                                       child: Text(
@@ -259,9 +245,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   : ListView.builder(
                                       padding: const EdgeInsets.all(20),
                                       shrinkWrap: true,
-                                      itemCount: searchList.length,
+                                      itemCount: searchProduct.length,
                                       itemBuilder: (ctx, i) {
-                                        print(' my searching $searchList');
+                                        print(' my searching $searchProduct');
                                         return InkWell(
                                           onTap: () {
                                             // Get.back();
@@ -269,7 +255,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             Get.to(ProductScreen());
                                           },
                                           child: Text(
-                                            searchList[i],
+                                            searchProduct[i],
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold),
