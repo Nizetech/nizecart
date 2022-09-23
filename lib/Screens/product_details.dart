@@ -13,10 +13,10 @@ import 'package:intl/intl.dart' as intl;
 
 import 'product_details.dart';
 
-enum FilterOptions {
-  Favorites,
-  All,
-}
+// enum FilterOptions {
+//   Favorites,
+//   All,
+// }
 
 class ProductScreen extends ConsumerStatefulWidget {
   final Map data;
@@ -109,7 +109,10 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
               color: Colors.black,
               size: 25,
             ),
-            onPressed: () => Get.back(),
+            onPressed: () {
+              Get.back();
+              setState(() {});
+            },
           ),
         ),
         actions: [

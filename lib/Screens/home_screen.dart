@@ -85,7 +85,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       body: FutureBuilder(
           future: Future.wait([
-            ref.read(productControllerProvider).searchProduct(search.text),
+            ref
+                .read(productControllerProvider)
+                .searchProduct(search.text.toLowerCase()),
             ref.read(productControllerProvider).getProduct(),
 
             // ref.read()
@@ -98,7 +100,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             } else {
               List searchProduct = snapshot.data[0];
               List product = snapshot.data[1];
-              // List<String> searchList = [];
+
               print('my Products: ${product}');
 
               print('my search $searchProduct');
@@ -232,7 +234,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           isSearch
                               ?
                               // print(snapshot.data);
-                              searchProduct == []
+                              searchProduct.isEmpty
                                   ? const Padding(
                                       padding: EdgeInsets.all(20),
                                       child: Text(
@@ -242,26 +244,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                     )
-                                  : ListView.builder(
-                                      padding: const EdgeInsets.all(20),
-                                      shrinkWrap: true,
-                                      itemCount: searchProduct.length,
-                                      itemBuilder: (ctx, i) {
-                                        print(' my searching $searchProduct');
-                                        return InkWell(
-                                          onTap: () {
-                                            // Get.back();
-                                            // Get.back();
-                                            Get.to(ProductScreen());
-                                          },
-                                          child: Text(
-                                            searchProduct[i],
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        );
-                                      },
+                                  : Expanded(
+                                      child: GridView.builder(
+                                        itemCount: searchProduct.length,
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 20, horizontal: 10),
+                                        shrinkWrap: true,
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          childAspectRatio: 0.54,
+                                          crossAxisSpacing: 10,
+                                          mainAxisSpacing: 20,
+                                          crossAxisCount: 2,
+                                        ),
+                                        itemBuilder: (ctx, i) {
+                                          Map data = searchProduct[i];
+
+                                          return MainView(
+                                            data: data,
+                                          );
+                                        },
+                                      ),
                                     )
                               : Expanded(
                                   child: Container(
@@ -299,20 +302,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                           vertical: 18,
                                                           horizontal: 20),
                                                       decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          image:
-                                                              DecorationImage(
-                                                                  image:
-                                                                      AssetImage(
-                                                                    slideView[
-                                                                            index]
-                                                                        [
-                                                                        'image'],
-                                                                  ),
-                                                                  fit: BoxFit
-                                                                      .cover)),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        image: DecorationImage(
+                                                            image: AssetImage(
+                                                              slideView[index]
+                                                                  ['image'],
+                                                            ),
+                                                            fit: BoxFit.cover),
+                                                      ),
                                                       child: Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -494,8 +493,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               itemBuilder: (ctx, i) {
                                                 Map data = product[i];
 
-                                                // List fav = [products[i]];
-                                                // bool enable = favItems.contains(fav);
                                                 return MainView(
                                                   data: data,
                                                 );

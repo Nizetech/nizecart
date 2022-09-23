@@ -64,7 +64,7 @@ class ProductRepository {
     var ref = FirebaseStorage.instance.ref().child('images').child(productID);
     await ref.putFile(file);
     var url = await ref.getDownloadURL();
-    print(url);
+    // print(url);
     return url;
   }
 
@@ -90,25 +90,19 @@ class ProductRepository {
   Future<List> productCategory(String tag) async {
     CollectionReference products = firestore.collection('Products');
     try {
-      // var snapshot = await products.get();
+      QuerySnapshot snapshot =
+          await products.where('tag', isEqualTo: tag).get();
       // List<QueryDocumentSnapshot> docs = snapshot.docs;
       // List<Map> data = [];
       // for (var item in docs) {
       //   data.add(item.data());
       // }
-      // // print(data);
+      // print('Service product: $data');
       // return data;
-      QuerySnapshot snapshot =
-          await products.where('title', isEqualTo: tag).get();
-      print('My Tag $snapshot');
-      if (snapshot.docs.isNotEmpty) {
-        return snapshot.docs.first.data() as List;
-      } else {
-        return [];
-      }
-      // .map((e) => e.data() as Map).toList();
+      return snapshot.docs.map((e) => e.data() as Map).toList();
     } catch (e) {
-      print(e);
+      print(e.toString());
+      showErrorToast(e.toString());
       return [];
     }
   }
@@ -116,22 +110,9 @@ class ProductRepository {
   Future<List> searchProduct(String query) async {
     CollectionReference products = firestore.collection('Products');
     try {
-      // List<Product> items =
-      // QuerySnapshot snaps =
-      //     await products.where('title', isEqualTo: query).get();
-      //     snaps.docs.map((doc) => Product.fromJson(doc.data())).toList();
-      //     await products.where('title', isEqualTo: query).get();
-      // List<Product> items = [];
-      QuerySnapshot snaps = await products
-          .where('title'.toLowerCase(), isEqualTo: query.toLowerCase())
-          .get();
-      // List<Map> items = [];
-      // List<QueryDocumentSnapshot> docs = snaps.docs;
-      // for (var item in snaps.docs) {
-      //   items.add(item.data());
-      // }
-      // print(' my search list $items');
-      // return items;
+      QuerySnapshot snaps =
+          await products.where('title'.toLowerCase(), isEqualTo: query).get();
+
       return snaps.docs.map((e) => e.data() as Map).toList();
     } catch (e) {
       print(e.toString());

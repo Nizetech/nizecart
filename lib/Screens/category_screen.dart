@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:nizecart/Screens/product_details.dart';
 import 'package:nizecart/Screens/products_list.dart';
 import 'package:nizecart/products/product_controller.dart';
+import '../Models/data.dart';
 import '../Widget/component.dart';
 
 class CategoryScreen extends ConsumerStatefulWidget {
@@ -14,16 +15,6 @@ class CategoryScreen extends ConsumerStatefulWidget {
 }
 
 class _CategoryScreenState extends ConsumerState<CategoryScreen> {
-  List<String> cat = [
-    'Grocery',
-    'Homes & Garden',
-    'Phones & Tablets',
-    'Computing',
-    'Electronics',
-    'Fashion',
-    'Baby Products',
-    'Gaming',
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +28,9 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
       ),
       backgroundColor: white,
       body: FutureBuilder(
-        future: ref.read(productControllerProvider).productCategory(cat.first),
+        future: ref
+            .read(productControllerProvider)
+            .productCategory(categories.first),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return loader();
@@ -45,19 +38,19 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
             List product = snapshot.data;
             print("Category: $product");
             return ListView.separated(
-              itemCount: cat.length,
+              itemCount: categories.length,
               separatorBuilder: (ctx, i) => Divider(),
               itemBuilder: (ctx, i) {
                 return ListTile(
                   onTap: () => Get.to(
                     ProductList(
                       data: product,
-                      productName: cat[i],
+                      productName: categories[i],
                     ),
                   ),
                   contentPadding: EdgeInsets.only(left: 10, right: 10),
                   title: Text(
-                    cat[i],
+                    categories[i],
                     style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                   ),
                   trailing: Icon(Icons.navigate_next),
