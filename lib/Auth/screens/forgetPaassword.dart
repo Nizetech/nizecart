@@ -60,7 +60,7 @@ class ForgetPassword extends ConsumerWidget {
                 cursorColor: mainColor,
                 decoration: InputDecoration(
                   hintText: 'Email address',
-                  // labelStyle: TextStyle(fontSize: 18),
+              
                   filled: true,
                   isDense: true,
 

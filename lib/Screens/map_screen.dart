@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:nizecart/Widget/component.dart';
 import 'place.dart';
 
 class MapScreen extends StatefulWidget {
@@ -79,98 +80,122 @@ class _MapScreenState extends State<MapScreen> {
       6.3344143,
       5.5998271,
     ),
-    zoom: 12,
+    zoom: 20,
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
+        // extendBodyBehindAppBar: true,
         appBar: AppBar(
-            elevation: 0,
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.transparent,
-            title: TextField(
-              controller: address,
-              decoration: InputDecoration(
-                hintText: 'Enter Adresss',
-                hintStyle: TextStyle(color: Colors.black),
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.black, width: 2),
+          elevation: 0,
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.grey[300],
+          actions: [
+            if (widget.isSelecting)
+              IconButton(
+                onPressed: pickedLocation == null ? null : () => Get.back(),
+                icon: Icon(Icons.check),
+              ),
+          ],
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                height: 100,
+                alignment: Alignment.center,
+                width: double.infinity,
+                color: Colors.grey[200],
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: const Text(
+                  'Hi nice to meet you!',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.black),
                 ),
               ),
-            ),
-            actions: [
-              if (widget.isSelecting)
-                IconButton(
-                  onPressed: pickedLocation == null ? null : () => Get.back(),
-                  icon: Icon(Icons.check),
-                ),
-            ]),
-        body: Stack(
-          children: [
-            GoogleMap(
-              // mapType: MapType.hybrid,
-              onMapCreated: onMapCreated,
-              onCameraMove: (CameraPosition newPosition) {
-                print(newPosition.target.toJson());
-                widget.value = newPosition.target;
-              },
-              myLocationEnabled: true,
-              indoorViewEnabled: true,
-              initialCameraPosition: initialLocation,
-              onTap: widget.isSelecting ? selectLocation : null,
-              markers: (pickedLocation == null && widget.isSelecting)
-                  ? {}
-                  : {
-                      Marker(
-                        markerId: MarkerId('m1'),
-                        position: pickedLocation ??
-                            LatLng(
-                              initialLocation.target.latitude,
-                              initialLocation.target.longitude,
-                            ),
-                      ),
-                    },
-            ),
-            Positioned(
-                bottom: 30,
-                left: 30,
-                child: Container(
-                  color: Colors.white,
-                  child: IconButton(
-                    icon: Icon(Icons.my_location),
-                    onPressed: () async {
-                      var position = await _determinePosition();
-                      final GoogleMapController controller =
-                          await mapController.future;
-                      controller.showMarkerInfoWindow(
-                        MarkerId('m2'),
-                      );
-                      controller.getScreenCoordinate(
-                        LatLng(position.latitude, position.longitude),
-                      );
-
-                      controller.animateCamera(
-                        CameraUpdate.newCameraPosition(
-                          CameraPosition(
-                            target:
-                                LatLng(position.latitude, position.longitude),
-                            zoom: widget.initZoom,
+              Container(
+                height: MediaQuery.of(context).size.height * .5,
+                width: double.infinity,
+                child:
+                    //  Stack(
+                    //   children: [
+                    GoogleMap(
+                  // mapType: MapType.hybrid,
+                  onMapCreated: onMapCreated,
+                  onCameraMove: (CameraPosition newPosition) {
+                    print(newPosition.target.toJson());
+                    widget.value = newPosition.target;
+                  },
+                  myLocationEnabled: true,
+                  indoorViewEnabled: true,
+                  initialCameraPosition: initialLocation,
+                  onTap: widget.isSelecting ? selectLocation : null,
+                  markers: (pickedLocation == null && widget.isSelecting)
+                      ? {}
+                      : {
+                          Marker(
+                            markerId: MarkerId('m1'),
+                            position: pickedLocation ??
+                                LatLng(
+                                  initialLocation.target.latitude,
+                                  initialLocation.target.longitude,
+                                ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ))
-          ],
+                        },
+                ),
+                // Positioned(
+                //     bottom: 30,
+                //     left: 30,
+                //     child:
+                // Container(
+                //   color: Colors.white,
+                //   child: IconButton(
+                //     icon: Icon(Icons.my_location),
+                //     onPressed: () async {
+
+                  
+                //       var position = await _determinePosition();
+                //       final GoogleMapController controller =
+                //           await mapController.future;
+                //       controller.showMarkerInfoWindow(
+                //         MarkerId('m2'),
+                //       );
+                //       controller.getScreenCoordinate(
+                //         LatLng(position.latitude, position.longitude),
+                //       );
+
+                //       controller.animateCamera(
+                //         CameraUpdate.newCameraPosition(
+                //           CameraPosition(
+                //             target: LatLng(
+                //                 position.latitude, position.longitude),
+                //             zoom: widget.initZoom,
+                //           ),
+                //         ),
+                //       );
+                //   },
+                // ),
+                // ))
+                //   ],
+                // ),
+              ),
+              CustomTextField(
+                controller: address,
+                hint: 'Address',
+              ),
+              SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: CustomButton(
+                  text: 'Submit',
+                  onPressed: () {},
+                ),
+              )
+            ],
+          ),
         ));
   }
 }

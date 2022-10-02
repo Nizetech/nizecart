@@ -30,14 +30,7 @@ class AccountScreen extends ConsumerWidget {
           'Account',
           style: TextStyle(fontSize: 20),
         ),
-        leadingWidth: 10,
-        actions: [
-          Icon(Iconsax.search_normal),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Cart(),
-          ),
-        ],
+        centerTitle: true,
       ),
       backgroundColor: white,
       body: Padding(
@@ -51,7 +44,6 @@ class AccountScreen extends ConsumerWidget {
                   fontSize: 20, color: mainColor, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            const AccountListTile(text: 'Order'),
             AccountListTile(
               text: 'Profile',
               onTap: () => Get.to(ProfileScreen()),
@@ -61,7 +53,7 @@ class AccountScreen extends ConsumerWidget {
               onTap: () => Get.to(ProductsOverviewScreen()),
             ),
             AccountListTile(
-              text: 'Manage Product',
+              text: 'Admin Board',
               onTap: () => Get.to(ManageProducts()),
             ),
             AccountListTile(
@@ -72,11 +64,6 @@ class AccountScreen extends ConsumerWidget {
               text: 'Change password',
               onTap: () => Get.to(ChangePassword()),
             ),
-            AccountListTile(
-                text: 'Sign Out',
-                onTap: () {
-                  ref.read(authtControllerProvider).signOut();
-                }),
           ],
         ),
       ),

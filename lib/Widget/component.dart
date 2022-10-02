@@ -744,3 +744,33 @@ Widget photo() {
     ],
   );
 }
+
+class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hint;
+  const CustomTextField({Key key, this.controller, this.hint})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      cursorColor: mainColor,
+      decoration: InputDecoration(
+        hintText: hint,
+        filled: true,
+        isDense: true,
+        prefixIconColor: mainColor,
+        fillColor: white,
+        iconColor: mainColor,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey)),
+      ),
+    );
+  }
+}

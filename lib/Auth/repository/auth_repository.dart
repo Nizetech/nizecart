@@ -54,26 +54,33 @@ class AuthRepository {
     String address,
   }) async {
     try {
-      CollectionReference userCredential = firestore.collection('Users');
+      CollectionReference collectionReference = firestore.collection('Users');
       //create user on firebase auth
-      UserCredential user = await auth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: email, password: pwd);
-      if (user.user != null) {
-        user.user.sendEmailVerification();
+      if (userCredential.user != null) {
+        userCredential.user.sendEmailVerification();
         var userData = UserModel(
-          uid: user.user.uid,
+          uid: userCredential.user.uid,
           email: email,
-          fname: fname,
-          lname: lname,
-          phone: phone,
+          firstName: fname,
+          lastName: lname,
+          phoneNumber: phone,
           photoUrl: photoUrl,
           address: address,
         );
-        await userCredential.doc(user.user.uid).set(userData.toMap());
+        await collectionReference
+            .doc(userCredential.user.uid)
+            .set(userData.toMap());
         // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
+
+        //Update display name
+        await userCredential.user.updateDisplayName(
+          fname + ' ' + lname,
+        );
         Hive.box('name').put('displayName', fname);
         Hive.box('name').put('lname', lname);
-        Hive.box('name').put('email', user.user.email);
+        Hive.box('name').put('email', userCredential.user.email);
         return true;
       }
       // return true;
@@ -88,9 +95,9 @@ class AuthRepository {
   // Sign In
   Future<bool> signIn(String email, String pwd) async {
     try {
-      UserCredential user =
+      UserCredential userCredential =
           await auth.signInWithEmailAndPassword(email: email, password: pwd);
-      Hive.box('name').put('email', user.user.email);
+      Hive.box('name').put('email', userCredential.user.email);
       // Get.to(BottomNav());
       return true;
     } on FirebaseAuthException catch (authException) {
@@ -130,7 +137,7 @@ class AuthRepository {
 
   // Sign in with google
   Future<bool> signInWithGoogle() async {
-    CollectionReference userCredential = firestore.collection('Users');
+    CollectionReference collectionReference = firestore.collection('Users');
     try {
       //Trigger the authentication flow
       final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
@@ -143,21 +150,21 @@ class AuthRepository {
         idToken: googleAuth.idToken,
       );
       // Once signed in, return the UserCredential
-      final UserCredential user =
+      final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
-      if (user.user != null) {
-        await userCredential.doc(user.user.uid).set({
-          'fname': user.user.displayName,
-          'last_name': user.user.displayName,
-          'phone': user.user.phoneNumber,
-          'email': user.user.email,
+      if (userCredential.user != null) {
+        await collectionReference.doc(userCredential.user.uid).set({
+          'fname': userCredential.user.displayName,
+          'last_name': userCredential.user.displayName,
+          'phone': userCredential.user.phoneNumber,
+          'email': userCredential.user.email,
           'address': '',
           'photoUrl': '',
-          'uid': user.user.uid,
+          'uid': userCredential.user.uid,
           'date_created': Timestamp.now(),
         });
-        Hive.box('name').put('displayName', user.user.displayName);
-        Hive.box('name').put('email', user.user.email);
+        Hive.box('name').put('displayName', userCredential.user.displayName);
+        Hive.box('name').put('email', userCredential.user.email);
         return true;
       } else {
         showErrorToast('Google sign in failed');
@@ -203,9 +210,9 @@ class AuthRepository {
 
   // Update Address
   Stream<void> changeAddress(String address) {
-    CollectionReference userCredential = firestore.collection('Users');
+    CollectionReference collectionReference = firestore.collection('Users');
     try {
-      userCredential.doc(getUser().uid).update(
+      collectionReference.doc(getUser().uid).update(
         {
           'address': address,
         },
@@ -220,7 +227,7 @@ class AuthRepository {
   // Update profileImage
   Future<String> updateProfileImage(File image) async {
     Reference storageReference = firebaseStorage.ref('profilePicture');
-    CollectionReference userCredential = firestore.collection('Users');
+    CollectionReference collectionReference = firestore.collection('Users');
     try {
       //Upload image to firebase storage
       UploadTask uploadTask =
@@ -230,7 +237,7 @@ class AuthRepository {
       uploadTask.then((value) {
         value.ref.getDownloadURL().then((url) {
           photoUrl = url;
-          userCredential.doc(getUser().uid).update({
+          collectionReference.doc(getUser().uid).update({
             'photoUrl': photoUrl,
             'imageUploaded': true,
           });
@@ -268,9 +275,9 @@ class AuthRepository {
 
   /// stream userdetails
   Stream<DocumentSnapshot> userDetails() {
-    CollectionReference userCredential = firestore.collection('Users');
+    CollectionReference collectionReference = firestore.collection('Users');
     try {
-      var snap = userCredential.doc(getUser().uid).snapshots();
+      var snap = collectionReference.doc(getUser().uid).snapshots();
       print('User details ${snap}');
       // return shot.data();
       return snap;

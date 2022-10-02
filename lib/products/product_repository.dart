@@ -3,9 +3,19 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutterwave_standard/core/flutterwave.dart';
+import 'package:flutterwave_standard/flutterwave.dart';
+import 'package:flutterwave_standard/models/responses/charge_response.dart';
+import 'package:get/get.dart';
 import 'package:nizecart/Models/orders.dart';
 import 'package:nizecart/Models/product_model.dart';
+import 'package:nizecart/Screens/image_input.dart';
+import 'package:nizecart/Screens/success_screen.dart';
+import 'package:nizecart/botton_nav.dart';
+import 'package:nizecart/keys/keys.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 
 import '../Widget/component.dart';
 
@@ -193,12 +203,57 @@ class ProductRepository {
           .collection('order')
           .doc(orderId)
           .set(orderData.toMap());
-      showToast('Order placed successfully');
+      // showToast('Order placed successfully');
+      Get.to(SuccessPage());
       return true;
     } catch (e) {
       print(e.toString());
       showErrorToast('Something went wrong');
       return false;
+    }
+  }
+
+  //Make Payment with FLutterwave
+  Future<Map<String, dynamic>> payWithFlutterWave(
+      String amount, BuildContext context) async {
+    try {
+      String trxId = DateTime.now().millisecondsSinceEpoch.toString();
+      User user = FirebaseAuth.instance.currentUser;
+      final Customer customer = Customer(
+        name: user.displayName,
+        phoneNumber: user.phoneNumber,
+        email: user.email,
+      );
+
+      final Flutterwave flutterwave = Flutterwave(
+        context: context,
+        publicKey: FLWPUBKEY,
+        currency: "NGN",
+        redirectUrl: "my_redirect_url",
+        txRef: trxId,
+        amount: amount,
+        customer: customer,
+        paymentOptions: "ussd, card, barter",
+        customization: Customization(title: "Add Money"),
+        isTestMode: true,
+      );
+
+      ChargeResponse response = await flutterwave.charge();
+      if (response.success) {
+        showToast('Successful');
+        // Verify transaction
+        var responseData = response.toJson();
+
+        responseData['date'] = FieldValue.serverTimestamp();
+
+        return responseData;
+      } else {
+        showErrorToast('Failed');
+        return {};
+      }
+    } catch (e) {
+      print(e);
+      return {};
     }
   }
 

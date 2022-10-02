@@ -35,7 +35,7 @@ class ChatRepository {
         var user = UserModel.fromMap(userData.data());
         chatList.add(
           Chat(
-              name: user.fname,
+              name: user.firstName,
               profilePic: user.photoUrl,
               chatId: chat.chatId,
               timeSent: chat.timeSent,
@@ -74,7 +74,7 @@ class ChatRepository {
   ) async {
     /// For the receiver's end
     var receiverChatContact = Chat(
-      name: senderUserData.fname,
+      name: senderUserData.firstName,
       profilePic: senderUserData.photoUrl,
       chatId: senderUserData.uid,
       timeSent: timeSent,
@@ -89,7 +89,7 @@ class ChatRepository {
 
     // Sender's end
     var senderChatContact = Chat(
-      name: receiverUserData.fname,
+      name: receiverUserData.firstName,
       profilePic: receiverUserData.photoUrl,
       chatId: receiverUserData.uid,
       timeSent: timeSent,
@@ -164,8 +164,8 @@ class ChatRepository {
         receiverUserId: receiverUserId,
         text: text,
         messageId: messageId,
-        userName: sender.fname,
-        receiverUserName: receiverUserData.fname,
+        userName: sender.firstName,
+        receiverUserName: receiverUserData.firstName,
         timeSent: timeSent,
       );
     } catch (e) {

@@ -32,6 +32,7 @@ dependencies:
   local_auth: ^2.1.2
   persistent_bottom_nav_bar_v2: ^4.2.5
   # flutter_paystack: ^1.0.5
+  flutterwave_standard: ^1.0.4
   flutter_paystack:
    git:
     url: https://github.com/definitelyme/flutter_paystack.git

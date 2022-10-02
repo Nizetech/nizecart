@@ -9,6 +9,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
+import 'package:nizecart/Screens/delivery_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import '../Widget/component.dart';
 
@@ -303,23 +304,23 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                                 ['qty']--;
                                                             box.put('cartItem',
                                                                 cartItems);
-                                                            Fluttertoast
-                                                                .showToast(
-                                                              msg:
-                                                                  'Removed from cart',
-                                                              toastLength: Toast
-                                                                  .LENGTH_SHORT,
-                                                              gravity:
-                                                                  ToastGravity
-                                                                      .BOTTOM,
-                                                              timeInSecForIosWeb:
-                                                                  1,
-                                                              backgroundColor:
-                                                                  Colors.red,
-                                                              textColor:
-                                                                  Colors.white,
-                                                              fontSize: 16.0,
-                                                            );
+                                                            // Fluttertoast
+                                                            //     .showToast(
+                                                            //   msg:
+                                                            //       'Removed from cart',
+                                                            //   toastLength: Toast
+                                                            //       .LENGTH_SHORT,
+                                                            //   gravity:
+                                                            //       ToastGravity
+                                                            //           .BOTTOM,
+                                                            //   timeInSecForIosWeb:
+                                                            //       1,
+                                                            //   backgroundColor:
+                                                            //       Colors.red,
+                                                            //   textColor:
+                                                            //       Colors.white,
+                                                            //   fontSize: 16.0,
+                                                            // );
                                                           });
                                                         }
                                                       },
@@ -354,8 +355,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                               box.put(
                                                                   'cartItem',
                                                                   cartItems);
-                                                              showToast(
-                                                                  'Added to cart');
+                                                              // showToast(
+                                                              //     'Added to cart');
                                                             },
                                                           );
                                                         } else {
@@ -405,10 +406,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                 child: const Text(
                                                   'Remove',
                                                   style: TextStyle(
-                                                      color: mainColor,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                    color: mainColor,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
                                               ),
                                             ],
@@ -438,7 +439,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           text: 'Checkout  (₦${formatter.format(totalAmount).toString()})',
           onPressed: () {
             return Get.to(
-              CheckOutScreen(totalAmount: totalAmount),
+              // CheckOutScreen(totalAmount: totalAmount),
+              DeliveryScreen(totalAmount: totalAmount),
             );
           },
         ),

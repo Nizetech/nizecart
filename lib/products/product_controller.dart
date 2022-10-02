@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
 import 'package:nizecart/products/product_repository.dart';
@@ -108,5 +109,11 @@ class ProductController {
       address: address,
       productDetails: productDetails,
     );
+  }
+
+  // Pay with flutterwave
+  Future<Map<String, dynamic>> payWithFlutterWave(
+      String amount, BuildContext context) {
+    return productRepository.payWithFlutterWave(amount, context);
   }
 }

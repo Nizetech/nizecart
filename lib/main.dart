@@ -36,20 +36,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'NizeCart',
       theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-              // backgroundColor: secColor,
-              elevation: 0,
-              color: secColor,
-              foregroundColor: white),
-          scaffoldBackgroundColor: Colors.grey[100],
-          primarySwatch: Colors.red,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          backgroundColor: white),
-      home: isLoggedIn
-          ?
-          // BottomNav()
-          CustomNavBar()
-          : SignInScreen(),
+        appBarTheme: const AppBarTheme(
+          // backgroundColor: secColor,
+          elevation: 0,
+          color: secColor,
+          foregroundColor: white,
+        ),
+        scaffoldBackgroundColor: Colors.grey[100],
+        primarySwatch: Colors.red,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        backgroundColor: white,
+      ),
+      home: isLoggedIn ? CustomNavBar() : SignInScreen(),
     );
   }
 }
