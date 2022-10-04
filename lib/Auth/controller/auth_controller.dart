@@ -78,9 +78,9 @@ class AuthController {
   }
 
   // get Userdetails
-  // Future<Map> getUserDetails() {
-  //   return authRepository.getUserDetails();
-  // }
+  Future<Map> getUserDetails() {
+    return authRepository.getUserDetails();
+  }
 
   // Get UserData
   // Future<UserModel> getUserCurrentUserData() async {

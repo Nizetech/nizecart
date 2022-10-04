@@ -49,17 +49,19 @@ class ProductController {
   }
 
   // Update Product
-  void updateProduct(
-    String imageUrl,
+  void updateProduct({
+    // String imageUrl,
     String title,
     String description,
     int price,
-  ) {
+    File image,
+  }) {
     productRepository.updateProduct(
-      imageUrl: imageUrl,
+      // imageUrl: imageUrl,
       title: title,
       description: description,
       price: price,
+      image: image,
     );
   }
 

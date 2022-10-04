@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -9,8 +10,11 @@ import 'package:nizecart/chat/controller/controller.dart';
 import '../Models/messages.dart';
 
 class ChatList extends ConsumerStatefulWidget {
-  String receiverUserId;
-  ChatList({Key key, this.receiverUserId}) : super(key: key);
+  final Map messageData;
+  ChatList({
+    Key key,
+    this.messageData,
+  }) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ChatListState();
@@ -21,40 +25,110 @@ class _ChatListState extends ConsumerState<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Messages>>(
-      stream:
-          ref.read(chatControllerProvider).getChatStream(widget.receiverUserId),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          Center(child: CircularProgressIndicator());
-        }
-        print(snapshot.data);
-        // SchedulerBinding.instance.addPersistentFrameCallback((_) {
-        //   messageController.jumpTo(
-        //     messageController.position.maxScrollExtent,
-        //   );
-        // });
-        return ListView.builder(
-            // controller: messageController,
-            itemCount: snapshot.data.length,
-            itemBuilder: (ctx, i) {
-              final messageData = snapshot.data[i];
-              var timeSent = DateFormat().add_H().format(messageData.timeSent);
-              if (messageData.senderId ==
-                  FirebaseAuth.instance.currentUser.uid) {
-                return SenderMsg(
-                  message: messageData.text,
-                  date: timeSent,
-                  userName: messageData.repliedTo,
-                );
-              }
-              return RecieverMsg(
-                message: messageData.text,
-                date: timeSent,
-                userName: messageData.repliedTo,
-              );
-            });
-      },
-    );
+    // SchedulerBinding.instance.addPersistentFrameCallback((_) {
+    //   messageController.jumpTo(
+    //     messageController.position.maxScrollExtent,
+    //   );
+    // });
+    bool isMe =
+        widget.messageData['sender'] == FirebaseAuth.instance.currentUser.uid;
+    return isMe
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * .7),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(27),
+                      topRight: Radius.circular(27),
+                      bottomLeft: Radius.circular(27),
+                      bottomRight: Radius.circular(2),
+                    ),
+                    color: Color(0xff4b4b4b),
+                  ),
+                  child: Column(
+                    children: [
+                      // Text(
+                      //   userName,
+                      //   style: TextStyle(
+                      //       fontWeight: FontWeight.bold, color: Colors.white),
+                      // ),
+                      Text(
+                        widget.messageData['text'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 13),
+                // DateFormat()
+                //                 .add_H()
+                //                 .format(messageData.timeSent);
+              Text(
+                widget.messageData['date'],
+                style: TextStyle(
+                  color: Color(0xff3a3a41),
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+              )
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * .7),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(2),
+                      topRight: Radius.circular(27),
+                      bottomLeft: Radius.circular(27),
+                      bottomRight: Radius.circular(27),
+                    ),
+                    color: Color(0xff4b4b4b),
+                  ),
+                  child: Column(
+                    children: [
+                       Text(
+                        widget.messageData['text'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 13),
+              // DateFormat()
+              //                 .add_H()
+              //                 .format(messageData.timeSent);
+              Text(
+                widget.messageData['date'],
+                style: TextStyle(
+                  color: Color(0xff3a3a41),
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+              )
+            ],
+          );
   }
 }

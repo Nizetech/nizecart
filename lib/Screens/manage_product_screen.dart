@@ -69,22 +69,30 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
     // print(storedImage);
     String imageUrl =
         await ref.read(productControllerProvider).uploadFile(storedImage);
-
-    ref.read(productControllerProvider).addProduct(
-          imageUrl: imageUrl,
-          title: title.text.trim(),
-          description: description.text.trim(),
-          price: int.parse(price.text),
-          tag: tag,
-        );
-
-    initValue();
-    showToast('Product Added');
-    setState(() {});
-    Get.back();
+    if (imageUrl.isNotEmpty &&
+        title.text.trim().isNotEmpty &&
+        description.text.trim().isNotEmpty &&
+        title.text.isNotEmpty &&
+        tag != '') {
+      ref.read(productControllerProvider).addProduct(
+            imageUrl: imageUrl,
+            title: title.text.trim(),
+            description: description.text.trim(),
+            price: int.parse(price.text),
+            tag: tag,
+          );
+      // initValue();
+      showToast('Product Added');
+      setState(() {});
+      Get.back();
+      Get.back();
+    } else {
+      showErrorToast('Please fill all fields');
+      Get.back();
+    }
   }
 
-  String tag;
+  String tag = '';
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +206,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
                   ),
                 ),
                 hint: Text('Category'),
-                items: [
+                items: const [
                   DropdownMenuItem(
                     child: Text('Grocery'),
                     value: 'Grocery',
@@ -229,7 +237,6 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
                   ),
                 ],
                 onChanged: (val) {
-                 
                   setState(() {
                     tag = val;
                   });

@@ -94,8 +94,6 @@ class _ProductListState extends State<ProductList> {
                 itemBuilder: (ctx, i) {
                   Map data = widget.data[i];
 
-                  // List fav = [products[i]];
-                  // bool enable = favItems.contains(fav);
                   return MainView(
                     data: data,
                   );

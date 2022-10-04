@@ -381,8 +381,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
                                                   // await _deleteCacheDir();
 
+                                                  // box.deleteAt(cartItems[i]);
                                                   cartItems.removeAt(i);
+                                                  box.put('cart', cartItems);
                                                   setState(() {});
+
                                                   // cartItems.removeWhere(
                                                   //   (element) =>
                                                   //       cartItems.elementAt(

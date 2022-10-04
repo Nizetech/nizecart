@@ -80,15 +80,20 @@ class _UpdateScreenState extends ConsumerState<UpdateScreen> {
   void UpdateProduct() async {
     loading('Updating Product...');
     // print(storedImage);
-    String imageUrl =
-        await ref.read(productControllerProvider).uploadFile(updateImage);
 
     ref.read(productControllerProvider).updateProduct(
           // 'imageUrl,'
-          '',
-          newTitle.text.trim(),
-          newDescription.text.trim(),
-          int.parse(price.text.trim()),
+          // imageUrl: updateImage != null ? imageUrl : widget.data['imageUrl'],
+          image: updateImage,
+          title: newTitle.text.trim() != ''
+              ? newTitle.text.trim()
+              : widget.data['title'],
+          description: newDescription.text.trim() != ''
+              ? newDescription.text.trim()
+              : widget.data['description'],
+          price: int.parse(price.text.trim()) != ''
+              ? int.parse(price.text.trim())
+              : widget.data['price'],
         );
     initValue();
     showToast('Product Updated');
@@ -189,12 +194,19 @@ class _UpdateScreenState extends ConsumerState<UpdateScreen> {
               decoration: BoxDecoration(
                 border: Border.all(width: 1, color: Colors.grey),
               ),
-              child: Image.network(
-                widget.data['imageUrl'],
-                height: 200,
-                width: 200,
-                fit: BoxFit.cover,
-              ),
+              child: updateImage == null
+                  ? Image.network(
+                      widget.data['imageUrl'],
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.file(
+                      updateImage,
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.cover,
+                    ),
             ),
             SizedBox(height: 5),
             Center(

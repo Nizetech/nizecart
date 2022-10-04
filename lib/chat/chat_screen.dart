@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:nizecart/Widget/chat_list.dart';
 import 'package:nizecart/chat/controller/controller.dart';
 
@@ -13,8 +15,11 @@ import '../Models/user_model.dart';
 import '../Widget/component.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
-  final String receiverUserId;
-  ChatScreen({Key key, this.receiverUserId}) : super(key: key);
+  DocumentSnapshot user;
+  ChatScreen({
+    Key key,
+    this.user,
+  }) : super(key: key);
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -27,9 +32,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   // String get uid => null;
   void sendTextMessage() {
-    ref.read(chatControllerProvider).sendTextMessages(
-          message.text.trim(),
-          widget.receiverUserId,
+    ref.read(chatControllerProvider).sendMessage(
+          text: message.text.trim(),
+          // widget.receiverUserId,
         );
     // print(_messageController.text.trim());
     setState(() {
@@ -37,89 +42,119 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     });
   }
 
+  // String userId = FirebaseAuth.instance.currentUser.uid;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: Icon(
-              Icons.arrow_back_ios_rounded,
-              color: Colors.white,
+            leading: IconButton(
+              onPressed: () => Get.back(),
+              icon: Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Colors.white,
+              ),
             ),
-          ),
-          title: StreamBuilder(
-              stream: ref.read(authtControllerProvider).userDetails(),
+            title:
+
+                // DocumentSnapshot data = snapshot.data;
+                // print(data['photoUrl']);
+
+                Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                widget.user['photoUrl'] == null
+                    ? CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey[200],
+                        child: const Icon(
+                          Iconsax.user,
+                          size: 25,
+                          color: Colors.black,
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(25),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.user['photoUrl'],
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.user['fname'],
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 2),
+                    Text("Online",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: mainColor,
+                        ))
+                  ],
+                )
+              ],
+            )
+            // }
+
+            ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: StreamBuilder(
+              stream: ref
+                  .read(chatControllerProvider)
+                  .getChatMessages(widget.user['uid']),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 } else {
-                  // DocumentSnapshot data = snapshot.data;
-                  // print(data['photoUrl']);
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  List<dynamic> messages = snapshot.data.docs.map((doc) {
+                    return doc.data() as Map;
+                  }).toList();
+                  print('messages: $messages');
+                  return Column(
                     children: [
-                      snapshot.data['photoUrl'] == null
-                          ? const Icon(
-                              Iconsax.user,
-                              size: 30,
-                              color: secColor,
-                            )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(25),
-                              child: CachedNetworkImage(
-                                imageUrl: snapshot.data['photoUrl'],
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                      SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '$name',
-                            style: TextStyle(fontSize: 16),
+                      SizedBox(height: 20),
+                      const Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Today",
+                          style: TextStyle(
+                            color: Color(0xffb3b3bb),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
                           ),
-                          SizedBox(height: 2),
-                          Text("Online",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: mainColor,
-                              ))
-                        ],
-                      )
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      messages.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'No Messages Yet',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              // controller: messageController,
+                              itemCount: messages.length,
+                              itemBuilder: (ctx, i) {
+                                ChatList(
+                                    messageData: messages.reversed.toList()[i]);
+                              }),
                     ],
                   );
                 }
               }),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              SizedBox(height: 20),
-              const Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Today",
-                  style: TextStyle(
-                    color: Color(0xffb3b3bb),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Expanded(
-                  child: ChatList(
-                receiverUserId: widget.receiverUserId,
-              ))
-            ],
-          ),
         ),
         bottomNavigationBar: Container(
           height: 54,

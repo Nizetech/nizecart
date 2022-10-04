@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
@@ -17,25 +18,19 @@ class ChatController {
   final ProviderRef ref;
   ChatController({this.chatRepository, this.ref});
 
-  Stream<List<Chat>> getChatList() {
-    return chatRepository.getChatList();
+  Stream<QuerySnapshot> getChatMessages(String uid) {
+    return chatRepository.getChatMessages(uid);
   }
 
-  Stream<List<Messages>> getChatStream(String receiverId) {
-    return chatRepository.getChatStream(receiverId);
+  Stream<QuerySnapshot<Object>> getChats() {
+    return chatRepository.getChats();
   }
 
-  void sendTextMessages(
+  Future<void> sendMessage({
     String text,
-    String receiverUserId,
-  ) {
-    ref.read(userDataAuthProvider).whenData((value) {
-      UserModel sender;
-      chatRepository.sendTextMessages(
-        text: text,
-        receiverUserId: receiverUserId,
-        sender: sender,
-      );
-    });
+    String receiver,
+    // String receiverToken,
+  }) {
+    return chatRepository.sendMessage(text: text, receiver: receiver);
   }
 }

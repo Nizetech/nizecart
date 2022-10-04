@@ -43,7 +43,7 @@ class _PayWithPaystackState extends ConsumerState<PayWithPaystack> {
 
   @override
   void initState() {
-    plugin.initialize(publicKey: PayPalKey);
+    plugin.initialize(publicKey: PayStackKey);
     super.initState();
   }
 

@@ -7,6 +7,7 @@ class Product {
   String productID;
   int rating;
   String tag;
+  bool isFav;
   Product({
     this.title,
     this.description,
@@ -15,6 +16,7 @@ class Product {
     this.favorite,
     this.productID,
     this.rating,
+    this.isFav,
     this.tag,
   });
 
@@ -24,6 +26,7 @@ class Product {
     price = json['price'];
     imageUrl = json['imageUrl'] ?? '';
     tag = json['tag'];
+    isFav = json['isFav'];
     favorite = json['favorite'] == null
         ? []
         : List<dynamic>.from(json['favorite'].map((e) => e));
@@ -41,6 +44,7 @@ class Product {
     data['productID'] = productID;
     data['rating'] = rating;
     data['tag'] = tag;
+    data['isFav'] = isFav;
     return data;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Messages {
-  final String senderId;
+  final List userIds;
   final String receiverId;
   final String text;
   final DateTime timeSent;
@@ -9,7 +9,7 @@ class Messages {
   final String repliedTo;
   final bool isSeen;
   Messages(
-      {this.senderId,
+      {this.userIds,
       this.receiverId,
       this.text,
       this.timeSent,
@@ -19,7 +19,7 @@ class Messages {
 
   Map<String, dynamic> toJson() {
     return {
-      'senderId': senderId,
+      'senderId': userIds,
       'receiverId': receiverId,
       'text': text,
       'timeSent': FieldValue.serverTimestamp(),
@@ -31,7 +31,7 @@ class Messages {
 
   factory Messages.fromJson(Map<String, dynamic> data) {
     return Messages(
-      senderId: data['senderId'] ?? '',
+      userIds: data['userIds'] ?? '',
       receiverId: data['receiverId'] ?? '',
       text: data['text'] ?? '',
       timeSent: data[FieldValue.serverTimestamp()],

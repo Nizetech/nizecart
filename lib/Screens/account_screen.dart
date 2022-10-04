@@ -57,10 +57,6 @@ class AccountScreen extends ConsumerWidget {
               onTap: () => Get.to(ManageProducts()),
             ),
             AccountListTile(
-              text: 'Customer Support',
-              onTap: () => Get.to(ChatScreen()),
-            ),
-            AccountListTile(
               text: 'Change password',
               onTap: () => Get.to(ChangePassword()),
             ),

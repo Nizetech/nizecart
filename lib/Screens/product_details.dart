@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/products/product_controller.dart';
@@ -110,7 +111,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
               size: 25,
             ),
             onPressed: () {
-              Get.back();
+           Get.back();
               setState(() {});
             },
           ),
@@ -126,24 +127,23 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                   left: Radius.circular(50),
                 )),
             child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    enable = !enable;
-                  });
-                  if (enable) {
-                    ref
-                        .read(productControllerProvider)
-                        .addFavorite(widget.data);
-                  } else {
-                    ref
-                        .read(productControllerProvider)
-                        .removeFavorite(widget.data['productID']);
-                  }
-                },
-                icon: Icon(
-                  enable ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.red[600],
-                )),
+              onPressed: () {
+                setState(() {
+                  enable = !enable;
+                });
+                if (enable) {
+                  ref.read(productControllerProvider).addFavorite(widget.data);
+                } else {
+                  ref
+                      .read(productControllerProvider)
+                      .removeFavorite(widget.data['favId']);
+                }
+              },
+              icon: Icon(
+                enable ? Icons.favorite : Icons.favorite_border,
+                color: Colors.red[600],
+              ),
+            ),
           ),
         ],
       ),

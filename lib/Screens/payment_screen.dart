@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:nizecart/Models/payment.dart';
+import 'package:nizecart/Screens/success_screen.dart';
 import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
@@ -43,70 +44,69 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
 
 //   String publicKeyTest = 'pk_test_52197b2afc4c27f4491282296d1a848bea6794f9';
 
-//   final plugin = PaystackPlugin();
+  final plugin = PaystackPlugin();
 
-//   @override
-//   void initState() {
-//     plugin.initialize(publicKey: publicKeyTest);
-//     super.initState();
-//   }
+  @override
+  void initState() {
+    plugin.initialize(publicKey: PayStackKey);
+    super.initState();
+  }
 
-//   //used to generate a unique reference for payment
-//   String _getReference() {
-//     var platform = (Platform.isIOS) ? 'iOS' : 'Android';
-//     final thisDate = DateTime.now().millisecondsSinceEpoch;
-//     return 'ChargedFrom${platform}_$thisDate';
-//   }
+  //used to generate a unique reference for payment
+  String _getReference() {
+    var platform = (Platform.isIOS) ? 'iOS' : 'Android';
+    final thisDate = DateTime.now().millisecondsSinceEpoch;
+    return 'ChargedFrom${platform}_$thisDate';
+  }
 
-//   //async method to charge users card and return a response
+  //async method to charge users card and return a response
 
-// // Test Card
-//   ///Bank Auth Simulation(reusable)
-// //     4084 0800 0000 0409
-// //     (EXPIRY
-// //   09/23,
-// //   (CVV
-// //    000),
+// Test Card
+  ///Bank Auth Simulation(reusable)
+//     4084 0800 0000 0409
+//     (EXPIRY
+//   09/23,
+//   (CVV
+//    000),
 
-//   chargeCard() async {
-//     var charge = Charge()
-//       ..amount = widget.data['shippingFee'] != ''
-//           ? widget.data['total']
-//           : widget.data['totalAmount']
-//       // 100 //the money should be in kobo hence the need to multiply the value by 100
-//       ..reference = _getReference()
-//       ..putCustomField(
-//           'custom_id',
-//           getRandomString(
-//               8)) //to pass extra parameters to be retrieved on the response from Paystack
-//       ..email = email;
+  chargeCard() async {
+    var charge = Charge()
+      ..amount = widget.data['shippingFee'] != ''
+          ? widget.data['total'] * 100
+          : widget.data['totalAmount'] * 100
+      // 100 //the money should be in kobo hence the need to multiply the value by 100
+      ..reference = _getReference()
+      ..putCustomField(
+        'custom_id',
+        getRandomString(8),
+      ) //to pass extra parameters to be retrieved on the response from Paystack
+      ..email = email;
 
-//     CheckoutResponse response = await plugin.checkout(
-//       context,
-//       method: CheckoutMethod.card,
-//       charge: charge,
-//     );
+    CheckoutResponse response = await plugin.checkout(
+      context,
+      method: CheckoutMethod.card,
+      charge: charge,
+    );
 
-//     //check if the response is true or not
-//     if (response.status != true) {
-//       ref.read(productControllerProvider).orders(
-//             username: name,
-//             title: title,
-//             quantity: quantity,
-//             totalAmount: widget.data['totalAmount'],
-//             phoneNumber: '',
-//             address: widget.data['address'],
-//             productDetails: cartItems,
-//           );
-//       //you can send some data from the response to an API or use webhook to record the payment on a database
+    //check if the response is true or not
+    if (response.status != true) {
+      ref.read(productControllerProvider).orders(
+            username: name,
+            title: title,
+            quantity: quantity,
+            totalAmount: widget.data['totalAmount'],
+            phoneNumber: '',
+            address: widget.data['address'],
+            productDetails: cartItems,
+          );
+      //you can send some data from the response to an API or use webhook to record the payment on a database
 
-//       showToast('Payment was successful!!!');
-//       Get.to(BottomNav());
-//     } else {
-//       //the payment wasn't successsful or the user cancelled the payment
-//       showErrorToast('Payment Failed!!!');
-//     }
-//   }
+      Get.to(SuccessPage());
+    } else {
+      //the payment wasn't successsful or the user cancelled the payment
+      showErrorToast('Payment Failed!!!');
+    }
+  }
 
   static var box = Hive.box('name');
 
@@ -373,18 +373,20 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                     onPressed: () {
                       // chargeCard();
                       enable == 0
-                          ? PayWithPaystack(
-                              amount: widget.data['shippingFee'] != ''
-                                  ? widget.data['total']
-                                  : widget.data['totalAmount'],
-                              title: title,
-                              quantity: quantity,
-                              totalAmount: widget.data['totalAmount'],
-                              phoneNumber: '',
-                              address: '',
-                              cartItems: cartItems,
-                              email: email,
-                            )
+                          ?
+                          //  PayWithPaystack(
+                          //     amount: widget.data['shippingFee'] != ''
+                          //         ? widget.data['total']
+                          //         : widget.data['totalAmount'],
+                          //     title: title,
+                          //     quantity: quantity,
+                          //     totalAmount: widget.data['totalAmount'],
+                          //     phoneNumber: '',
+                          //     address: '',
+                          //     cartItems: cartItems,
+                          //     email: email,
+                          //   )
+                          chargeCard()
                           : enable == 1
                               ? ref
                                   .read(productControllerProvider)

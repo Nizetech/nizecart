@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:nizecart/Screens/privacy_policy.dart';
+import 'package:nizecart/chat/chat_screen.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../Auth/controller/auth_controller.dart';
 import '../Widget/component.dart';
@@ -65,9 +69,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Icons.arrow_back,
             color: Colors.white,
           ),
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: () => Get.back(),
         ),
         backgroundColor: Colors.transparent,
         // title: const Text(
@@ -85,10 +87,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           stream: ref.read(authtControllerProvider).userDetails(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else {
               print(snapshot.data['photoUrl']);
-              String data = snapshot.data['photoUrl'];
+              DocumentSnapshot user = snapshot.data;
+              String data = user['photoUrl'];
               return CustomScrollView(
                 slivers: [
                   SliverFillRemaining(
@@ -101,14 +104,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           children: [
                             Container(
                               height: 200,
-                              margin: EdgeInsets.only(bottom: 50),
+                              margin: const EdgeInsets.only(bottom: 50),
                               decoration: const BoxDecoration(
                                 borderRadius: BorderRadius.vertical(
                                   bottom: Radius.circular(40),
                                 ),
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.vertical(
+                                borderRadius: const BorderRadius.vertical(
                                   bottom: Radius.circular(40),
                                 ),
                                 child: Image.asset(
@@ -127,7 +130,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               child: Container(
                                 height: 200,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(
+                                  borderRadius: const BorderRadius.vertical(
                                     bottom: Radius.circular(40),
                                   ),
                                   gradient: LinearGradient(
@@ -266,11 +269,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                                   ImageSource
                                                                       .camera);
                                                             },
-                                                            icon: Icon(
+                                                            icon: const Icon(
                                                               Iconsax.image,
                                                               size: 15,
                                                             ),
-                                                            label: Text(
+                                                            label: const Text(
                                                               'Choose from camera',
                                                             ),
                                                             style: ButtonStyle(
@@ -325,7 +328,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Center(
                                   child: Column(
                                     children: [
@@ -339,7 +342,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       ),
                                       Text(
                                         '$email',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: mainColor,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -347,9 +350,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 Container(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     color: white,
@@ -362,13 +365,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   ),
                                   child: Column(
                                     children: [
-                                      const ListTile(
+                                      ListTile(
                                         contentPadding: EdgeInsets.zero,
                                         leading: Icon(
                                           Iconsax.user,
                                           color: mainColor,
                                         ),
-                                        title: Text(
+                                        title: const Text(
                                           'Account settings',
                                           style: TextStyle(
                                             fontSize: 16,
@@ -377,8 +380,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                         ),
                                         trailing:
                                             Icon(Icons.navigate_next_sharp),
+                                        onTap: () {},
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       const ListTile(
                                         contentPadding: EdgeInsets.zero,
                                         leading: Icon(
@@ -395,7 +399,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                         trailing:
                                             Icon(Icons.navigate_next_sharp),
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       ListTile(
                                         contentPadding: EdgeInsets.zero,
                                         leading: const Icon(
@@ -422,11 +426,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                             )
                                                 .then((val) {
                                               if (val) {
-                                                print(val);
                                                 setState(() {
                                                   isLocked = val;
                                                   // isLocked = !isLocked;
-                                                  val = !isLocked;
+                                                  // val = !isLocked;
                                                 });
                                                 Hive.box('name')
                                                     .put('isLocked', isLocked);
@@ -435,44 +438,113 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           },
                                         ),
                                       ),
-                                      Divider(),
-                                      const ListTile(
+                                      const Divider(),
+                                      ListTile(
                                         contentPadding: EdgeInsets.zero,
                                         leading: Icon(
                                           Iconsax.info_circle,
                                           color: mainColor,
                                         ),
-                                        title: Text(
+                                        title: const Text(
                                           'Privacy Policy',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
+                                        onTap: () => Get.to(PrivacyPolicy()),
                                         trailing:
                                             Icon(Icons.navigate_next_sharp),
                                       ),
-                                      Divider(),
-                                      const ListTile(
+                                      const Divider(),
+                                      ListTile(
                                         contentPadding: EdgeInsets.zero,
-                                        leading: Icon(
+                                        leading: const Icon(
                                           Iconsax.message_question,
                                           color: mainColor,
                                         ),
-                                        title: Text(
+                                        title: const Text(
                                           'Help',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
-                                        trailing:
-                                            Icon(Icons.navigate_next_sharp),
+                                        trailing: const Icon(
+                                            Icons.navigate_next_sharp),
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                  top: Radius.circular(20),
+                                                ),
+                                              ),
+                                              context: context,
+                                              builder: (contex) {
+                                                return Container(
+                                                  height: 170,
+                                                  width: double.infinity,
+                                                  padding: EdgeInsets.all(20),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                      top: Radius.circular(20),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      ListTile(
+                                                        leading: const Icon(
+                                                          Iconsax.call_calling,
+                                                          size: 25,
+                                                          color: Colors.green,
+                                                        ),
+                                                        title: const Text(
+                                                          'Call Agent',
+                                                          style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        onTap: () =>
+                                                            launchUrlString(
+                                                                'tel:09072026425'),
+                                                      ),
+                                                      Divider(),
+                                                      ListTile(
+                                                        leading: const Icon(
+                                                          Iconsax.message,
+                                                          size: 25,
+                                                          color: Colors.green,
+                                                        ),
+                                                        title: const Text(
+                                                          'Chat Support',
+                                                          style: TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        onTap: () =>
+                                                            Get.to(ChatScreen(
+                                                          user: snapshot.data,
+                                                        )),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              });
+                                        },
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       ListTile(
                                         contentPadding: EdgeInsets.zero,
-                                        leading: Icon(
+                                        leading: const Icon(
                                           Iconsax.logout,
                                           color: mainColor,
                                         ),
@@ -481,7 +553,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                               .read(authtControllerProvider)
                                               .signOut();
                                         },
-                                        title: Text(
+                                        title: const Text(
                                           'Log out',
                                           style: TextStyle(
                                             fontSize: 16,
@@ -492,7 +564,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                               ],
                             ),
                           ),

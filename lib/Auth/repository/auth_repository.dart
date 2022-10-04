@@ -261,17 +261,17 @@ class AuthRepository {
   }
 
 // Get user details
-  // Future<Map> getUserDetails() async {
-  //   CollectionReference userCredential = firestore.collection('Users');
-  //   try {
-  //     DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
-  //     print('User details ${shot}');
-  //     return shot.data();
-  //   } catch (e) {
-  //     print(e.toString());
-  //     return {};
-  //   }
-  // }
+  Future<Map> getUserDetails() async {
+    CollectionReference userCredential = firestore.collection('Users');
+    try {
+      DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
+      print('User details ${shot}');
+      return shot.data();
+    } catch (e) {
+      print(e.toString());
+      return {};
+    }
+  }
 
   /// stream userdetails
   Stream<DocumentSnapshot> userDetails() {

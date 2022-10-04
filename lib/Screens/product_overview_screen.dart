@@ -146,6 +146,7 @@ class _ProductsOverviewScreenState
                                                   .deleteProduct(
                                                       data[index]['productID']);
                                               setState(() {});
+                                              Get.back();
                                             },
                                             child: const Text(
                                               'Yes',

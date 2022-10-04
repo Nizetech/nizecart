@@ -218,11 +218,13 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                             Spacer(),
                                             GestureDetector(
                                               onTap: () {
+                                                print(
+                                                    "item id: ${item['productID']}");
                                                 ref
                                                     .read(
                                                         productControllerProvider)
                                                     .removeFavorite(
-                                                        item['productID']);
+                                                        item['favId']);
                                                 setState(() {});
                                               },
                                               child: const Text(
