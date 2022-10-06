@@ -146,6 +146,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                   // 'pp',
                                   style: const TextStyle(
                                     fontSize: 16,
+                                    fontFamily: 'Roboto',
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -256,7 +257,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                         color: Colors.black,
                                                         fontSize: 16,
                                                         fontWeight:
-                                                            FontWeight.bold,
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                   ),
@@ -275,6 +276,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                                 .toString(),
                                                         maxLines: 1,
                                                         style: const TextStyle(
+                                                          fontFamily: 'Roboto',
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           color: Colors.black,
@@ -409,13 +411,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                           'cart', cartItems);
                                                       setState(() {});
 
-                                                      // cartItems.removeWhere(
-                                                      //   (element) =>
-                                                      //       cartItems.elementAt(
-                                                      //           i)['title'],
-                                                      // );
-                                                      // box.put(
-                                                      //     'cartItem', cartItems);
                                                       Fluttertoast.showToast(
                                                         msg:
                                                             'Item removed from cart',

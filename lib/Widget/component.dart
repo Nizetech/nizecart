@@ -37,7 +37,11 @@ class CustomButton extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(fontSize: 20, color: white),
+          style: TextStyle(
+            fontSize: 20,
+            color: white,
+            fontFamily: 'Roboto',
+          ),
         ),
       ),
     );
@@ -105,6 +109,7 @@ class _TopViewsState extends State<TopViews> {
                   '₦' + formatter.format(widget.data['price']).toString(),
                   style: const TextStyle(
                     fontSize: 16,
+                    fontFamily: 'Roboto',
                     color: Colors.black54,
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
@@ -262,8 +267,9 @@ class _MainViewState extends ConsumerState<MainView> {
                       '₦' + formatter.format(widget.data['price']),
                       textAlign: TextAlign.left,
                       maxLines: 2,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
+                        fontFamily: 'roboto',
                         fontWeight: FontWeight.bold,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -273,6 +279,7 @@ class _MainViewState extends ConsumerState<MainView> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         decoration: TextDecoration.lineThrough,
+                        fontFamily: 'roboto',
                         fontSize: 14,
                         color: Colors.grey,
                       ),

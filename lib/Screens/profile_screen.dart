@@ -11,6 +11,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:nizecart/Screens/order_history.dart';
 import 'package:nizecart/Screens/privacy_policy.dart';
 import 'package:nizecart/chat/chat_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -72,14 +73,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           onPressed: () => Get.back(),
         ),
         backgroundColor: Colors.transparent,
-        // title: const Text(
-        //   'Profile',
-        //   style: TextStyle(fontSize: 20),
-        // ),
-        // centerTitle: true,
-        // actions: [
-        //   IconButton(icon: const Icon(Icons.more_vert_sharp), onPressed: () {}),
-        // ],
       ),
       backgroundColor: white,
       body: FutureBuilder(
@@ -386,8 +379,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                         onTap: () {},
                                       ),
                                       const Divider(),
-                                      const ListTile(
+                                      ListTile(
                                         contentPadding: EdgeInsets.zero,
+                                        onTap: () => Get.to(OrderHistory()),
                                         leading: Icon(
                                           Iconsax.shopping_bag,
                                           color: mainColor,

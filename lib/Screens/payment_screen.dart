@@ -317,7 +317,10 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                       ),
                       Text(
                         '₦ ' + formatter.format(widget.data['totalAmount']),
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Roboto',
+                        ),
                       )
                     ],
                   ),
@@ -336,7 +339,10 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                           ? Text(
                               '₦ ${widget.data['shippingFee']}',
                               // formatter.format(shippingFee),
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'Roboto',
+                              ),
                             )
                           : SizedBox(),
                     ],
@@ -355,6 +361,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                               '₦ ' + formatter.format(widget.data['total']),
                               style: TextStyle(
                                   fontSize: 16,
+                                  fontFamily: 'Roboto',
                                   color: mainColor,
                                   fontWeight: FontWeight.bold),
                             )
@@ -363,6 +370,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                                   formatter.format(widget.data['totalAmount']),
                               style: TextStyle(
                                   fontSize: 16,
+                                  fontFamily: 'Roboto',
                                   color: mainColor,
                                   fontWeight: FontWeight.bold),
                             )

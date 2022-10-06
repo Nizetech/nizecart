@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.grey[100],
         primarySwatch: Colors.red,
+        fontFamily: 'Poppins',
         visualDensity: VisualDensity.adaptivePlatformDensity,
         backgroundColor: white,
       ),

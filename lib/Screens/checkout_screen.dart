@@ -181,6 +181,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                             'Door Delivery',
                             style: TextStyle(
                               fontSize: 16,
+                              fontWeight: FontWeight.w500,
                               color: Colors.black,
                             ),
                           ),
@@ -249,9 +250,9 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                               title: const Text(
                                 'Pickup Station',
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
                               ),
                               subtitle: const Text(
                                 'Delivered within 5 working days',
@@ -307,7 +308,10 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                 ),
                                 Text(
                                   '₦ ' + formatter.format(widget.totalAmount),
-                                  style: TextStyle(fontSize: 16),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'Roboto',
+                                  ),
                                 )
                               ],
                             ),
@@ -325,7 +329,10 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                     ? Text(
                                         '₦ ${shippingFee}',
                                         // formatter.format(shippingFee),
-                                        style: TextStyle(fontSize: 16),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: 'Roboto',
+                                        ),
                                       )
                                     : SizedBox(),
                               ],
@@ -345,6 +352,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                         style: const TextStyle(
                                             fontSize: 16,
                                             color: mainColor,
+                                            fontFamily: 'Roboto',
                                             fontWeight: FontWeight.bold),
                                       )
                                     : Text(
@@ -354,6 +362,7 @@ class _CheckOutScreenState extends ConsumerState<CheckOutScreen> {
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: mainColor,
+                                            fontFamily: 'Roboto',
                                             fontWeight: FontWeight.bold),
                                       )
                               ],

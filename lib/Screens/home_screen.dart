@@ -127,7 +127,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                SizedBox(height: 20),
+                                SizedBox(height: 25),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -171,7 +171,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                         'Good ${greeting()} $name !',
                                         style: const TextStyle(
                                             color: Colors.white,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w500,
                                             fontSize: 20),
                                       ),
                                     ),
@@ -187,6 +187,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           .7,
+                                      height: 45,
                                       child: TextField(
                                           controller: search,
                                           cursorColor: mainColor,
@@ -405,7 +406,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               ),
                                             ),
                                             SizedBox(
-                                              height: 240,
+                                              height: 243,
                                               child: ListView.separated(
                                                 padding: const EdgeInsets.only(
                                                     left: 15,

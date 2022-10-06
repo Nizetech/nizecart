@@ -121,6 +121,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                               decoration: BoxDecoration(
                                 color: white,
                                 borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey[200]),
                                 boxShadow: [
                                   BoxShadow(
                                     offset: const Offset(0, 3),
@@ -160,18 +161,20 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(height: 7),
                                         Text(
                                           '\₦ ' +
                                               formatter.format(
                                                   snapshot.data[i]['price']),
                                           style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
+                                            color: Colors.grey,
+                                            fontSize: 16,
+                                            fontFamily: 'Roboto',
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                         SizedBox(height: 20),
                                         Row(
