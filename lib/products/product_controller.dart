@@ -93,29 +93,61 @@ class ProductController {
   // Create Order
   Future<bool> orders({
     String username,
-    String title,
-    String description,
     int quantity,
     int totalAmount,
     String phoneNumber,
     String address,
+    String city,
+    String email,
+    String postCode,
+    String country,
     List productDetails,
   }) {
     return productRepository.orders(
       username: username,
-      title: title,
-      // description: description,
+      city: city,
       quantity: quantity,
       totalAmount: totalAmount,
       phoneNumber: phoneNumber,
       address: address,
+      postCode: postCode,
+      country: country,
       productDetails: productDetails,
     );
   }
 
+//Get Order
+  Future<List> getOrder() {
+    return productRepository.getOrder();
+  }
+
   // Pay with flutterwave
-  Future<Map<String, dynamic>> payWithFlutterWave(
-      String amount, BuildContext context) {
-    return productRepository.payWithFlutterWave(amount, context);
+  Future<Map<String, dynamic>> payWithFlutterWave({
+    String amount,
+    String username,
+    int quantity,
+    int totalAmount,
+    String phoneNumber,
+    String address,
+    String city,
+    String email,
+    String postCode,
+    String country,
+    List productDetails,
+    BuildContext context,
+  }) {
+    return productRepository.payWithFlutterWave(
+      amount: amount,
+      context: context,
+      quantity: quantity,
+      totalAmount: totalAmount,
+      phoneNumber: phoneNumber,
+      address: address,
+      city: city,
+      email: email,
+      postCode: postCode,
+      country: country,
+      productDetails: productDetails,
+    );
   }
 }

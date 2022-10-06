@@ -136,7 +136,7 @@ class _MainViewState extends ConsumerState<MainView> {
   bool enable = false;
 
   // final Map data;
-  List products = [];
+  List cartItems = box.get('cart', defaultValue: []);
 
   int quantity = 0;
   static var box = Hive.box('name');
@@ -197,7 +197,7 @@ class _MainViewState extends ConsumerState<MainView> {
                     borderRadius: BorderRadius.circular(3),
                     color: secColor,
                   ),
-                  child: Text(
+                  child: const Text(
                     '20%',
                     style: TextStyle(
                       color: Colors.white,
@@ -290,8 +290,8 @@ class _MainViewState extends ConsumerState<MainView> {
                       'title': widget.data['title'],
                       'imageUrl': widget.data['imageUrl'],
                     };
-                    products.add(productValue);
-                    box.put('cart', products);
+                    cartItems.add(productValue);
+                    box.put('cart', cartItems);
                     // print('Here are my :$products');
                     Get.to(CartScreen());
                   },
@@ -724,22 +724,41 @@ class RecieverMsg extends StatelessWidget {
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
-  const CustomTextField({Key key, this.controller, this.hint})
-      : super(key: key);
+  final String label;
+  final Widget icon;
+  final bool enable;
+  final TextInputType keyboard;
+  const CustomTextField({
+    Key key,
+    this.controller,
+    this.hint,
+    this.icon,
+    this.enable,
+    this.label,
+    this.keyboard,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       cursorColor: mainColor,
+      keyboardType: keyboard ?? TextInputType.name,
       decoration: InputDecoration(
+        labelText: label,
         hintText: hint,
         filled: true,
         isDense: true,
         prefixIconColor: mainColor,
+        enabled: enable ?? true,
+        suffixIcon: icon,
         fillColor: white,
         iconColor: mainColor,
         enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: Colors.grey),
         ),

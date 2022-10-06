@@ -95,6 +95,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        
         leading: Container(
           width: 60,
           alignment: Alignment.centerRight,
@@ -111,7 +112,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
               size: 25,
             ),
             onPressed: () {
-           Get.back();
+              Get.back();
               setState(() {});
             },
           ),
@@ -297,6 +298,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                     };
                                     products.add(productValue);
                                     cartItems.add(productValue);
+                                    box.put('cart', cartItems);
                                     showToast('Added to cart');
                                   },
                                   child: Container(
@@ -332,6 +334,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                     products.add(productValue);
                                     // box.add(products);
                                     cartItems.add(productValue);
+                                    box.put('cart', cartItems);
                                     setState(() {});
 
                                     Get.to(CartScreen());

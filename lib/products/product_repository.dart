@@ -212,35 +212,38 @@ class ProductRepository {
 // Make order
   Future<bool> orders({
     String username,
-    String title,
-    // String description,
     int quantity,
     int totalAmount,
     String phoneNumber,
     String address,
+    String city,
+    String email,
+    String postCode,
+    String country,
     List productDetails,
   }) async {
-    final orderId = '${DateTime.now().millisecondsSinceEpoch}';
-    CollectionReference userCredential = firestore.collection('Users');
-
+    final orderId = '${DateTime.now().microsecondsSinceEpoch}';
+    CollectionReference orderCredential = firestore.collection('Orders');
+    String track = getRandomString(4);
     try {
       var orderData = OrderModel(
         username: username,
         orderID: orderId,
         orderDate: DateTime.now(),
         userID: auth.currentUser.uid,
-        title: title,
         quantity: quantity,
+        status: 'Pending',
         phoneNumber: phoneNumber,
         totalAmount: totalAmount,
         address: address,
+        postCode: postCode,
+        trackNumber: track,
+        city: city,
+        email: email,
+        country: country,
         productDetails: productDetails,
       );
-      await userCredential
-          .doc(getUser().uid)
-          .collection('order')
-          .doc(orderId)
-          .set(orderData.toMap());
+      await orderCredential.doc(orderId).set(orderData.toMap());
       // showToast('Order placed successfully');
       Get.to(SuccessPage());
       return true;
@@ -251,9 +254,35 @@ class ProductRepository {
     }
   }
 
+  // Get Order
+  Future<List> getOrder() async {
+    CollectionReference order = firestore.collection('Order');
+    try {
+      QuerySnapshot snapshot =
+          await order.where('userID', isEqualTo: auth.currentUser.uid).get();
+      // Map data = snapshot.data();
+      // snaps.docs.map((e) => e.data() as Map).toList()
+      return snapshot.docs;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   //Make Payment with FLutterwave
-  Future<Map<String, dynamic>> payWithFlutterWave(
-      String amount, BuildContext context) async {
+  Future<Map<String, dynamic>> payWithFlutterWave({
+    String amount,
+    String username,
+    int quantity,
+    int totalAmount,
+    String phoneNumber,
+    String address,
+    String city,
+    String email,
+    String postCode,
+    String country,
+    List productDetails,
+    BuildContext context,
+  }) async {
     try {
       String trxId = DateTime.now().millisecondsSinceEpoch.toString();
       User user = FirebaseAuth.instance.currentUser;
@@ -278,6 +307,18 @@ class ProductRepository {
 
       ChargeResponse response = await flutterwave.charge();
       if (response.success) {
+        await orders(
+          username: username,
+          quantity: quantity,
+          totalAmount: totalAmount,
+          phoneNumber: phoneNumber,
+          address: address,
+          city: city,
+          email: email,
+          postCode: postCode,
+          country: country,
+          productDetails: productDetails,
+        );
         showToast('Successful');
         // Verify transaction
         var responseData = response.toJson();
@@ -295,6 +336,7 @@ class ProductRepository {
     }
   }
 
+// Get product
   Future<Map> getProduct() async {
     CollectionReference products = firestore.collection('Products');
     final productID = '${DateTime.now().millisecondsSinceEpoch}';

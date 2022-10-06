@@ -71,9 +71,9 @@ class _ChatListState extends ConsumerState<ChatList> {
                 ),
               ),
               SizedBox(height: 13),
-                // DateFormat()
-                //                 .add_H()
-                //                 .format(messageData.timeSent);
+              // DateFormat()
+              //                 .add_H()
+              //                 .format(messageData.timeSent);
               Text(
                 widget.messageData['date'],
                 style: TextStyle(
@@ -104,7 +104,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                   ),
                   child: Column(
                     children: [
-                       Text(
+                      Text(
                         widget.messageData['text'],
                         style: TextStyle(
                           color: Colors.white,

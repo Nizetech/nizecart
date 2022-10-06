@@ -135,6 +135,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                   Container(
                                     height: 100,
                                     width: 100,
+                                    padding: EdgeInsets.all(3),
                                     decoration: BoxDecoration(
                                       color: Colors.grey[300],
                                       borderRadius: BorderRadius.circular(10),
@@ -191,6 +192,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                                 };
 
                                                 cartItems.add(productValue);
+                                                box.put('cart', cartItems);
                                                 print(
                                                   // 'Here are my shop now prdt :$product');
                                                   Get.to(CartScreen()),
@@ -216,8 +218,8 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                               ),
                                             ),
                                             Spacer(),
-                                            GestureDetector(
-                                              onTap: () {
+                                            TextButton(
+                                              onPressed: () {
                                                 print(
                                                     "item id: ${item['productID']}");
                                                 ref

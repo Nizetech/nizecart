@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:nizecart/Widget/chat_list.dart';
+import 'package:nizecart/chat/chat_list.dart';
 import 'package:nizecart/chat/controller/controller.dart';
 
 import '../Auth/controller/auth_controller.dart';
@@ -15,7 +15,7 @@ import '../Models/user_model.dart';
 import '../Widget/component.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
-  DocumentSnapshot user;
+  Map user;
   ChatScreen({
     Key key,
     this.user,
@@ -34,6 +34,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void sendTextMessage() {
     ref.read(chatControllerProvider).sendMessage(
           text: message.text.trim(),
+          receiver: widget.user['uid'],
           // widget.receiverUserId,
         );
     // print(_messageController.text.trim());
@@ -88,11 +89,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.user['fname'],
+                      widget.user['firstName'],
                       style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(height: 2),
-                    Text("Online",
+                    const Text("Online",
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,

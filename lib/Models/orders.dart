@@ -8,6 +8,12 @@ class OrderModel {
   final String title;
   final int quantity;
   final String address;
+  final String country;
+  final String city;
+  final String email;
+  final String postCode;
+  final String status;
+  final String trackNumber;
   final List productDetails;
   final String phoneNumber;
   final int totalAmount;
@@ -19,9 +25,15 @@ class OrderModel {
     this.userID,
     this.quantity,
     this.phoneNumber,
+    this.productDetails,
     this.totalAmount,
     this.address,
-    this.productDetails,
+    this.status,
+    this.city,
+    this.country,
+    this.trackNumber,
+    this.email,
+    this.postCode,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +46,13 @@ class OrderModel {
       'quantity': quantity,
       'phoneNumber': phoneNumber,
       'address': address,
+      'city': city,
+      'country': country,
+      'email': email,
+      'status': status,
+      'postCode': postCode,
+      'trackNumber': trackNumber,
+      'totalAmount': totalAmount,
       'productDetails': productDetails,
     };
   }
@@ -48,6 +67,13 @@ class OrderModel {
       quantity: map['quantity'],
       phoneNumber: map['phoneNumber'],
       address: map['address'],
+      status: map['status'],
+      city: map['city'],
+      country: map['country'],
+      email: map['email'],
+      postCode: map['postCode'],
+      totalAmount: map['totalAmount'],
+      trackNumber: map['trackNumber'],
       productDetails: map['productDetails'],
     );
   }

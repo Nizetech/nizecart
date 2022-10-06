@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
@@ -15,9 +16,6 @@ import '../keys/keys.dart';
 // import 'package:flutterwave/flutterwave.dart';
 
 class PaymentMethod extends ConsumerStatefulWidget {
-  // final int totalAmount;
-  // final int total;
-  // final String shippingFee;
   final Map data;
   PaymentMethod({Key key, this.data}) : super(key: key);
 
@@ -38,9 +36,10 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
     });
   }
 
+  User user;
   final formatter = intl.NumberFormat.decimalPattern();
 
-//   // PayStack Integration
+  // PayStack Integration
 
 //   String publicKeyTest = 'pk_test_52197b2afc4c27f4491282296d1a848bea6794f9';
 
@@ -91,12 +90,15 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
     //check if the response is true or not
     if (response.status != true) {
       ref.read(productControllerProvider).orders(
-            username: name,
-            title: title,
+            username: widget.data['firstName'] + ' ' + widget.data['last_name'],
             quantity: quantity,
             totalAmount: widget.data['totalAmount'],
-            phoneNumber: '',
+            phoneNumber: widget.data['phoneNumber'],
             address: widget.data['address'],
+            city: widget.data['city'],
+            email: widget.data['email'],
+            country: widget.data['country'],
+            postCode: widget.data['postCode'],
             productDetails: cartItems,
           );
       //you can send some data from the response to an API or use webhook to record the payment on a database
@@ -110,7 +112,6 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
 
   static var box = Hive.box('name');
 
-  String name = box.get('displayName');
   String email = box.get('email');
   String title = box.get('title');
   int quantity = box.get('quantity');
@@ -118,7 +119,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.data['shippingFee']);
+    print('my Name: ${widget.data['email']}');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -369,39 +370,38 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                   ),
                   SizedBox(height: 10),
                   CustomButton(
-                    text: 'Proceed to Payment',
+                    text: 'Order',
                     onPressed: () {
-                      // chargeCard();
                       enable == 0
-                          ?
-                          //  PayWithPaystack(
-                          //     amount: widget.data['shippingFee'] != ''
-                          //         ? widget.data['total']
-                          //         : widget.data['totalAmount'],
-                          //     title: title,
-                          //     quantity: quantity,
-                          //     totalAmount: widget.data['totalAmount'],
-                          //     phoneNumber: '',
-                          //     address: '',
-                          //     cartItems: cartItems,
-                          //     email: email,
-                          //   )
-                          chargeCard()
+                          ? chargeCard()
                           : enable == 1
                               ? ref
                                   .read(productControllerProvider)
                                   .payWithFlutterWave(
-                                    widget.data['totalAmount'].toString(),
-                                    context,
-                                  )
-                              : ref.read(productControllerProvider).orders(
-                                    username: name,
-                                    title: title,
-                                    description: '',
+                                    username: widget.data['firstName'] +
+                                        widget.data['last_name'],
                                     quantity: quantity,
                                     totalAmount: widget.data['totalAmount'],
-                                    phoneNumber: '',
-                                    address: '',
+                                    phoneNumber: widget.data['phoneNumber'],
+                                    address: widget.data['address'],
+                                    city: widget.data['city'],
+                                    email: widget.data['email'],
+                                    country: widget.data['country'],
+                                    postCode: widget.data['postCode'],
+                                    productDetails: cartItems,
+                                    context: context,
+                                  )
+                              : ref.read(productControllerProvider).orders(
+                                    username: widget.data['firstName'] +
+                                        widget.data['last_name'],
+                                    quantity: quantity,
+                                    totalAmount: widget.data['totalAmount'],
+                                    phoneNumber: widget.data['phoneNumber'],
+                                    address: widget.data['address'],
+                                    city: widget.data['city'],
+                                    email: widget.data['email'],
+                                    country: widget.data['country'],
+                                    postCode: widget.data['postCode'],
                                     productDetails: cartItems,
                                   );
                     },

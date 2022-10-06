@@ -41,6 +41,11 @@ class ChatRepository {
     return chatId;
   }
 
+// String getChatRoomIdByUserId(String userID, String peerID) {
+//     return userID.hashCode <= peerID.hashCode
+//         ? userID + '_' + peerID
+//         : peerID + '_' + userID;
+//   }
   // Get admin id
   Future<Map> adminDetails() async {
     CollectionReference userCredential = firestore.collection('Admin');
@@ -105,9 +110,11 @@ class ChatRepository {
       data['sender'] = userId;
       data['admin_receiver'] = receiver;
       data['text'] = text;
+      data['users'] = [userId, receiver];
+      data['chatID'] = chatID;
 
       await chatsCollection
-          .doc(chatID)
+          .doc()
           .collection('Messages')
           .doc(messageId)
           .set(data);
@@ -119,7 +126,7 @@ class ChatRepository {
         'users': [userId, receiver],
         'unreadMessages': {receiver: FieldValue.increment(1)},
       }, SetOptions(merge: true));
-
+      print('message Sent: $data');
       //  NotifService().sendMessageNotif(token: receiverToken, message: text);
     } catch (e) {
       print(e);

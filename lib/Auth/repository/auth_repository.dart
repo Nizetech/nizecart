@@ -43,6 +43,14 @@ class AuthRepository {
     return box.get('isLoggedIn', defaultValue: false);
   }
 
+  String get userId {
+    return auth.currentUser.uid;
+  }
+
+  User get user {
+    return auth.currentUser;
+  }
+
   // Sign up User
   Future<bool> signUp({
     String email,
@@ -208,19 +216,45 @@ class AuthRepository {
     }
   }
 
+  //Update Profile
+  Future<bool> updateProfile(UserModel user) async {
+    CollectionReference collectionReference = firestore.collection('Users');
+
+    try {
+      await auth.currentUser.updateDisplayName(
+        '${user.firstName} ${user.lastName}',
+      );
+      await collectionReference.doc(userId).update(user.toMap());
+      Get.back();
+      Get.back();
+      showToast('Profile Updated Successfully');
+      return true;
+    } catch (e) {
+      Get.back();
+      showErrorToast(e.toString());
+      return false;
+    }
+  }
+
   // Update Address
-  Stream<void> changeAddress(String address) {
+  Future<bool> updateDelivery({
+      String address, String country, String post, String city}) async {
     CollectionReference collectionReference = firestore.collection('Users');
     try {
       collectionReference.doc(getUser().uid).update(
         {
           'address': address,
+          'postCode': post,
+          'city': city,
+          'country': country,
         },
       );
       showToast('Address changed successfully');
+      return true;
     } catch (e) {
       print(e.toString());
       showErrorToast('Failed to change address');
+      return false;
     }
   }
 
@@ -247,6 +281,7 @@ class AuthRepository {
       return photoUrl;
     } catch (e) {
       showErrorToast(e.toString());
+      return '';
     }
   }
 
@@ -266,6 +301,11 @@ class AuthRepository {
     try {
       DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
       print('User details ${shot}');
+      // if (shot.exists) {
+      //   UserModel userData =
+      //       UserModel.fromMap(shot.data() as Map<String, dynamic>);
+      //   return userData;
+      // }
       return shot.data();
     } catch (e) {
       print(e.toString());

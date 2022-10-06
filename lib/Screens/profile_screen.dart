@@ -49,8 +49,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       ref.read(authtControllerProvider).updateProfileImage(
             File(file.path),
           );
-      Get.back();
       setState(() {});
+      Get.back();
       // user.reload();
     }
     return;
@@ -82,16 +82,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         // ],
       ),
       backgroundColor: white,
-      body: StreamBuilder(
-          // future: ref.read(authtControllerProvider).getUserDetails(),
-          stream: ref.read(authtControllerProvider).userDetails(),
+      body: FutureBuilder(
+          future: ref.read(authtControllerProvider).getUserDetails(),
+          // stream: ref.read(authtControllerProvider).userDetails(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             } else {
               print(snapshot.data['photoUrl']);
-              DocumentSnapshot user = snapshot.data;
+              Map user = snapshot.data;
+              print('My user ${user['photoUrl']}');
               String data = user['photoUrl'];
+
               return CustomScrollView(
                 slivers: [
                   SliverFillRemaining(
@@ -185,6 +187,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   child: Stack(children: [
                                     CircleAvatar(
                                       radius: 55,
+                                      backgroundColor: Colors.grey[200],
                                       child: data == null
                                           ? const Icon(
                                               Iconsax.user,
@@ -390,7 +393,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           color: mainColor,
                                         ),
                                         title: Text(
-                                          'Order',
+                                          'Orders',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
@@ -532,7 +535,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                         ),
                                                         onTap: () =>
                                                             Get.to(ChatScreen(
-                                                          user: snapshot.data,
+                                                          user: user,
                                                         )),
                                                       ),
                                                     ],

@@ -68,8 +68,14 @@ class AuthController {
   }
 
   // Change Address
-  Stream<void> changeAddress(String address) {
-    return authRepository.changeAddress(address);
+  Future<bool> updateDelivery(
+      {String address, String country, String post, String city}) {
+    return authRepository.updateDelivery(
+      address: address,
+      country: country,
+      city: city,
+      post: post,
+    );
   }
 
   // Update ProfileImage

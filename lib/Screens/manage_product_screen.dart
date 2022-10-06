@@ -81,10 +81,10 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
             price: int.parse(price.text),
             tag: tag,
           );
-      // initValue();
+      initValue();
       showToast('Product Added');
       setState(() {});
-      Get.back();
+      // Get.back();
       Get.back();
     } else {
       showErrorToast('Please fill all fields');
@@ -121,6 +121,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
               child: TextField(
                 controller: title,
                 cursorColor: mainColor,
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   labelText: 'Title',
                   // labelStyle: TextStyle(fontSize: 18),

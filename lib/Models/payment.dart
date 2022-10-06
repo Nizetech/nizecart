@@ -88,7 +88,7 @@ class _PayWithPaystackState extends ConsumerState<PayWithPaystack> {
     if (response.status != true) {
       ref.read(productControllerProvider).orders(
             username: widget.name,
-            title: widget.title,
+
             quantity: widget.quantity,
             totalAmount: widget.totalAmount,
             //  widget.data['totalAmount'],
