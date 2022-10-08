@@ -144,6 +144,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
               child: TextField(
                   controller: description,
                   cursorColor: mainColor,
+                  maxLines: 4,
                   decoration: InputDecoration(
                     labelText: 'Description',
                     filled: true,
@@ -178,6 +179,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
                         style: TextStyle(
                           color: mainColor,
                           fontSize: 20,
+                          fontFamily: 'roboto',
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -217,7 +219,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
                     value: 'Homes & Garden',
                   ),
                   DropdownMenuItem(
-                    child: Text('Homes & Garden'),
+                    child: Text('Phones & Tablet'),
                     value: 'Phones & Tablets',
                   ),
                   DropdownMenuItem(

@@ -275,8 +275,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       child: SingleChildScrollView(
                                         physics:
                                             const AlwaysScrollableScrollPhysics(
-                                          parent: BouncingScrollPhysics(),
-                                        ),
+                                                // parent: BouncingScrollPhysics(),
+                                                ),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -394,10 +394,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               ),
                                             ),
                                             SizedBox(height: 20),
-                                            const Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 15, right: 15),
-                                              child: Text(
+                                            Container(
+                                              width: double.infinity,
+                                              color: mainColor.withOpacity(.2),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 10,
+                                                horizontal: 15,
+                                              ),
+                                              child: const Text(
                                                 'Top Deals',
                                                 style: TextStyle(
                                                     fontSize: 16,
@@ -428,9 +432,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               ),
                                             ),
                                             SizedBox(height: 20),
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 15),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 15, vertical: 10),
+                                              color: mainColor.withOpacity(.2),
                                               child: Align(
                                                 alignment: Alignment.bottomLeft,
                                                 child: Row(
@@ -470,7 +475,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                       size: 13,
                                                       color: priColor,
                                                     ),
-                                                    SizedBox(width: 20),
                                                   ],
                                                 ),
                                               ),

@@ -12,6 +12,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:nizecart/Screens/order_history.dart';
+import 'package:nizecart/Screens/order_screen.dart';
 import 'package:nizecart/Screens/privacy_policy.dart';
 import 'package:nizecart/chat/chat_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -65,13 +66,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () => Get.back(),
-        ),
+        leading: BackButton(color: Colors.white),
         backgroundColor: Colors.transparent,
       ),
       backgroundColor: white,
@@ -381,12 +376,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       const Divider(),
                                       ListTile(
                                         contentPadding: EdgeInsets.zero,
-                                        onTap: () => Get.to(OrderHistory()),
-                                        leading: Icon(
+                                        onTap: () => Get.to(OrderScreen()),
+                                        leading: const Icon(
                                           Iconsax.shopping_bag,
                                           color: mainColor,
                                         ),
-                                        title: Text(
+                                        title: const Text(
                                           'Orders',
                                           style: TextStyle(
                                             fontSize: 16,
@@ -503,7 +498,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                         title: const Text(
                                                           'Call Agent',
                                                           style: TextStyle(
-                                                            fontSize: 20,
+                                                            fontSize: 18,
                                                             fontWeight:
                                                                 FontWeight.w600,
                                                           ),
@@ -522,7 +517,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                         title: const Text(
                                                           'Chat Support',
                                                           style: TextStyle(
-                                                            fontSize: 20,
+                                                            fontSize: 18,
                                                             fontWeight:
                                                                 FontWeight.w600,
                                                           ),

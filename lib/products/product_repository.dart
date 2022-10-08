@@ -256,15 +256,22 @@ class ProductRepository {
 
   // Get Order
   Future<List> getOrder() async {
-    CollectionReference order = firestore.collection('Order');
+    CollectionReference order = firestore.collection('Orders');
     try {
       QuerySnapshot snapshot =
           await order.where('userID', isEqualTo: auth.currentUser.uid).get();
       // Map data = snapshot.data();
       // snaps.docs.map((e) => e.data() as Map).toList()
-      return snapshot.docs;
+      //  List<QueryDocumentSnapshot> docs = snapshot.docs;
+      // List<Map> data = [];
+      // for (var item in docs) {
+      //   data.add(item.data());
+      // }
+      print('Orders$snapshot');
+      return snapshot.docs.map((e) => e.data() as Map).toList();
     } catch (e) {
       print(e.toString());
+      return [];
     }
   }
 

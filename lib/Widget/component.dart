@@ -124,6 +124,77 @@ class _TopViewsState extends State<TopViews> {
   }
 }
 
+class OrderView extends StatelessWidget {
+  final Map data;
+
+  OrderView({
+    Key key,
+    this.data,
+  }) : super(key: key);
+
+  final formatter = intl.NumberFormat.decimalPattern();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(ProductScreen(
+          data: data,
+        ));
+      },
+      child: Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 80,
+              width: 100,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl: data['imageUrl'],
+                  width: double.infinity,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            SizedBox(height: 5),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  data['title'],
+                  textAlign: TextAlign.left,
+                  maxLines: 2,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  '₦' + formatter.format(data['price']).toString(),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontFamily: 'Roboto',
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class MainView extends ConsumerStatefulWidget {
   final Map data;
 

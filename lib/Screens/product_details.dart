@@ -95,6 +95,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        foregroundColor: Colors.black,
         leading: Container(
           width: 60,
           alignment: Alignment.centerRight,
@@ -104,17 +105,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
               borderRadius: BorderRadius.horizontal(
                 right: Radius.circular(50),
               )),
-          child: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Colors.black,
-              size: 25,
-            ),
-            onPressed: () {
-              Get.back();
-              setState(() {});
-            },
-          ),
+          child: BackButton(color: Colors.black),
         ),
         actions: [
           Container(

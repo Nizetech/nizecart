@@ -9,13 +9,7 @@ class PrivacyPolicy extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-        ),
+        leading: BackButton(),
         centerTitle: true,
         backgroundColor: secColor,
         elevation: 0,
@@ -32,7 +26,7 @@ class PrivacyPolicy extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          children: [
+          children: const [
             SizedBox(height: 20),
             Text(
               'Privacy Policy',

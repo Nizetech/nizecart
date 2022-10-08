@@ -146,7 +146,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 10,
           ),
           Container(
             width: double.infinity,
