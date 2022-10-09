@@ -61,7 +61,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
         return null;
       }
     }
-    Get.back();
+    Navigator.of(context).pop();
   }
 
   void addProduct() async {
@@ -82,13 +82,13 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
             tag: tag,
           );
       initValue();
-      showToast('Product Added');
+      successToast('Product Added');
       setState(() {});
-      // Get.back();
-      Get.back();
+      // Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } else {
-      showErrorToast('Please fill all fields');
-      Get.back();
+      toast('Please fill all fields');
+      Navigator.of(context).pop();
     }
   }
 
@@ -106,7 +106,7 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
             color: Colors.white,
           ),
           onPressed: () {
-            Get.back();
+            Navigator.of(context).pop();
           },
         ),
         centerTitle: true,
@@ -139,26 +139,23 @@ class _ManageProductsState extends ConsumerState<ManageProducts> {
               ),
             ),
             SizedBox(height: 15),
-            SizedBox(
-              height: 45,
-              child: TextField(
-                  controller: description,
-                  cursorColor: mainColor,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    labelText: 'Description',
-                    filled: true,
-                    isDense: true,
-                    iconColor: mainColor,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: mainColor)),
-                    focusedBorder: OutlineInputBorder(
+            TextField(
+                controller: description,
+                cursorColor: mainColor,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  filled: true,
+                  isDense: true,
+                  iconColor: mainColor,
+                  enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: mainColor),
-                    ),
-                  )),
-            ),
+                      borderSide: BorderSide(color: mainColor)),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: mainColor),
+                  ),
+                )),
             SizedBox(height: 15),
             SizedBox(
               height: 45,

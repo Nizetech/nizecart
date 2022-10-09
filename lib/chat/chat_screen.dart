@@ -51,17 +51,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       body: Scaffold(
         appBar: AppBar(
             leading: IconButton(
-              onPressed: () => Get.back(),
+              onPressed: () => Navigator.of(context).pop(),
               icon: Icon(
                 Icons.arrow_back_ios_rounded,
                 color: Colors.white,
               ),
             ),
             title:
-
                 // DocumentSnapshot data = snapshot.data;
                 // print(data['photoUrl']);
-
                 Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -151,7 +149,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                               itemBuilder: (ctx, i) {
                                 ChatList(
                                     messageData: messages.reversed.toList()[i]);
-                              }),
+                              },
+                            ),
                     ],
                   );
                 }

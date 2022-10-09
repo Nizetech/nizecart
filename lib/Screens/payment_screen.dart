@@ -24,6 +24,10 @@ class PaymentMethod extends ConsumerStatefulWidget {
 }
 
 class _PaymentMethodState extends ConsumerState<PaymentMethod> {
+  static var box = Hive.box('name');
+
+  List cartItems = box.get('cart', defaultValue: []);
+
   int enable = 0;
   void change(dynamic val) {
     setState(() {
@@ -88,7 +92,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
     );
 
     //check if the response is true or not
-    if (response.status != true) {
+    if (response.status == true) {
       ref.read(productControllerProvider).orders(
             username: widget.data['firstName'] + ' ' + widget.data['last_name'],
             quantity: quantity,
@@ -102,20 +106,19 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
             productDetails: cartItems,
           );
       //you can send some data from the response to an API or use webhook to record the payment on a database
-
+      cartItems.clear();
+      box.put('cart', cartItems);
       Get.to(SuccessPage());
     } else {
       //the payment wasn't successsful or the user cancelled the payment
-      showErrorToast('Payment Failed!!!');
+      toast('Payment Failed!!!');
+      Navigator.of(context).pop();
     }
   }
-
-  static var box = Hive.box('name');
 
   String email = box.get('email');
   String title = box.get('title');
   int quantity = box.get('quantity');
-  List cartItems = box.get('cart', defaultValue: []);
 
   @override
   Widget build(BuildContext context) {

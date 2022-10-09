@@ -12,15 +12,16 @@ class ChangePassword extends ConsumerWidget {
   TextEditingController cPwd = TextEditingController();
 
   String init = '';
-  void updatePassword(WidgetRef ref) {
+  void updatePassword(WidgetRef ref, BuildContext context ) {
     if (nPwd.text != null) {
       ref.read(authtControllerProvider).changePassword(nPwd.text.trim());
       nPwd.text = init;
-      Get.back();
+      Navigator.of(context).pop();
       showToast('Password changed successfully');
     } else {
       showErrorToast('Password does not match');
-      Get.back();
+      // Navigator.of(context).pop();
+      Navigator.of(context).pop();
     }
   }
 
@@ -28,10 +29,6 @@ class ChangePassword extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
-        ),
         centerTitle: true,
         title: const Text(
           'Change Password',
@@ -92,7 +89,7 @@ class ChangePassword extends ConsumerWidget {
             CustomButton(
                 text: "Change Password",
                 onPressed: () {
-                  updatePassword(ref);
+                  updatePassword(ref, context);
                 }),
           ],
         ),

@@ -9,6 +9,7 @@ import 'Screens/account_screen.dart';
 import 'Screens/category_screen.dart';
 import 'Screens/favourite_screen.dart';
 import 'Screens/home_screen.dart';
+import 'Screens/profile_screen.dart';
 
 class BottomNav extends StatefulWidget {
   BottomNav({Key key}) : super(key: key);
@@ -27,7 +28,8 @@ class _BottomNavState extends State<BottomNav> {
     HomeScreen(),
     CategoryScreen(),
     FavouriteScreen(),
-    AccountScreen(),
+    // AccountScreen(),
+    ProfileScreen(),
   ];
 
   @override

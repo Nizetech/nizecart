@@ -11,6 +11,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:nizecart/Auth/screens/signInScreen.dart';
+import 'package:nizecart/Screens/account_screen.dart';
+import 'package:nizecart/Screens/account_settings.dart';
 import 'package:nizecart/Screens/order_history.dart';
 import 'package:nizecart/Screens/order_screen.dart';
 import 'package:nizecart/Screens/privacy_policy.dart';
@@ -35,9 +38,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     user = FirebaseAuth.instance.currentUser;
   }
 
+  bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
   static var box = Hive.box('name');
+  bool isLocked = box.get('isLocked', defaultValue: false);
   final String email = box.get('email');
-  final String fName = box.get('displayName');
+  final String displayName = box.get('displayName');
   String lName = box.get('lname');
 
   void updateImage(ImageSource source) async {
@@ -52,13 +57,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             File(file.path),
           );
       setState(() {});
-      Get.back();
+      Navigator.of(context).pop();
       // user.reload();
     }
     return;
   }
-
-  bool isLocked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +80,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             } else {
-              print(snapshot.data['photoUrl']);
+              // print(snapshot.data['photoUrl']);
               Map user = snapshot.data;
-              print('My user ${user['photoUrl']}');
+              // print('My user ${user['photoUrl']}');
               String data = user['photoUrl'];
 
               return CustomScrollView(
@@ -323,21 +326,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 Center(
                                   child: Column(
                                     children: [
-                                      Text(
-                                        '$fName ' + '$lName',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.blue[800],
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '$email',
-                                        style: const TextStyle(
-                                          color: mainColor,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
+                                      data == null
+                                          ? SizedBox()
+                                          : Text(
+                                              '$displayName',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.blue[800],
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                      data == null
+                                          ? SizedBox()
+                                          : Text(
+                                              '$email',
+                                              style: const TextStyle(
+                                                color: mainColor,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
                                     ],
                                   ),
                                 ),
@@ -358,7 +365,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     children: [
                                       ListTile(
                                         contentPadding: EdgeInsets.zero,
-                                        leading: Icon(
+                                        leading: const Icon(
                                           Iconsax.user,
                                           color: mainColor,
                                         ),
@@ -371,12 +378,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                         ),
                                         trailing:
                                             Icon(Icons.navigate_next_sharp),
-                                        onTap: () {},
+                                        onTap: () => Get.to(AccountSettings()),
                                       ),
                                       const Divider(),
                                       ListTile(
                                         contentPadding: EdgeInsets.zero,
-                                        onTap: () => Get.to(OrderScreen()),
+                                        onTap: () {
+                                          isLoggedIn
+                                              ? Get.to(OrderScreen())
+                                              : Get.to(SignInScreen());
+                                        },
                                         leading: const Icon(
                                           Iconsax.shopping_bag,
                                           color: mainColor,
@@ -413,18 +424,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           onChanged: (val) {
                                             LocalAuthentication()
                                                 .authenticate(
-                                              localizedReason:
-                                                  'Please authenticate to continue',
-                                            )
+                                                    localizedReason:
+                                                        'Please authenticate to continue',
+                                                    options:
+                                                        const AuthenticationOptions(
+                                                      biometricOnly: true,
+                                                    ))
                                                 .then((val) {
                                               if (val) {
                                                 setState(() {
-                                                  isLocked = val;
-                                                  // isLocked = !isLocked;
-                                                  // val = !isLocked;
+                                                  isLocked = !isLocked;
                                                 });
-                                                Hive.box('name')
-                                                    .put('isLocked', isLocked);
+                                                box.put('isLocked', isLocked);
                                               }
                                             });
                                           },
@@ -433,7 +444,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       const Divider(),
                                       ListTile(
                                         contentPadding: EdgeInsets.zero,
-                                        leading: Icon(
+                                        leading: const Icon(
                                           Iconsax.info_circle,
                                           color: mainColor,
                                         ),
@@ -465,72 +476,82 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                         trailing: const Icon(
                                             Icons.navigate_next_sharp),
                                         onTap: () {
-                                          showModalBottomSheet(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                  top: Radius.circular(20),
-                                                ),
-                                              ),
-                                              context: context,
-                                              builder: (contex) {
-                                                return Container(
-                                                  height: 170,
-                                                  width: double.infinity,
-                                                  padding: EdgeInsets.all(20),
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Colors.white,
+                                          !isLoggedIn
+                                              ? Get.to(SignInScreen())
+                                              : showModalBottomSheet(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.vertical(
                                                       top: Radius.circular(20),
                                                     ),
                                                   ),
-                                                  child: Column(
-                                                    children: [
-                                                      ListTile(
-                                                        leading: const Icon(
-                                                          Iconsax.call_calling,
-                                                          size: 25,
-                                                          color: Colors.green,
+                                                  context: context,
+                                                  builder: (contex) {
+                                                    return Container(
+                                                      height: 170,
+                                                      width: double.infinity,
+                                                      padding:
+                                                          EdgeInsets.all(20),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .vertical(
+                                                          top: Radius.circular(
+                                                              20),
                                                         ),
-                                                        title: const Text(
-                                                          'Call Agent',
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        ),
-                                                        onTap: () =>
-                                                            launchUrlString(
-                                                                'tel:09072026425'),
                                                       ),
-                                                      Divider(),
-                                                      ListTile(
-                                                        leading: const Icon(
-                                                          Iconsax.message,
-                                                          size: 25,
-                                                          color: Colors.green,
-                                                        ),
-                                                        title: const Text(
-                                                          'Chat Support',
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight.w600,
+                                                      child: Column(
+                                                        children: [
+                                                          ListTile(
+                                                            leading: const Icon(
+                                                              Iconsax
+                                                                  .call_calling,
+                                                              size: 25,
+                                                              color:
+                                                                  Colors.green,
+                                                            ),
+                                                            title: const Text(
+                                                              'Call Agent',
+                                                              style: TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
+                                                            onTap: () =>
+                                                                launchUrlString(
+                                                                    'tel:09072026425'),
                                                           ),
-                                                        ),
-                                                        onTap: () =>
-                                                            Get.to(ChatScreen(
-                                                          user: user,
-                                                        )),
+                                                          Divider(),
+                                                          ListTile(
+                                                            leading: const Icon(
+                                                              Iconsax.message,
+                                                              size: 25,
+                                                              color:
+                                                                  Colors.green,
+                                                            ),
+                                                            title: const Text(
+                                                              'Chat Support',
+                                                              style: TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
+                                                            onTap: () => Get.to(
+                                                                ChatScreen(
+                                                              user: user,
+                                                            )),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                );
-                                              });
+                                                    );
+                                                  });
                                         },
                                       ),
                                       const Divider(),
@@ -556,11 +577,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 20),
                               ],
                             ),
                           ),
                         ),
+                        const SizedBox(height: 50),
                       ],
                     ),
                   ),

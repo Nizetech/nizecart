@@ -94,7 +94,9 @@ class _MapScreenState extends State<MapScreen> {
           actions: [
             if (widget.isSelecting)
               IconButton(
-                onPressed: pickedLocation == null ? null : () => Get.back(),
+                onPressed: pickedLocation == null
+                    ? null
+                    : () => Navigator.of(context).pop(),
                 icon: Icon(Icons.check),
               ),
           ],
@@ -156,7 +158,6 @@ class _MapScreenState extends State<MapScreen> {
                 //     icon: Icon(Icons.my_location),
                 //     onPressed: () async {
 
-                  
                 //       var position = await _determinePosition();
                 //       final GoogleMapController controller =
                 //           await mapController.future;

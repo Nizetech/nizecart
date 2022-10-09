@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -16,6 +17,8 @@ const white = Colors.white;
 const mainColor = Color(0xffEA4E4E);
 const priColor = Color(0xff3634BE);
 const secColor = Color(0xff293F48);
+Box box = Hive.box('name');
+bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -37,7 +40,7 @@ class CustomButton extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             color: white,
             fontFamily: 'Roboto',
@@ -67,14 +70,25 @@ class _TopViewsState extends State<TopViews> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(ProductScreen(
-          data: widget.data,
-        ));
+        isLoggedIn
+            ? Get.to(ProductScreen(data: widget.data))
+            : Get.to(SignInScreen());
       },
       child: Container(
         padding: EdgeInsets.all(10),
+        margin: EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey[200]),
+          boxShadow: [
+            BoxShadow(
+              offset: const Offset(0, 3),
+              blurRadius: 5,
+              color: Colors.grey.withOpacity(.5),
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -169,7 +183,7 @@ class OrderView extends StatelessWidget {
                   data['title'],
                   textAlign: TextAlign.left,
                   maxLines: 2,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
@@ -221,7 +235,9 @@ class _MainViewState extends ConsumerState<MainView> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(ProductScreen(data: widget.data));
+        isLoggedIn
+            ? Get.to(ProductScreen(data: widget.data))
+            : Get.to(SignInScreen());
       },
       child: Container(
         height: 250,
@@ -230,6 +246,14 @@ class _MainViewState extends ConsumerState<MainView> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.white,
+          border: Border.all(color: Colors.grey[200]),
+          boxShadow: [
+            BoxShadow(
+              offset: const Offset(0, 3),
+              blurRadius: 5,
+              color: Colors.grey.withOpacity(.5),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +395,7 @@ class _MainViewState extends ConsumerState<MainView> {
                     cartItems.add(productValue);
                     box.put('cart', cartItems);
                     // print('Here are my :$products');
-                    Get.to(CartScreen());
+                    isLoggedIn ? Get.to(CartScreen()) : Get.to(SignInScreen());
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -413,9 +437,9 @@ class Cart extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // print('Total quantity: ${selectedItems.length}');
     return GestureDetector(
-      onTap: () => Get.to(
-        CartScreen(),
-      ),
+      onTap: () {
+        isLoggedIn ? Get.to(CartScreen()) : Get.to(SignInScreen());
+      },
       child: Stack(
         children: [
           const Padding(
@@ -562,23 +586,55 @@ String greeting() {
 }
 
 class AccountListTile extends StatelessWidget {
-  const AccountListTile({Key key, this.text, this.onTap}) : super(key: key);
+  const AccountListTile(
+      {Key key, this.text, this.onTap, this.icon, this.trailing})
+      : super(key: key);
   final String text;
   final Function onTap;
+  final Widget icon;
+  final Widget trailing;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
-      leading: Icon(Iconsax.shop),
+      leading: icon ?? Icon(Iconsax.shop),
       title: Text(
         text,
-        style: TextStyle(color: Colors.grey),
+        style: TextStyle(color: Colors.black),
       ),
-      trailing: const Icon(Icons.navigate_next_sharp),
+      trailing: trailing ??
+          const Icon(
+            Icons.navigate_next_sharp,
+            color: Colors.black,
+          ),
       // onTap: () => Get.to(ManageProduct()),
     );
   }
+}
+
+Widget toast(String message) {
+  Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
+    backgroundColor: Colors.red,
+    textColor: Colors.white,
+    fontSize: 16.0,
+  );
+}
+
+Widget successToast(String message) {
+  Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
+    backgroundColor: Colors.green,
+    textColor: Colors.white,
+    fontSize: 16.0,
+  );
 }
 
 Widget shimmer(BuildContext context) {

@@ -9,6 +9,7 @@ import 'package:flutterwave_standard/core/flutterwave.dart';
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:flutterwave_standard/models/responses/charge_response.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Models/orders.dart';
 import 'package:nizecart/Models/product_model.dart';
 import 'package:nizecart/Screens/image_input.dart';
@@ -31,6 +32,8 @@ class ProductRepository {
   ProductRepository({this.auth, this.firebaseStorage, this.firestore});
 
   User getUser() => auth.currentUser;
+  static var box = Hive.box('name');
+  List cartItems = box.get('cart', defaultValue: []);
 
   //Add product
   void addProduct(
@@ -62,7 +65,7 @@ class ProductRepository {
     } catch (e) {
       print(e.toString());
       // FirebaseException ext = e;
-      showErrorToast(e.toString());
+      toast(e.toString());
     }
   }
 
@@ -113,7 +116,7 @@ class ProductRepository {
       return snapshot.docs.map((e) => e.data() as Map).toList();
     } catch (e) {
       print(e.toString());
-      showErrorToast(e.toString());
+      toast(e.toString());
       return [];
     }
   }
@@ -129,7 +132,7 @@ class ProductRepository {
       return snaps.docs.map((e) => e.data() as Map).toList();
     } catch (e) {
       print(e.toString());
-      showErrorToast(e.toString());
+      toast(e.toString());
       return [];
     }
   }
@@ -157,7 +160,7 @@ class ProductRepository {
       print(imageUrl);
       return imageUrl;
     } catch (e) {
-      showErrorToast(e.toString());
+      toast(e.toString());
     }
   }
 
@@ -178,10 +181,10 @@ class ProductRepository {
         'description': description, // A fruit
         'price': price, // 1.99
       });
-      showToast('Product updated successfully');
+      successToast('Product updated successfully');
     } catch (e) {
       print(e.toString());
-      showErrorToast('Could not update product');
+      toast('Could not update product');
     }
   }
 
@@ -199,7 +202,7 @@ class ProductRepository {
           .doc(productID)
           .set(product)
           .then((value) {
-        showToast('Product added to favorites');
+        successToast('Product added to favorites');
       });
       await userCredential.doc(getUser().uid).update({
         'isFav': true,
@@ -244,12 +247,14 @@ class ProductRepository {
         productDetails: productDetails,
       );
       await orderCredential.doc(orderId).set(orderData.toMap());
-      // showToast('Order placed successfully');
+      // successToast('Order placed successfully');
+      cartItems.clear();
+      box.put('cart', cartItems);
       Get.to(SuccessPage());
       return true;
     } catch (e) {
       print(e.toString());
-      showErrorToast('Something went wrong');
+      toast('Something went wrong');
       return false;
     }
   }
@@ -326,7 +331,9 @@ class ProductRepository {
           country: country,
           productDetails: productDetails,
         );
-        showToast('Successful');
+         cartItems.clear();
+        box.put('cart', cartItems);
+        successToast('Successful');
         // Verify transaction
         var responseData = response.toJson();
 
@@ -334,7 +341,7 @@ class ProductRepository {
 
         return responseData;
       } else {
-        showErrorToast('Failed');
+        toast('Failed');
         return {};
       }
     } catch (e) {
@@ -366,9 +373,9 @@ class ProductRepository {
       });
       print('product credential: $userCredential');
       print('user id: ${getUser().uid}');
-      showErrorToast('Product removed from favorites');
+      toast('Product removed from favorites');
     } catch (e) {
-      showErrorToast(e.toString());
+      toast(e.toString());
 
       print(e.toString());
     }
@@ -381,10 +388,10 @@ class ProductRepository {
     try {
       Reference storageReference = firebaseStorage.ref('images');
       await products.doc(productID).delete();
-      showToast('Product deleted');
+      successToast('Product deleted');
     } catch (e) {
       print(e.toString());
-      showErrorToast(e.toString());
+      toast(e.toString());
     }
   }
 

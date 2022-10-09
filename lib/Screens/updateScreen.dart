@@ -74,7 +74,7 @@ class _UpdateScreenState extends ConsumerState<UpdateScreen> {
         return null;
       }
     }
-    Get.back();
+    Navigator.of(context).pop();
   }
 
   void UpdateProduct() async {
@@ -97,7 +97,7 @@ class _UpdateScreenState extends ConsumerState<UpdateScreen> {
         );
     initValue();
     showToast('Product Updated');
-    Get.back();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -113,7 +113,7 @@ class _UpdateScreenState extends ConsumerState<UpdateScreen> {
             color: Colors.white,
           ),
           onPressed: () {
-            Get.back();
+            Navigator.of(context).pop();
           },
         ),
         centerTitle: true,
@@ -222,7 +222,7 @@ class _UpdateScreenState extends ConsumerState<UpdateScreen> {
                           GestureDetector(
                             onTap: () {
                               updateImages(ImageSource.camera);
-                              // Get.back();
+                              // Navigator.of(context).pop();
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -242,7 +242,7 @@ class _UpdateScreenState extends ConsumerState<UpdateScreen> {
                             onTap: () {
                               updateImages(ImageSource.gallery);
 
-                              // Get.back();
+                              // Navigator.of(context).pop();
                             },
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,

@@ -172,7 +172,6 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
               CustomTextField(
                 controller: phone,
                 label: 'Phone Number',
-                enable: false,
               ),
               SizedBox(height: 20),
               CustomButton(
@@ -180,9 +179,10 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                   if (country.text.trim().isEmpty ||
                       address.text.trim().isEmpty ||
                       city.text.trim().isEmpty ||
+                      phone.text.trim().isEmpty ||
                       post.text.trim().isEmpty) {
-                    showErrorToast('Please fill all fields');
-                    Get.back();
+                    toast('Please fill all fields');
+                    Navigator.of(context).pop();
                   } else {
                     loader();
                     await ref.read(authtControllerProvider).updateDelivery(

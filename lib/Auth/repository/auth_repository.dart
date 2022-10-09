@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -86,8 +88,8 @@ class AuthRepository {
         await userCredential.user.updateDisplayName(
           fname + ' ' + lname,
         );
-        Hive.box('name').put('displayName', fname);
-        Hive.box('name').put('lname', lname);
+        Hive.box('name').put('displayName', user.displayName);
+
         Hive.box('name').put('email', userCredential.user.email);
         return true;
       }
@@ -95,13 +97,13 @@ class AuthRepository {
     } catch (e) {
       print(e);
       FirebaseException ext = e;
-      showErrorToast(ext.message);
+      toast(ext.message);
       return false;
     }
   }
 
   // Sign In
-  Future<bool> signIn(String email, String pwd) async {
+  Future<bool> signIn(String email, String pwd, BuildContext context) async {
     try {
       UserCredential userCredential =
           await auth.signInWithEmailAndPassword(email: email, password: pwd);
@@ -109,12 +111,12 @@ class AuthRepository {
       // Get.to(BottomNav());
       return true;
     } on FirebaseAuthException catch (authException) {
-      Get.back();
-      showErrorToast(authException.message);
+      Navigator.of(context).pop();
+      toast(authException.message);
       return false;
     } catch (e) {
       print(e);
-      showErrorToast(e.toString());
+      toast(e.toString());
       return false;
     }
   }
@@ -167,20 +169,68 @@ class AuthRepository {
           'phone': userCredential.user.phoneNumber,
           'email': userCredential.user.email,
           'address': '',
-          'photoUrl': '',
+          'photoUrl': userCredential.user.photoURL,
           'uid': userCredential.user.uid,
           'date_created': Timestamp.now(),
         });
+        //Update display name
+        await userCredential.user.updateDisplayName(
+          userCredential.user.displayName,
+        );
         Hive.box('name').put('displayName', userCredential.user.displayName);
         Hive.box('name').put('email', userCredential.user.email);
         return true;
       } else {
-        showErrorToast('Google sign in failed');
+        toast('Google sign in failed');
         return false;
       }
     } catch (e) {
       print(e);
-      showErrorToast('Google sign in failed');
+      toast('Google sign in failed');
+      return false;
+    }
+  }
+
+  // Sign in Facebook
+
+  Future<bool> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    CollectionReference collectionReference = firestore.collection('Users');
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+
+      // Create a credential from the access token
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(loginResult.accessToken.token);
+
+      // Once signed in, return the UserCredential
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(facebookAuthCredential);
+      if (userCredential.user != null) {
+        await collectionReference.doc(userCredential.user.uid).set({
+          'fname': userCredential.user.displayName,
+          'last_name': userCredential.user.displayName,
+          'phone': userCredential.user.phoneNumber,
+          'email': userCredential.user.email,
+          'address': '',
+          'photoUrl': userCredential.user.photoURL,
+          'uid': userCredential.user.uid,
+          'date_created': Timestamp.now(),
+        });
+        //Update display name
+        await userCredential.user.updateDisplayName(
+          userCredential.user.displayName,
+        );
+        Hive.box('name').put('displayName', userCredential.user.displayName);
+        Hive.box('name').put('email', userCredential.user.email);
+        return true;
+      } else {
+        toast('Google sign in failed');
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      toast('Google sign in failed');
       return false;
     }
   }
@@ -202,7 +252,7 @@ class AuthRepository {
   Future<bool> changePassword(String newPassword) async {
     try {
       await auth.currentUser.updatePassword(newPassword);
-      showToast('Password changed successfully');
+      successToast('Password changed successfully');
       print('Email sent successfully');
       return true;
     } on FirebaseAuthException catch (e) {
@@ -217,7 +267,7 @@ class AuthRepository {
   }
 
   //Update Profile
-  Future<bool> updateProfile(UserModel user) async {
+  Future<bool> updateProfile(UserModel user, BuildContext context) async {
     CollectionReference collectionReference = firestore.collection('Users');
 
     try {
@@ -225,20 +275,20 @@ class AuthRepository {
         '${user.firstName} ${user.lastName}',
       );
       await collectionReference.doc(userId).update(user.toMap());
-      Get.back();
-      Get.back();
-      showToast('Profile Updated Successfully');
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      successToast('Profile Updated Successfully');
       return true;
     } catch (e) {
-      Get.back();
-      showErrorToast(e.toString());
+      Navigator.of(context).pop();
+      toast(e.toString());
       return false;
     }
   }
 
   // Update Address
-  Future<bool> updateDelivery({
-      String address, String country, String post, String city}) async {
+  Future<bool> updateDelivery(
+      {String address, String country, String post, String city}) async {
     CollectionReference collectionReference = firestore.collection('Users');
     try {
       collectionReference.doc(getUser().uid).update(
@@ -249,11 +299,11 @@ class AuthRepository {
           'country': country,
         },
       );
-      showToast('Address changed successfully');
+      successToast('Address changed successfully');
       return true;
     } catch (e) {
       print(e.toString());
-      showErrorToast('Failed to change address');
+      toast('Failed to change address');
       return false;
     }
   }
@@ -280,7 +330,7 @@ class AuthRepository {
       print(photoUrl);
       return photoUrl;
     } catch (e) {
-      showErrorToast(e.toString());
+      toast(e.toString());
       return '';
     }
   }
@@ -291,6 +341,17 @@ class AuthRepository {
     isLoggedIn = false;
     box.put('isLoggedIn', isLoggedIn);
     await Hive.box('name').delete('fname');
+    loader();
+    return Get.to(SignInScreen());
+  }
+
+//Delete Account
+  void deleteAccount() async {
+    CollectionReference collectionReference = firestore.collection('Users');
+    await collectionReference.doc(getUser().uid).delete();
+    isLoggedIn = false;
+    box.put('isLoggedIn', isLoggedIn);
+    await Hive.box('name').clear();
     loader();
     return Get.to(SignInScreen());
   }
@@ -346,7 +407,7 @@ class AuthRepository {
 // Send Email Verification
   void sendVerificationEmail() async {
     await auth.currentUser.sendEmailVerification();
-    showToast("Verification email sent");
+    successToast("Verification email sent");
   }
 }
 
@@ -358,11 +419,3 @@ class AuthRepository {
 //           ),
 //         );
 //   }
- // //Get displayName
-  // Future<String> getProduct() async {
-  //   QuerySnapshot snapshot =
-  //       await userCredential.where('uid', isEqualTo: productID).get();
-  //   List<QueryDocumentSnapshot> docs = snapshot.docs;
-  //   String data = docs[0].data();
-  //   return data;
-  // }

@@ -31,7 +31,7 @@ class _ProductsOverviewScreenState
       appBar: AppBar(
         title: Text('Products'),
         // leading: IconButton(
-        // onPressed: (() => Get.back()),
+        // onPressed: (() => Navigator.of(context).pop()),
         // icon: Icon(Icons.arrow_back),
         // )
       ),
@@ -130,7 +130,8 @@ class _ProductsOverviewScreenState
                                             'Are you sure you want  to delete this product?'),
                                         actions: [
                                           TextButton(
-                                            onPressed: () => Get.back(),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
                                             child: const Text(
                                               'No',
                                               style: TextStyle(
@@ -146,7 +147,7 @@ class _ProductsOverviewScreenState
                                                   .deleteProduct(
                                                       data[index]['productID']);
                                               setState(() {});
-                                              Get.back();
+                                              Navigator.of(context).pop();
                                             },
                                             child: const Text(
                                               'Yes',

@@ -4,6 +4,7 @@ import 'package:nizecart/Screens/account_screen.dart';
 import 'package:nizecart/Screens/category_screen.dart';
 import 'package:nizecart/Screens/favourite_screen.dart';
 import 'package:nizecart/Screens/home_screen.dart';
+import 'package:nizecart/Screens/profile_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
@@ -30,7 +31,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
       HomeScreen(),
       CategoryScreen(),
       FavouriteScreen(),
-      AccountScreen(),
+      // AccountScreen(),
+      ProfileScreen(),
     ];
   }
 

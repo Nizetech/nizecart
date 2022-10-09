@@ -10,6 +10,7 @@ import 'package:nizecart/Auth/screens/signUp_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/custom_nav_bar.dart';
 
 import '../../botton_nav.dart';
 import 'forgetPaassword.dart';
@@ -43,14 +44,28 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     ref.read(authtControllerProvider).signInWithGoogle().then((value) {
       if (value) {
         Hive.box('name').put('isLoggedIn', true);
-        Get.offAll(BottomNav());
+        Get.offAll(CustomNavBar());
       } else {
-        Get.back();
+        Navigator.of(context).pop();
       }
     });
   }
 
-  // Get.back();
+  void signInWithFacebook() {
+    loading('Logging in...');
+    // isLoggedIn
+    // await ProductService().signInWithGoogle();
+    ref.read(authtControllerProvider).signInWithFacebook().then((value) {
+      if (value) {
+        Hive.box('name').put('isLoggedIn', true);
+        Get.offAll(CustomNavBar());
+      } else {
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
+  // Navigator.of(context).pop();
   void visible() {
     setState(() {
       isVisible = !isVisible;
@@ -65,22 +80,23 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           .signIn(
             emailController.text.trim(),
             pwd.text.trim(),
+            context,
           )
           .then((value) {
         (value) {
           if (value) {
             Hive.box('name').put('isLoggedIn', true);
-            Get.to(BottomNav());
+            Get.to(CustomNavBar());
             showToast('Login Successful');
           } else {
             showErrorToast('Invalid Email or Password');
-            Get.back();
+            Navigator.of(context).pop();
           }
         };
       });
     } else {
       showErrorToast('Please enter your email and password');
-      Get.back();
+      Navigator.of(context).pop();
     }
   }
 
@@ -135,7 +151,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   //   });
   // }
 
-  Future<void> _authenticate() async {
+  Future<void> authenticate() async {
     bool authenticated = false;
     try {
       setState(() {
@@ -333,20 +349,25 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(0xff4838d1),
-                            width: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          // signInWithFacebook();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: const Color(0xff4838d1),
+                              width: 1,
+                            ),
+                            color: Colors.white,
                           ),
-                          color: Colors.white,
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: Image.asset(
-                          'assets/facebook.png',
-                          height: 24,
-                          width: 24,
+                          padding: const EdgeInsets.all(16),
+                          child: Image.asset(
+                            'assets/facebook.png',
+                            height: 24,
+                            width: 24,
+                          ),
                         ),
                       ),
                     ),
@@ -399,14 +420,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         ),
                       ]),
                 ),
-                SizedBox(height: 10),
-                IconButton(
-                    onPressed: _authenticate,
-                    icon: Icon(
-                      Icons.fingerprint,
-                      color: mainColor,
-                      size: 40,
-                    ))
               ],
             ),
           ),

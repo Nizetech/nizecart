@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
@@ -43,8 +44,8 @@ class AuthController {
   }
 
 // Sign In
-  Future<bool> signIn(String email, String pwd) {
-    return authRepository.signIn(email, pwd);
+  Future<bool> signIn(String email, String pwd,  BuildContext context) {
+    return authRepository.signIn(email, pwd, context);
   }
 
   // SignIn with google
@@ -52,9 +53,19 @@ class AuthController {
     return authRepository.signInWithGoogle();
   }
 
+  // SignIn with facebook
+  Future<bool> signInWithFacebook() {
+    return authRepository.signInWithFacebook();
+  }
+
   // Sign out
   void signOut() {
     authRepository.signOut();
+  }
+
+  // Delete Account
+  void deleteAccount() {
+    authRepository.deleteAccount();
   }
 
   // Change Password

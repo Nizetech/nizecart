@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/botton_nav.dart';
+import 'package:nizecart/custom_nav_bar.dart';
 import '../../Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:flutter/src/material/radio_list_tile.dart';
@@ -51,25 +52,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                 // showToast('Signed In Successful');
               } else {
                 showErrorToast('phone number is not valid');
-                Get.back();
+                Navigator.of(context).pop();
                 return;
               }
             } else {
               showErrorToast('email is not valid');
-              Get.back();
+              Navigator.of(context).pop();
 
               return;
             }
           } else {
             showErrorToast('email is not valid');
-            Get.back();
+            Navigator.of(context).pop();
 
             return;
           }
         } else {
           showErrorToast('you must agree with the terms and conditions');
-          Get.back();
-          Get.back();
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
           return;
         }
         ref
@@ -86,20 +87,20 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
           if (value) {
             showToast('loggedIn in successfully');
             Hive.box('name').put("isLoggedIn", true);
-            Get.to(BottomNav());
+            Get.to(CustomNavBar());
           } else {
-            Get.back();
-            // Get.back();
+            Navigator.of(context).pop();
+            // Navigator.of(context).pop();
           }
         });
       } else {
         // Get.to(BottomNav());
-        Get.back();
+        Navigator.of(context).pop();
         showErrorToast('password must be at least 6 characters');
       }
     } else {
       // Get.to(BottomNav());
-      Get.back();
+      Navigator.of(context).pop();
       showErrorToast('Please fill all the fields');
       // }
     }
@@ -131,7 +132,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
         backgroundColor: Colors.black,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Get.back(),
+          onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
           'Create Account',

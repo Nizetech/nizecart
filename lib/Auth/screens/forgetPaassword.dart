@@ -31,10 +31,6 @@ class ForgetPassword extends ConsumerWidget {
         elevation: 0,
         foregroundColor: white,
         backgroundColor: secColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Get.back(),
-        ),
         title: Text(
           'Recover Password',
           style: TextStyle(fontSize: 20),
@@ -60,10 +56,8 @@ class ForgetPassword extends ConsumerWidget {
                 cursorColor: mainColor,
                 decoration: InputDecoration(
                   hintText: 'Email address',
-              
                   filled: true,
                   isDense: true,
-
                   prefixIconColor: mainColor,
                   iconColor: mainColor,
                   enabledBorder: OutlineInputBorder(

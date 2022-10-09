@@ -411,19 +411,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                           'cart', cartItems);
                                                       setState(() {});
 
-                                                      Fluttertoast.showToast(
-                                                        msg:
-                                                            'Item removed from cart',
-                                                        toastLength:
-                                                            Toast.LENGTH_SHORT,
-                                                        gravity:
-                                                            ToastGravity.BOTTOM,
-                                                        timeInSecForIosWeb: 1,
-                                                        backgroundColor:
-                                                            Colors.red,
-                                                        textColor: Colors.white,
-                                                        fontSize: 16.0,
-                                                      );
+                                                      toast(
+                                                          'Item removed from cart');
                                                     },
                                                     child: const Text(
                                                       'Remove',
@@ -461,15 +450,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ),
         child: CustomButton(
           text: 'Checkout  (₦${formatter.format(totalAmount).toString()})',
-          onPressed: () {
-            return Get.to(
-              // CheckOutScreen(totalAmount: totalAmount),
-              DeliveryScreen(
-                totalAmount: totalAmount,
-                user: user,
-              ),
-            );
-          },
+          onPressed: cartItems.isEmpty
+              ? null
+              : () {
+                  return Get.to(
+                    // CheckOutScreen(totalAmount: totalAmount),
+                    DeliveryScreen(
+                      totalAmount: totalAmount,
+                      user: user,
+                    ),
+                  );
+                },
         ),
       ),
     );

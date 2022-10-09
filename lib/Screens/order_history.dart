@@ -458,7 +458,7 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
                                 ),
                               ),
                               SizedBox(
-                                height: 150,
+                                height: 153,
                                 child: CarouselSlider.builder(
                                   unlimitedMode: true,
                                   enableAutoSlider: true,
