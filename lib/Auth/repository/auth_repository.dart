@@ -281,14 +281,19 @@ class AuthRepository {
       return true;
     } catch (e) {
       Navigator.of(context).pop();
-      toast(e.toString());
+      print(e.toString());
+
       return false;
     }
   }
 
   // Update Address
   Future<bool> updateDelivery(
-      {String address, String country, String post, String city}) async {
+      {String address,
+      String country,
+      String post,
+      String city,
+      String phone}) async {
     CollectionReference collectionReference = firestore.collection('Users');
     try {
       collectionReference.doc(getUser().uid).update(
@@ -297,9 +302,10 @@ class AuthRepository {
           'postCode': post,
           'city': city,
           'country': country,
+          'phoneNumber': phone,
         },
       );
-      successToast('Address changed successfully');
+      // successToast('Address changed successfully');
       return true;
     } catch (e) {
       print(e.toString());
@@ -330,7 +336,8 @@ class AuthRepository {
       print(photoUrl);
       return photoUrl;
     } catch (e) {
-      toast(e.toString());
+      print(e.toString());
+      // toast(e.toString());
       return '';
     }
   }
@@ -342,7 +349,7 @@ class AuthRepository {
     box.put('isLoggedIn', isLoggedIn);
     await Hive.box('name').delete('fname');
     loader();
-    return Get.to(SignInScreen());
+    return Get.offAll(SignInScreen());
   }
 
 //Delete Account
@@ -353,7 +360,7 @@ class AuthRepository {
     box.put('isLoggedIn', isLoggedIn);
     await Hive.box('name').clear();
     loader();
-    return Get.to(SignInScreen());
+    return Get.offAll(SignInScreen());
   }
 
 // Get user details
@@ -362,11 +369,7 @@ class AuthRepository {
     try {
       DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
       print('User details ${shot}');
-      // if (shot.exists) {
-      //   UserModel userData =
-      //       UserModel.fromMap(shot.data() as Map<String, dynamic>);
-      //   return userData;
-      // }
+
       return shot.data();
     } catch (e) {
       print(e.toString());

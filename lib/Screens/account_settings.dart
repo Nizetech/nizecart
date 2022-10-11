@@ -26,6 +26,7 @@ class _AccountSettingsState extends ConsumerState<AccountSettings> {
           style: TextStyle(fontSize: 20),
         ),
       ),
+      backgroundColor: white,
       body: Column(children: [
         SizedBox(height: 20),
         AccountListTile(

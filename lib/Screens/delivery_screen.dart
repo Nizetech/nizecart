@@ -186,10 +186,12 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                   } else {
                     loader();
                     await ref.read(authtControllerProvider).updateDelivery(
-                        country: country.text.trim(),
-                        post: post.text.trim(),
-                        address: address.text.trim(),
-                        city: city.text.trim());
+                          country: country.text.trim(),
+                          post: post.text.trim(),
+                          address: address.text.trim(),
+                          city: city.text.trim(),
+                          phone: phone.text.trim(),
+                        );
                     Get.to(
                       CheckOutScreen(totalAmount: widget.totalAmount),
                     );

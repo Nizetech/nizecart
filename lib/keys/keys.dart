@@ -26,3 +26,7 @@ String formatDate(Timestamp timestamp) {
 String formatTime(Timestamp timestamp) {
   return DateFormat.yMEd().add_jms().format(timestamp.toDate());
 }
+
+String time(Timestamp timestamp) {
+  return DateFormat.Hm().format(timestamp.toDate());
+}

@@ -4,13 +4,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Screens/order_history.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:nizecart/keys/keys.dart';
 import 'package:nizecart/products/product_controller.dart';
 
 class OrderScreen extends ConsumerWidget {
-  const OrderScreen({Key key}) : super(key: key);
+  OrderScreen({Key key}) : super(key: key);
+  static var box = Hive.box('name');
+  bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,15 +29,16 @@ class OrderScreen extends ConsumerWidget {
           ),
         ),
       ),
+      backgroundColor: white,
       body: FutureBuilder(
           future: ref.read(productControllerProvider).getOrder(),
           builder: (context, snapshot) {
             List order = snapshot.data;
             log("my Orderssss: ${order}");
-            if (order != []) {
-              if (!snapshot.hasData) {
-                return loader();
-              } else {
+            if (!snapshot.hasData) {
+              return loader();
+            } else {
+              if (isLoggedIn) {
                 return ListView.separated(
                   itemCount: order.length,
                   separatorBuilder: (BuildContext context, int index) =>
@@ -128,14 +132,31 @@ class OrderScreen extends ConsumerWidget {
                     );
                   },
                 );
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/cart.png',
+                        height: 120,
+                        width: 150,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    const Text(
+                      'No Orders yet!!',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                );
               }
-            } else {
-              return Center(
-                child: Text(
-                  'No Oders Yet',
-                  style: TextStyle(color: Colors.black),
-                ),
-              );
             }
           }),
       // ),

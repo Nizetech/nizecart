@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/products/product_controller.dart';
 import '../Widget/component.dart';
@@ -88,6 +89,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
   bool enable = false;
 
   List cartItems = box.get('cart', defaultValue: []);
+  bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
 
   @override
   Widget build(BuildContext context) {
@@ -119,15 +121,21 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                 )),
             child: IconButton(
               onPressed: () {
-                setState(() {
-                  enable = !enable;
-                });
-                if (enable) {
-                  ref.read(productControllerProvider).addFavorite(widget.data);
+                if (isLoggedIn) {
+                  setState(() {
+                    enable = !enable;
+                  });
+                  if (enable) {
+                    ref
+                        .read(productControllerProvider)
+                        .addFavorite(widget.data);
+                  } else {
+                    ref
+                        .read(productControllerProvider)
+                        .removeFavorite(widget.data['favId']);
+                  }
                 } else {
-                  ref
-                      .read(productControllerProvider)
-                      .removeFavorite(widget.data['favId']);
+                  Get.to(SignInScreen());
                 }
               },
               icon: Icon(
@@ -278,6 +286,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                               InkWell(
                                 splashColor: mainColor,
                                 onTap: () {
+                                  // if (isLoggedIn) {
                                   setState(() {
                                     quantity++;
                                   });
@@ -287,11 +296,20 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                     'price': widget.data['price'],
                                     'title': widget.data['title'],
                                     'imageUrl': widget.data['imageUrl'],
+                                    'id': widget.data['productID'],
                                   };
-                                  products.add(productValue);
-                                  cartItems.add(productValue);
-                                  box.put('cart', cartItems);
-                                  showToast('Added to cart');
+                                  if (cartItems.isNotEmpty) {
+                                    toast('Product already exist in cart');
+                                    return;
+                                  } else {
+                                    // products.add(productValue);
+                                    cartItems.add(productValue);
+                                    box.put('cart', cartItems);
+                                    showToast('Added to cart');
+                                  }
+                                  // } else {
+                                  //   Get.to(SignInScreen());
+                                  // }
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
@@ -313,22 +331,26 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                               SizedBox(width: 10),
                               InkWell(
                                 onTap: () {
-                                  setState(() {
-                                    quantity++;
-                                  });
-                                  Map<String, dynamic> productValue = {
-                                    'qty': quantity,
-                                    'price': widget.data['price'],
-                                    'title': widget.data['title'],
-                                    'imageUrl': widget.data['imageUrl'],
-                                  };
-                                  products.add(productValue);
-                                  // box.add(products);
-                                  cartItems.add(productValue);
-                                  box.put('cart', cartItems);
-                                  setState(() {});
+                                  if (isLoggedIn) {
+                                    setState(() {
+                                      quantity++;
+                                    });
+                                    Map<String, dynamic> productValue = {
+                                      'qty': quantity,
+                                      'price': widget.data['price'],
+                                      'title': widget.data['title'],
+                                      'imageUrl': widget.data['imageUrl'],
+                                    };
+                                    products.add(productValue);
+                                    // box.add(products);
+                                    cartItems.add(productValue);
+                                    box.put('cart', cartItems);
+                                    setState(() {});
 
-                                  Get.to(CartScreen());
+                                    Get.to(CartScreen());
+                                  } else {
+                                    Get.to(SignInScreen());
+                                  }
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(

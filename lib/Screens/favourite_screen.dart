@@ -29,6 +29,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
 
   List product = [];
   List cartItems = box.get('cart', defaultValue: []);
+  bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +57,31 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
           future: ref.read(productControllerProvider).getFavProduct(),
           builder: ((context, snapshot) {
             if (!snapshot.hasData) {
+              if (!isLoggedIn) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/cart.png',
+                        height: 120,
+                        width: 150,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    const Text(
+                      'No Favourite Items!!',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                );
+              }
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -76,7 +102,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                         ),
                         SizedBox(height: 10),
                         const Text(
-                          'No Favourite Items',
+                          'No Favourite Items!!',
                           style: TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
@@ -132,6 +158,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
                                         snapshot.data[i]['title'],
@@ -154,7 +181,7 @@ class _FavouriteScreenState extends ConsumerState<FavouriteScreen> {
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                      SizedBox(height: 20),
+                                      SizedBox(height: 15),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,

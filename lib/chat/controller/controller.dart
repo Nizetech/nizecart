@@ -26,11 +26,18 @@ class ChatController {
     return chatRepository.getChats();
   }
 
+// admin details
+  Future<List> adminDetails() {
+    return chatRepository.adminDetails();
+  }
+
   Future<void> sendMessage({
     String text,
-    String receiver,
+    // String receiver,
     // String receiverToken,
   }) {
-    return chatRepository.sendMessage(text: text, receiver: receiver);
+    return chatRepository.sendMessage(
+      text: text,
+    );
   }
 }

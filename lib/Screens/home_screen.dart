@@ -111,6 +111,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               print('my Products: ${product}');
 
               print('my search $searchProduct');
+              // if(user == null){
+
+              // }
               return Column(
                 children: [
                   Container(
@@ -145,7 +148,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   color:
                                       const Color.fromARGB(255, 221, 213, 213),
                                 ),
-                                child: user == null
+                                child: user == null || users == null
                                     ? const Icon(
                                         Iconsax.user,
                                         size: 30,
@@ -164,7 +167,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                             SizedBox(width: 15),
                             Expanded(
-                              child: user == null
+                              child: user == null || users == null
                                   ? Text(
                                       'Good ${greeting()}🙂',
                                       style: const TextStyle(

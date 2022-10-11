@@ -70,9 +70,7 @@ class _TopViewsState extends State<TopViews> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        isLoggedIn
-            ? Get.to(ProductScreen(data: widget.data))
-            : Get.to(SignInScreen());
+        Get.to(ProductScreen(data: widget.data));
       },
       child: Container(
         padding: EdgeInsets.all(10),
@@ -235,9 +233,7 @@ class _MainViewState extends ConsumerState<MainView> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        isLoggedIn
-            ? Get.to(ProductScreen(data: widget.data))
-            : Get.to(SignInScreen());
+        Get.to(ProductScreen(data: widget.data));
       },
       child: Container(
         height: 250,
@@ -438,7 +434,7 @@ class Cart extends ConsumerWidget {
     // print('Total quantity: ${selectedItems.length}');
     return GestureDetector(
       onTap: () {
-        isLoggedIn ? Get.to(CartScreen()) : Get.to(SignInScreen());
+        !isLoggedIn ? Get.to(CartScreen()) : Get.to(SignInScreen());
       },
       child: Stack(
         children: [

@@ -44,7 +44,7 @@ class AuthController {
   }
 
 // Sign In
-  Future<bool> signIn(String email, String pwd,  BuildContext context) {
+  Future<bool> signIn(String email, String pwd, BuildContext context) {
     return authRepository.signIn(email, pwd, context);
   }
 
@@ -80,12 +80,17 @@ class AuthController {
 
   // Change Address
   Future<bool> updateDelivery(
-      {String address, String country, String post, String city}) {
+      {String address,
+      String country,
+      String post,
+      String city,
+      String phone}) {
     return authRepository.updateDelivery(
       address: address,
       country: country,
       city: city,
       post: post,
+      phone: phone,
     );
   }
 

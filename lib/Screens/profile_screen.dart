@@ -45,22 +45,53 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final String displayName = box.get('displayName');
   String lName = box.get('lname');
 
-  void updateImage(ImageSource source) async {
-    ImagePicker picker = ImagePicker();
-    var file = await picker.pickImage(
-      source: source,
-      imageQuality: 30,
-    );
+  // void updateImage(ImageSource source) async {
+  //   ImagePicker picker = ImagePicker();
+  //   var file = await picker.pickImage(
+  //     source: source,
+  //     imageQuality: 30,
+  //   );
 
-    if (file != null) {
-      ref.read(authtControllerProvider).updateProfileImage(
-            File(file.path),
-          );
-      setState(() {});
-      Navigator.of(context).pop();
-      // user.reload();
+  //   if (file != null) {
+  //     ref.read(authtControllerProvider).updateProfileImage(
+  //           File(file.path),
+  //         );
+  //     // Navigator.of(context).pop();
+  //     Get.back();
+  //     setState(() {});
+  //     // user.reload();
+  //   }
+  //   return;
+  // }
+  void updateImage(
+    ImageSource source,
+  ) async {
+    XFile pickedFile =
+        await ImagePicker().pickImage(source: source, imageQuality: 40);
+    if (pickedFile != null) {
+      CroppedFile croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          compressQuality: 50,
+          cropStyle: CropStyle.circle,
+          uiSettings: [
+            AndroidUiSettings(
+              lockAspectRatio: false,
+            ),
+          ]);
+      if (croppedFile != null) {
+        // setState(() {
+        //   storedImage = File(croppedFile.path);
+        // });
+        ref
+            .read(authtControllerProvider)
+            .updateProfileImage(File(croppedFile.path));
+      } else {
+        return null;
+      }
     }
-    return;
+    setState(() {});
+    Get.back();
+    setState(() {});
   }
 
   @override
@@ -81,7 +112,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               return const Center(child: CircularProgressIndicator());
             } else {
               // print(snapshot.data['photoUrl']);
+
               Map user = snapshot.data;
+
               // print('My user ${user['photoUrl']}');
               String data = user['photoUrl'];
 
@@ -204,89 +237,96 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           backgroundColor: Colors.white,
                                           child: GestureDetector(
                                             onTap: () {
-                                              Get.dialog(
-                                                Dialog(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
-                                                  child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
+                                              if (!isLoggedIn) {
+                                                Get.to(SignInScreen());
+                                              } else {
+                                                Get.dialog(
+                                                  Dialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
                                                               20),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          const Text(
-                                                            'Change Profile Picture',
-                                                            style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 20),
-                                                          TextButton.icon(
-                                                            onPressed: () {
-                                                              updateImage(
-                                                                  ImageSource
-                                                                      .gallery);
-                                                            },
-                                                            icon: const Icon(
-                                                                Iconsax
-                                                                    .gallery),
-                                                            label: const Text(
-                                                                'Choose from Gallery'),
-                                                            style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                secColor,
-                                                              ),
-                                                              foregroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                Colors.white,
+                                                    ),
+                                                    child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(20),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            const Text(
+                                                              'Change Profile Picture',
+                                                              style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 10),
-                                                          TextButton.icon(
-                                                            onPressed:
-                                                                () async {
-                                                              updateImage(
-                                                                  ImageSource
-                                                                      .camera);
-                                                            },
-                                                            icon: const Icon(
-                                                              Iconsax.image,
-                                                              size: 15,
-                                                            ),
-                                                            label: const Text(
-                                                              'Choose from camera',
-                                                            ),
-                                                            style: ButtonStyle(
-                                                              backgroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                secColor,
-                                                              ),
-                                                              foregroundColor:
-                                                                  MaterialStateProperty
-                                                                      .all(
-                                                                Colors.white,
+                                                            const SizedBox(
+                                                                height: 20),
+                                                            TextButton.icon(
+                                                              onPressed: () {
+                                                                updateImage(
+                                                                    ImageSource
+                                                                        .gallery);
+                                                              },
+                                                              icon: const Icon(
+                                                                  Iconsax
+                                                                      .gallery),
+                                                              label: const Text(
+                                                                  'Choose from Gallery'),
+                                                              style:
+                                                                  ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(
+                                                                  secColor,
+                                                                ),
+                                                                foregroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(
+                                                                  Colors.white,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      )),
-                                                ),
-                                              );
+                                                            const SizedBox(
+                                                                height: 10),
+                                                            TextButton.icon(
+                                                              onPressed:
+                                                                  () async {
+                                                                updateImage(
+                                                                    ImageSource
+                                                                        .camera);
+                                                              },
+                                                              icon: const Icon(
+                                                                Iconsax.image,
+                                                                size: 15,
+                                                              ),
+                                                              label: const Text(
+                                                                'Choose from camera',
+                                                              ),
+                                                              style:
+                                                                  ButtonStyle(
+                                                                backgroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(
+                                                                  secColor,
+                                                                ),
+                                                                foregroundColor:
+                                                                    MaterialStateProperty
+                                                                        .all(
+                                                                  Colors.white,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        )),
+                                                  ),
+                                                );
+                                              }
                                             },
                                             child: Container(
                                               height: 50,
@@ -489,10 +529,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                   context: context,
                                                   builder: (contex) {
                                                     return Container(
-                                                      height: 170,
+                                                      height: 200,
                                                       width: double.infinity,
                                                       padding:
-                                                          EdgeInsets.all(20),
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 10,
+                                                              horizontal: 20),
                                                       decoration:
                                                           const BoxDecoration(
                                                         color: Colors.white,
@@ -543,10 +585,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                                         .w600,
                                                               ),
                                                             ),
-                                                            onTap: () => Get.to(
-                                                                ChatScreen(
-                                                              user: user,
-                                                            )),
+                                                            onTap: () {
+                                                              Map data = user;
+                                                              Get.to(ChatScreen(
+                                                                user: data,
+                                                              ));
+                                                            },
                                                           ),
                                                         ],
                                                       ),
@@ -557,17 +601,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       const Divider(),
                                       ListTile(
                                         contentPadding: EdgeInsets.zero,
-                                        leading: const Icon(
-                                          Iconsax.logout,
-                                          color: mainColor,
+                                        leading: Icon(
+                                          isLoggedIn
+                                              ? Iconsax.logout
+                                              : Iconsax.login,
+                                          color: isLoggedIn
+                                              ? mainColor
+                                              : Colors.green,
                                         ),
                                         onTap: () {
                                           ref
                                               .read(authtControllerProvider)
                                               .signOut();
                                         },
-                                        title: const Text(
-                                          'Log out',
+                                        title: Text(
+                                          isLoggedIn ? 'Log out' : 'Log in',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
@@ -581,7 +629,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 50),
+                        !isLoggedIn
+                            ? const SizedBox(height: 30)
+                            : const SizedBox(height: 70),
                       ],
                     ),
                   ),

@@ -331,7 +331,7 @@ class ProductRepository {
           country: country,
           productDetails: productDetails,
         );
-         cartItems.clear();
+        cartItems.clear();
         box.put('cart', cartItems);
         successToast('Successful');
         // Verify transaction
@@ -349,6 +349,64 @@ class ProductRepository {
       return {};
     }
   }
+
+  // // Pay with paystack
+  // void _processPayment() {
+  //   try {
+  //     PaystackPayManager(context: context)
+  //       // Don't store your secret key on users device.
+  //       // Make sure this is retrive from your server at run time
+  //       ..setSecretKey("sk_test_eae9d6ee00def0e9932f97281c4374ef72d57674")
+  //       //accepts widget
+  //       ..setCompanyAssetImage(Image(
+  //         image: AssetImage("assets/NIZECART.png"),
+  //       ))
+  //       ..setAmount(050)
+  //       // ..setReference("your-unique-transaction-reference")
+  //       ..setReference(DateTime.now().millisecondsSinceEpoch.toString())
+  //       ..setCurrency("GHS")
+  //       ..setEmail("bakoambrose@gmail.com")
+  //       ..setFirstName("Ambrose")
+  //       ..setLastName("Bako")
+  //       ..setMetadata(
+  //         {
+  //           "custom_fields": [
+  //             {
+  //               "value": "snapTask",
+  //               "display_name": "Payment to",
+  //               "variable_name": "payment_to"
+  //             }
+  //           ]
+  //         },
+  //       )
+  //       ..onSuccesful(_onPaymentSuccessful)
+  //       ..onPending(_onPaymentPending)
+  //       ..onFailed(_onPaymentFailed)
+  //       ..onCancel(_onPaymentCancelled)
+  //       ..initialize();
+  //   } catch (error) {
+  //     print("Payment Error ==> $error");
+  //   }
+  // }
+
+  // void _onPaymentSuccessful(Transaction transaction) {
+  //   Get.to(SuccessPage());
+  //   successToast('Order Successfull');
+  // }
+
+  // void _onPaymentPending(Transaction transaction) {
+  //   loading('Pending');
+  // }
+
+  // void _onPaymentFailed(Transaction transaction) {
+  //   toast('Order Failed!!');
+  //   return;
+  // }
+
+  // void _onPaymentCancelled(Transaction transaction) {
+  //   toast('Order cancelled');
+  //   return;
+  // }
 
 // Get product
   Future<Map> getProduct() async {
