@@ -16,7 +16,8 @@ import 'package:nizecart/Screens/image_input.dart';
 import 'package:nizecart/Screens/success_screen.dart';
 import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/keys/keys.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
+import 'package:paystack_manager/models/transaction.dart';
+import 'package:paystack_manager/paystack_pay_manager.dart';
 
 import '../Widget/component.dart';
 
@@ -350,63 +351,65 @@ class ProductRepository {
     }
   }
 
-  // // Pay with paystack
-  // void _processPayment() {
-  //   try {
-  //     PaystackPayManager(context: context)
-  //       // Don't store your secret key on users device.
-  //       // Make sure this is retrive from your server at run time
-  //       ..setSecretKey("sk_test_eae9d6ee00def0e9932f97281c4374ef72d57674")
-  //       //accepts widget
-  //       ..setCompanyAssetImage(Image(
-  //         image: AssetImage("assets/NIZECART.png"),
-  //       ))
-  //       ..setAmount(050)
-  //       // ..setReference("your-unique-transaction-reference")
-  //       ..setReference(DateTime.now().millisecondsSinceEpoch.toString())
-  //       ..setCurrency("GHS")
-  //       ..setEmail("bakoambrose@gmail.com")
-  //       ..setFirstName("Ambrose")
-  //       ..setLastName("Bako")
-  //       ..setMetadata(
-  //         {
-  //           "custom_fields": [
-  //             {
-  //               "value": "snapTask",
-  //               "display_name": "Payment to",
-  //               "variable_name": "payment_to"
-  //             }
-  //           ]
-  //         },
-  //       )
-  //       ..onSuccesful(_onPaymentSuccessful)
-  //       ..onPending(_onPaymentPending)
-  //       ..onFailed(_onPaymentFailed)
-  //       ..onCancel(_onPaymentCancelled)
-  //       ..initialize();
-  //   } catch (error) {
-  //     print("Payment Error ==> $error");
-  //   }
-  // }
+  // Pay with paystack
+  void payStackPay(
+      {BuildContext context, String email, String name, String amount}) {
+    try {
+      PaystackPayManager(context: context)
+        // Don't store your secret key on users device.
+        // Make sure this is retrieve from your server at run time
+        ..setSecretKey(PayStackKey)
+        //accepts widget
+        ..setCompanyAssetImage(Image(
+          image: AssetImage("assets/NIZECART.png"),
+        ))
+        ..setAmount(amount)
+        // ..setReference("your-unique-transaction-reference")
+        ..setReference(DateTime.now().millisecondsSinceEpoch.toString())
+        ..setCurrency("NGN")
+        ..setEmail(email)
+        // ..reference()
+        ..setFirstName(name)
+        // ..setLastName("Bako")
+        ..setMetadata(
+          {
+            "custom_fields": [
+              {
+                "value": "snapTask",
+                "display_name": "Payment to",
+                "variable_name": "payment_to"
+              }
+            ]
+          },
+        )
+        ..onSuccesful(_onPaymentSuccessful)
+        ..onPending(_onPaymentPending)
+        ..onFailed(_onPaymentFailed)
+        ..onCancel(_onPaymentCancelled)
+        ..initialize();
+    } catch (error) {
+      print("Payment Error ==> $error");
+    }
+  }
 
-  // void _onPaymentSuccessful(Transaction transaction) {
-  //   Get.to(SuccessPage());
-  //   successToast('Order Successfull');
-  // }
+  void _onPaymentSuccessful() {
+    successToast('Order Successfull');
+    Get.to(SuccessPage());
+  }
 
-  // void _onPaymentPending(Transaction transaction) {
-  //   loading('Pending');
-  // }
+  void _onPaymentPending() {
+    loading('Pending');
+  }
 
-  // void _onPaymentFailed(Transaction transaction) {
-  //   toast('Order Failed!!');
-  //   return;
-  // }
+  void _onPaymentFailed() {
+    toast('Order Failed!!');
+    return;
+  }
 
-  // void _onPaymentCancelled(Transaction transaction) {
-  //   toast('Order cancelled');
-  //   return;
-  // }
+  void _onPaymentCancelled() {
+    toast('Order cancelled');
+    return;
+  }
 
 // Get product
   Future<Map> getProduct() async {

@@ -24,15 +24,8 @@ class ChatList extends ConsumerStatefulWidget {
 }
 
 class _ChatListState extends ConsumerState<ChatList> {
-  final ScrollController messageController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
-    SchedulerBinding.instance.addPersistentFrameCallback((_) {
-      messageController.jumpTo(
-        messageController.position.maxScrollExtent,
-      );
-    });
     bool isMe =
         widget.messageData['sender'] == FirebaseAuth.instance.currentUser.uid;
     return isMe
@@ -84,7 +77,8 @@ class _ChatListState extends ConsumerState<ChatList> {
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
                 ),
-              )
+              ),
+              SizedBox(height: 10),
             ],
           )
         : Column(
@@ -130,7 +124,8 @@ class _ChatListState extends ConsumerState<ChatList> {
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
                 ),
-              )
+              ),
+              SizedBox(height: 10),
             ],
           );
   }

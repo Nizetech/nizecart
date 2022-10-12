@@ -28,5 +28,5 @@ String formatTime(Timestamp timestamp) {
 }
 
 String time(Timestamp timestamp) {
-  return DateFormat.Hm().format(timestamp.toDate());
+  return DateFormat.jm().format(timestamp.toDate());
 }

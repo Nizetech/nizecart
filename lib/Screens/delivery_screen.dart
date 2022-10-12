@@ -182,7 +182,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                       phone.text.trim().isEmpty ||
                       post.text.trim().isEmpty) {
                     toast('Please fill all fields');
-                    Navigator.of(context).pop();
+                    return;
                   } else {
                     loader();
                     await ref.read(authtControllerProvider).updateDelivery(

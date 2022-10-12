@@ -34,11 +34,11 @@ class OrderScreen extends ConsumerWidget {
           future: ref.read(productControllerProvider).getOrder(),
           builder: (context, snapshot) {
             List order = snapshot.data;
-            log("my Orderssss: ${order}");
+            // log("my Orderssss: ${order}");
             if (!snapshot.hasData) {
               return loader();
             } else {
-              if (isLoggedIn) {
+              if (isLoggedIn && order.isNotEmpty) {
                 return ListView.separated(
                   itemCount: order.length,
                   separatorBuilder: (BuildContext context, int index) =>

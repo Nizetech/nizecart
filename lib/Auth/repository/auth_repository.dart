@@ -179,6 +179,7 @@ class AuthRepository {
         );
         Hive.box('name').put('displayName', userCredential.user.displayName);
         Hive.box('name').put('email', userCredential.user.email);
+        Hive.box('name').put('isLoggedIn', true);
         return true;
       } else {
         toast('Google sign in failed');
@@ -223,6 +224,7 @@ class AuthRepository {
         );
         Hive.box('name').put('displayName', userCredential.user.displayName);
         Hive.box('name').put('email', userCredential.user.email);
+        Hive.box('name').put('isLoggedIn', true);
         return true;
       } else {
         toast('Google sign in failed');
@@ -356,8 +358,8 @@ class AuthRepository {
   void deleteAccount() async {
     CollectionReference collectionReference = firestore.collection('Users');
     await collectionReference.doc(getUser().uid).delete();
-    isLoggedIn = false;
-    box.put('isLoggedIn', isLoggedIn);
+    await auth.currentUser.delete();
+    box.put('isLoggedIn', false);
     await Hive.box('name').clear();
     loader();
     return Get.offAll(SignInScreen());

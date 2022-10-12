@@ -434,7 +434,7 @@ class Cart extends ConsumerWidget {
     // print('Total quantity: ${selectedItems.length}');
     return GestureDetector(
       onTap: () {
-        !isLoggedIn ? Get.to(CartScreen()) : Get.to(SignInScreen());
+        isLoggedIn ? Get.to(CartScreen()) : Get.to(SignInScreen());
       },
       child: Stack(
         children: [

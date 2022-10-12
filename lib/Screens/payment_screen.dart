@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart' as intl;
@@ -41,83 +40,81 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
   }
 
   User user;
-  @override
-  void initState() {
-    user = FirebaseAuth.instance.currentUser;
-    plugin.initialize(publicKey: PayStackKey);
-
-    super.initState();
-  }
 
   final formatter = intl.NumberFormat.decimalPattern();
 
-  // PayStack Integration
+//   // PayStack Integration
 
-//   String publicKeyTest = 'pk_test_52197b2afc4c27f4491282296d1a848bea6794f9';
+// //   String publicKeyTest = 'pk_test_52197b2afc4c27f4491282296d1a848bea6794f9';
 
-  final plugin = PaystackPlugin();
+//   final plugin = PaystackPlugin();
+//   @override
+//   void initState() {
+//     user = FirebaseAuth.instance.currentUser;
+//     plugin.initialize(publicKey: PayStackKey);
 
-  //used to generate a unique reference for payment
-  String _getReference() {
-    var platform = (Platform.isIOS) ? 'iOS' : 'Android';
-    final thisDate = DateTime.now().millisecondsSinceEpoch;
-    return 'ChargedFrom${platform}_$thisDate';
-  }
+//     super.initState();
+//   }
 
-  //async method to charge users card and return a response
+//   //used to generate a unique reference for payment
+//   String _getReference() {
+//     var platform = (Platform.isIOS) ? 'iOS' : 'Android';
+//     final thisDate = DateTime.now().millisecondsSinceEpoch;
+//     return 'ChargedFrom${platform}_$thisDate';
+//   }
 
-// Test Card
-  ///Bank Auth Simulation(reusable)
-//     4084 0800 0000 0409
-//     (EXPIRY
-//   09/23,
-//   (CVV
-//    000),
+//   //async method to charge users card and return a response
 
-  chargeCard() async {
-    var charge = Charge()
-      ..amount = widget.data['shippingFee'] != ''
-          ? widget.data['total'] * 100
-          : widget.data['totalAmount'] * 100
-      // 100 //the money should be in kobo hence the need to multiply the value by 100
-      ..reference = _getReference()
-      ..putCustomField(
-        'custom_id',
-        getRandomString(8),
-      ) //to pass extra parameters to be retrieved on the response from Paystack
-      ..email = email;
+// // Test Card
+//   ///Bank Auth Simulation(reusable)
+// //     4084 0800 0000 0409
+// //     (EXPIRY
+// //   09/23,
+// //   (CVV
+// //    000),
 
-    CheckoutResponse response = await plugin.checkout(
-      context,
-      method: CheckoutMethod.card,
-      charge: charge,
-    );
+//   chargeCard() async {
+//     var charge = Charge()
+//       ..amount = widget.data['shippingFee'] != ''
+//           ? widget.data['total'] * 100
+//           : widget.data['totalAmount'] * 100
+//       // 100 //the money should be in kobo hence the need to multiply the value by 100
+//       ..reference = _getReference()
+//       ..putCustomField(
+//         'custom_id',
+//         getRandomString(8),
+//       ) //to pass extra parameters to be retrieved on the response from Paystack
+//       ..email = email;
 
-    //check if the response is true or not
-    if (response.status == true) {
-      ref.read(productControllerProvider).orders(
-            username: widget.data['firstName'] + ' ' + widget.data['last_name'],
-            quantity: quantity,
-            totalAmount: widget.data['totalAmount'],
-            phoneNumber: widget.data['phoneNumber'],
-            address: widget.data['address'],
-            city: widget.data['city'],
-            email: widget.data['email'],
-            country: widget.data['country'],
-            postCode: widget.data['postCode'],
-            productDetails: cartItems,
-          );
-      //you can send some data from the response to an API or use webhook to record the payment on a database
-      setState(() {});
-      Get.to(const SuccessPage());
-      cartItems.clear();
-      box.put('cart', cartItems);
-    } else {
-      //the payment wasn't successsful or the user cancelled the payment
-      toast('Payment Failed!!!');
-      Navigator.of(context).pop();
-    }
-  }
+//     CheckoutResponse response = await plugin.checkout(
+//       context,
+//       method: CheckoutMethod.card,
+//       charge: charge,
+//     );
+//     if (response.status == true) {
+//       ref.read(productControllerProvider).orders(
+//             username: widget.data['firstName'] + ' ' + widget.data['last_name'],
+//             quantity: quantity,
+//             totalAmount: widget.data['totalAmount'],
+//             phoneNumber: widget.data['phoneNumber'],
+//             address: widget.data['address'],
+//             city: widget.data['city'],
+//             email: widget.data['email'],
+//             country: widget.data['country'],
+//             postCode: widget.data['postCode'],
+//             productDetails: cartItems,
+//           );
+//       //you can send some data from the response to an API or use webhook to record the payment on a database
+//       setState(() {});
+//       Get.to(const SuccessPage());
+//       cartItems.clear();
+//       box.put('cart', cartItems);
+//     } else {
+//       //the payment wasn't successsful or the user cancelled the payment
+//       toast('Payment Failed!!!');
+//       return;
+//     }
+//   }
 
   String email = box.get('email');
   String title = box.get('title');
@@ -187,7 +184,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                   },
                 ),
                 title: const Text(
-                  'Pay with Paypal',
+                  'Pay with Paystack',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -367,7 +364,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                             ? Text(
                                 // '₦ ${total}',
                                 '₦ ' + formatter.format(widget.data['total']),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 16,
                                     fontFamily: 'Roboto',
                                     color: mainColor,
@@ -377,7 +374,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                                 '₦ ' +
                                     formatter
                                         .format(widget.data['totalAmount']),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 16,
                                     fontFamily: 'Roboto',
                                     color: mainColor,
@@ -390,12 +387,21 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                       text: 'Order',
                       onPressed: () {
                         enable == 0
-                            ? chargeCard()
+                            ? ref.read(productControllerProvider).payStackPay(
+                                context: context,
+                                name: user.displayName,
+                                email: widget.data['email'],
+                                amount: widget.data['shippingFee'] != ''
+                                    ? widget.data['total'] * 100
+                                    : widget.data['totalAmount'] * 100)
                             : enable == 1
                                 ? ref
                                     .read(productControllerProvider)
                                     .payWithFlutterWave(
                                       username: user.displayName,
+                                      amount: widget.data['shippingFee'] != ''
+                                          ? widget.data['total'] * 100
+                                          : widget.data['totalAmount'] * 100,
                                       quantity: quantity,
                                       totalAmount: widget.data['totalAmount'],
                                       phoneNumber: widget.data['phoneNumber'],
