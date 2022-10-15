@@ -298,7 +298,7 @@ class AuthRepository {
       String phone}) async {
     CollectionReference collectionReference = firestore.collection('Users');
     try {
-      collectionReference.doc(getUser().uid).update(
+      await collectionReference.doc(getUser().uid).update(
         {
           'address': address,
           'postCode': post,

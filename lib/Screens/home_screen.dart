@@ -428,9 +428,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             ),
                                             Spacer(),
                                             GestureDetector(
-                                              onTap: () => Get.to(ProductList(
-                                                data: product,
-                                              )),
+                                              onTap: () =>
+                                                  Get.to(ProductList()),
                                               child: const Text(
                                                 "SEE ALL",
                                                 style: TextStyle(

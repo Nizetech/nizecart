@@ -1,3 +1,5 @@
+// import 'dart:io';
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutterwave_standard/core/flutterwave.dart';
+// import 'package:flutterwave_standard/core/flutterwave.dart';
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:flutterwave_standard/models/responses/charge_response.dart';
 import 'package:get/get.dart';
@@ -16,8 +18,8 @@ import 'package:nizecart/Screens/image_input.dart';
 import 'package:nizecart/Screens/success_screen.dart';
 import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/keys/keys.dart';
-import 'package:paystack_manager/models/transaction.dart';
-import 'package:paystack_manager/paystack_pay_manager.dart';
+// import 'package:paystack_manager/models/transaction.dart';
+// import 'package:paystack_manager/paystack_pay_manager.dart';
 
 import '../Widget/component.dart';
 
@@ -306,17 +308,30 @@ class ProductRepository {
       );
 
       final Flutterwave flutterwave = Flutterwave(
-        context: context,
-        publicKey: FLWPUBKEY,
-        currency: "NGN",
-        redirectUrl: "my_redirect_url",
-        txRef: trxId,
-        amount: amount,
-        customer: customer,
-        paymentOptions: "ussd, card, barter",
-        customization: Customization(title: "Add Money"),
-        isTestMode: true,
-      );
+          context: context,
+          publicKey: FLWPUBKEY,
+          currency: "NGN",
+          redirectUrl: "my_redirect_url",
+          txRef: trxId,
+          amount: amount,
+          customer: customer,
+          paymentOptions: "ussd, card, barter",
+          customization: Customization(title: "Add Money",logo: 'NizeCart'),
+          isTestMode: true,
+          style: FlutterwaveStyle(
+              appBarText: 'Payment',
+              appBarTitleTextStyle: const TextStyle(
+                  color: white,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
+                  fontSize: 20),
+              appBarColor: secColor,
+              buttonColor: mainColor,
+              buttonTextStyle: const TextStyle(
+                  color: white,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
+                  fontSize: 16)));
 
       ChargeResponse response = await flutterwave.charge();
       if (response.success) {
@@ -351,74 +366,74 @@ class ProductRepository {
     }
   }
 
-  // Pay with paystack
-  void payStackPay(
-      {BuildContext context, String email, String name, String amount}) {
-    try {
-      PaystackPayManager(context: context)
-        // Don't store your secret key on users device.
-        // Make sure this is retrieve from your server at run time
-        ..setSecretKey(PayStackKey)
-        //accepts widget
-        ..setCompanyAssetImage(Image(
-          image: AssetImage("assets/NIZECART.png"),
-        ))
-        ..setAmount(amount)
-        // ..setReference("your-unique-transaction-reference")
-        ..setReference(DateTime.now().millisecondsSinceEpoch.toString())
-        ..setCurrency("NGN")
-        ..setEmail(email)
-        // ..reference()
-        ..setFirstName(name)
-        // ..setLastName("Bako")
-        ..setMetadata(
-          {
-            "custom_fields": [
-              {
-                "value": "snapTask",
-                "display_name": "Payment to",
-                "variable_name": "payment_to"
-              }
-            ]
-          },
-        )
-        ..onSuccesful(_onPaymentSuccessful)
-        ..onPending(_onPaymentPending)
-        ..onFailed(_onPaymentFailed)
-        ..onCancel(_onPaymentCancelled)
-        ..initialize();
-    } catch (error) {
-      print("Payment Error ==> $error");
-    }
-  }
+//   // Pay with paystack
+  // void payStackPay(
+  //     {BuildContext context, String email, String name, String amount}) {
+  //   try {
+  //     PaystackPayManager(context: context)
+  //       // Don't store your secret key on users device.
+  //       // Make sure this is retrieve from your server at run time
+  //       ..setSecretKey(PayStackKey)
+  //       //accepts widget
+  //       ..setCompanyAssetImage(Image(
+  //         image: AssetImage("assets/NIZECART.png"),
+  //       ))
+  //       ..setAmount(amount)
+  //       // ..setReference("your-unique-transaction-reference")
+  //       ..setReference(DateTime.now().millisecondsSinceEpoch.toString())
+  //       ..setCurrency("NGN")
+  //       ..setEmail(email)
+  //       // ..reference()
+  //       ..setFirstName(name)
+  //       // ..setLastName("Bako")
+  //       ..setMetadata(
+  //         {
+  //           "custom_fields": [
+  //             {
+  //               "value": "snapTask",
+  //               "display_name": "Payment to",
+  //               "variable_name": "payment_to"
+  //             }
+  //           ]
+  //         },
+  //       )
+  //       ..onSuccesful(_onPaymentSuccessful)
+  //       ..onPending(_onPaymentPending)
+  //       ..onFailed(_onPaymentFailed)
+  //       ..onCancel(_onPaymentCancelled)
+  //       ..initialize();
+  //   } catch (error) {
+  //     print("Payment Error ==> $error");
+  //   }
+  // }
 
-  void _onPaymentSuccessful() {
-    successToast('Order Successfull');
-    Get.to(SuccessPage());
-  }
+  // void _onPaymentSuccessful() {
+  //   successToast('Order Successfull');
+  //   Get.to(SuccessPage());
+  // }
 
-  void _onPaymentPending() {
-    loading('Pending');
-  }
+  // void _onPaymentPending() {
+  //   loading('Pending');
+  // }
 
-  void _onPaymentFailed() {
-    toast('Order Failed!!');
-    return;
-  }
+  // void _onPaymentFailed() {
+  //   toast('Order Failed!!');
+  //   return;
+  // }
 
-  void _onPaymentCancelled() {
-    toast('Order cancelled');
-    return;
-  }
+  // void _onPaymentCancelled() {
+  //   toast('Order cancelled');
+  //   return;
+  // }
 
-// Get product
-  Future<Map> getProduct() async {
-    CollectionReference products = firestore.collection('Products');
-    final productID = '${DateTime.now().millisecondsSinceEpoch}';
-    DocumentSnapshot snapshot = await products.doc(productID).get();
-    // Map data = snapshot.data();
-    return snapshot.data();
-  }
+// // Get product
+//   Future<Map> getProduct() async {
+//     CollectionReference products = firestore.collection('Products');
+//     final productID = '${DateTime.now().millisecondsSinceEpoch}';
+//     DocumentSnapshot snapshot = await products.doc(productID).get();
+//     // Map data = snapshot.data();
+//     return snapshot.data();
+//   }
 
   // remove favProduct
   void removeFavorite(String productID) async {

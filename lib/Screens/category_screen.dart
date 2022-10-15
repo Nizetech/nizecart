@@ -28,26 +28,33 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
       ),
       backgroundColor: white,
       body: FutureBuilder(
-        future: ref
-            .read(productControllerProvider)
-            .productCategory(categories.first),
+        future: ref.read(productControllerProvider).getProduct(),
+        // .productCategory(categories.first),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return loader();
           } else {
-            List product = snapshot.data;
+            List<Map> product = snapshot.data;
+            List<Map> cat = product;
             print("Category: $product");
             return ListView.separated(
               itemCount: categories.length,
               separatorBuilder: (ctx, i) => Divider(),
               itemBuilder: (ctx, i) {
                 return ListTile(
-                  onTap: () => Get.to(
-                    ProductList(
-                      data: product,
-                      productName: categories[i],
-                    ),
-                  ),
+                  onTap: () {
+                    setState(() {
+                      cat = product
+                          .where((element) => element['tag'] == categories[i])
+                          .toList();
+                      Get.to(
+                        ProductList(
+                          data: cat,
+                          productName: categories[i],
+                        ),
+                      );
+                    });
+                  },
                   contentPadding: EdgeInsets.only(left: 10, right: 10),
                   title: Text(
                     categories[i],

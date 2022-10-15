@@ -122,11 +122,11 @@ class ProductController {
   }
 
   // PayWithPaystack
-  void payStackPay(
-      {BuildContext context, String email, String name, String amount}) {
-    return productRepository.payStackPay(
-        context: context, email: email, name: name, amount: amount);
-  }
+  // void payStackPay(
+  //     {BuildContext context, String email, String name, String amount}) {
+  //   return productRepository.payStackPay(
+  //       context: context, email: email, name: name, amount: amount);
+  // }
 
   // Pay with flutterwave
   Future<Map<String, dynamic>> payWithFlutterWave({

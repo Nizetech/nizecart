@@ -276,7 +276,7 @@ class _MainViewState extends ConsumerState<MainView> {
                               .removeFavorite(widget.data['favId']);
                           setState(() {});
                         }
-                        showToast('Added to favorite');
+                        // showToast('Added to favorite');
                       },
                       icon: Icon(
                         // fav.contains(

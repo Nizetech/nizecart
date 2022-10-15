@@ -1,4 +1,5 @@
 List<String> categories = [
+  'All',
   'Grocery',
   'Homes & Garden',
   'Phones & Tablets',
