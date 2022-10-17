@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nizecart/Models/messages.dart';
 import 'package:nizecart/Models/user_model.dart';
 import 'package:nizecart/Widget/component.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../Models/chat_model.dart';
 
@@ -28,6 +31,8 @@ class ChatRepository {
   String get userId {
     return auth.currentUser.uid;
   }
+
+  User user;
 
   // Chat Id
   String getChatID(String Id, String adminID) {
@@ -105,7 +110,8 @@ class ChatRepository {
   // Send massage
   Future<void> sendMessage({
     String text,
-    // String receiver,
+    String username,
+    String photoUrl,
     // String receiverToken,
   }) async {
     try {
@@ -120,6 +126,8 @@ class ChatRepository {
       data['sender'] = userId;
       data['admin_receiver'] = receiver;
       data['text'] = text;
+      data['username'] = username;
+      data['photoUrl'] = photoUrl;
       data['users'] = [userId, receiver];
       data['chatID'] = chatID;
 
@@ -130,16 +138,26 @@ class ChatRepository {
           .set(data);
 
       //Save last message
-      // await chatsCollection.doc(chatID).set({
-      //   'lastMessage': text,
-      //   'lastMessageDate': FieldValue.serverTimestamp(),
-      //   'users': [userId, receiver],
-      //   'unreadMessages': {receiver: FieldValue.increment(1)},
-      // }, SetOptions(merge: true));
-      print('message Sent: $data');
+      await chatsCollection.doc(chatID).set(
+        {
+          'lastMessage': text,
+          'photoUrl': photoUrl,
+          'username': username,
+          'lastMessageDate': FieldValue.serverTimestamp(),
+          'users': [userId, receiver],
+          'unreadMessages': {
+            receiver: FieldValue.increment(1),
+          },
+        },
+
+        //  SetOptions(merge: true)
+      );
+      // print('message Sent: $data');
       //  NotifService().sendMessageNotif(token: receiverToken, message: text);
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
+
+  String uid = Uuid().v1();
 }

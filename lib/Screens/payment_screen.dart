@@ -116,6 +116,13 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
 //     }
 //   }
 
+// Flutter wave Test Card
+// Card No 5531886652142950
+//Cvv 564
+//Pin 3310
+// Exp 09/32
+// OTP 12345
+
   String email = box.get('email');
   String title = box.get('title');
   int quantity = box.get('quantity');
@@ -123,7 +130,8 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
   @override
   Widget build(BuildContext context) {
     bool isShipping = widget.data['shippingFee'] != '';
-    print('runtime type ${widget.data['amount'].runtimeType}');
+    print('runtime type ${widget.data['total']}');
+    print('runtime type ${widget.data['totalAmount']}');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -401,9 +409,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                               username: user.displayName,
                               amount: isShipping
                                   ? widget.data['total'].toString()
-                                  : formatter
-                                      .format(widget.data['totalAmount'])
-                                      .toString(),
+                                  : widget.data['totalAmount'].toString(),
                               quantity: quantity,
                               totalAmount: widget.data['totalAmount'],
                               phoneNumber: widget.data['phoneNumber'],

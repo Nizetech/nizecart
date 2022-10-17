@@ -35,6 +35,8 @@ class _ProductListState extends ConsumerState<ProductList> {
   Widget build(BuildContext context) {
     List<Map> product = widget.data;
     List<Map> cat = product;
+    List<Map> category;
+    // print('Category cat $cat');
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.productName ?? 'Products'),
@@ -49,7 +51,10 @@ class _ProductListState extends ConsumerState<ProductList> {
               if (!snapshot.hasData) {
                 return loader();
               } else {
-                cat = snapshot.data;
+                List<Map> snap = snapshot.data;
+                category = snap;
+                // print('Snap Category cat $category');
+
                 return Column(
                   children: [
                     SizedBox(
@@ -66,15 +71,21 @@ class _ProductListState extends ConsumerState<ProductList> {
                             onTap: () {
                               setState(() {
                                 selected = index;
-                                if (categories[index] == 'All') {
-                                  cat = product;
-                                }
-                                {
-                                  cat = product
+                                // });
+                                if (selected == 0 ||
+                                    categories[index] == 'All') {
+                                  // setState(() {
+                                  category = snap;
+                                  // });
+                                } else {
+                                  // setState(() {
+
+                                  category = snap
                                       .where((element) =>
                                           element['tag'] == categories[index])
                                       .toList();
                                 }
+                                print('Category cat $category');
                               });
                             },
                             child: Container(
@@ -107,7 +118,8 @@ class _ProductListState extends ConsumerState<ProductList> {
                     ),
                     Expanded(
                       child: GridView.builder(
-                        itemCount: cat.length,
+                        itemCount:
+                            widget.data != null ? cat.length : category.length,
                         padding:
                             EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                         shrinkWrap: true,
@@ -119,18 +131,8 @@ class _ProductListState extends ConsumerState<ProductList> {
                           crossAxisCount: 2,
                         ),
                         itemBuilder: (ctx, i) {
-                          // Map data = widget.data[i];
-                          // setState(() {
-                          //   cat = product
-                          //       .where((element) => element['tag'] == categories[i]);
-                          // });
-
                           return MainView(
-                              data:
-                                  //  selected == 0 ?
-                                  cat[i]
-                              // : cat[i],
-                              );
+                              data: widget.data != null ? cat[i] : category[i]);
                         },
                       ),
                     ),

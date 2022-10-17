@@ -1,5 +1,6 @@
 // import 'dart:io';
 
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -128,8 +129,7 @@ class ProductRepository {
     CollectionReference products = firestore.collection('Products');
     try {
       QuerySnapshot snaps = await products
-          .where('title'.toLowerCase().contains(query),
-              isEqualTo: query.toLowerCase())
+          .where('title'.toLowerCase(), isEqualTo: query.toLowerCase())
           .get();
 
       return snaps.docs.map((e) => e.data() as Map).toList();
@@ -164,6 +164,7 @@ class ProductRepository {
       return imageUrl;
     } catch (e) {
       toast(e.toString());
+      return '';
     }
   }
 
@@ -299,39 +300,43 @@ class ProductRepository {
     BuildContext context,
   }) async {
     try {
-      String trxId = DateTime.now().millisecondsSinceEpoch.toString();
+      String ref = DateTime.now().millisecondsSinceEpoch.toString();
       User user = FirebaseAuth.instance.currentUser;
       final Customer customer = Customer(
         name: user.displayName,
         phoneNumber: user.phoneNumber,
         email: user.email,
       );
-
+      log('amount $amount');
       final Flutterwave flutterwave = Flutterwave(
-          context: context,
-          publicKey: FLWPUBKEY,
-          currency: "NGN",
-          redirectUrl: "my_redirect_url",
-          txRef: trxId,
-          amount: amount,
-          customer: customer,
-          paymentOptions: "ussd, card, barter",
-          customization: Customization(title: "Add Money",logo: 'NizeCart'),
-          isTestMode: true,
-          style: FlutterwaveStyle(
-              appBarText: 'Payment',
-              appBarTitleTextStyle: const TextStyle(
-                  color: white,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Poppins',
-                  fontSize: 20),
-              appBarColor: secColor,
-              buttonColor: mainColor,
-              buttonTextStyle: const TextStyle(
-                  color: white,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Poppins',
-                  fontSize: 16)));
+        context: context,
+        publicKey: FLWPUBKEY,
+        currency: "NGN",
+        redirectUrl: "my_redirect_url",
+        txRef: ref,
+        amount: amount,
+        customer: customer,
+        paymentOptions: "ussd, card, barter",
+        customization: Customization(title: "Add Money"),
+        isTestMode: true,
+        style: FlutterwaveStyle(
+          appBarText: 'Payment',
+          appBarTitleTextStyle: const TextStyle(
+            color: white,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Poppins',
+            fontSize: 20,
+          ),
+          appBarColor: secColor,
+          buttonColor: mainColor,
+          buttonTextStyle: const TextStyle(
+            color: white,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Poppins',
+            fontSize: 16,
+          ),
+        ),
+      );
 
       ChargeResponse response = await flutterwave.charge();
       if (response.success) {

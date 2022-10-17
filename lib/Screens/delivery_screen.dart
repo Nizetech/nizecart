@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
@@ -9,6 +13,7 @@ import 'package:nizecart/Models/user_model.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
 import 'package:nizecart/Screens/map_screen.dart';
 import 'package:nizecart/Widget/component.dart';
+import 'package:nizecart/services/service_controller.dart';
 
 class DeliveryScreen extends ConsumerStatefulWidget {
   Map user;
@@ -32,8 +37,48 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
   // Future<Map> user;
   String userAddress = '';
   // UserModel user;
+
   User user;
+  Position currentPosition;
+  String currentAddress;
   String countryName = 'United State';
+
+  getCurrentLocation() {
+    Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+            forceAndroidLocationManager: true)
+        .then((Position position) {
+      if (mounted) {
+        setState(() {
+          currentPosition = position;
+        });
+      }
+      print(' my Cuurent position $currentPosition');
+      print('my current address $currentAddress');
+
+      getAddressFromLatLng();
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  getAddressFromLatLng() async {
+    try {
+      // to translate latititude and longitude into an address
+      List<Placemark> p = await placemarkFromCoordinates(
+          currentPosition.latitude, currentPosition.longitude);
+
+      Placemark place = p[0];
+
+      setState(() {
+        currentAddress =
+            "${place.street}, ${place.administrativeArea}, ${place.subLocality}, ${place.name}, ${place.subThoroughfare}, ${place.locality}, ${place.postalCode}, ${place.country}";
+      });
+      log(currentAddress);
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   void initState() {
@@ -50,6 +95,14 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
     address.text = widget.user['address'];
     phone.text = widget.user['phoneNumber'];
     print('my user: ${widget.user}');
+
+    ref.read(serviceControllerProvider).getUserAddress().then((value) {
+      if (mounted) {
+        setState(() {
+          userAddress = value;
+        });
+      }
+    });
 
     super.initState();
   }
@@ -71,7 +124,11 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
             children: [
               SizedBox(height: 20),
               GestureDetector(
-                onTap: () => Get.to(MapScreen()),
+                onTap: () {
+                  print('tapped');
+                  print('tapped me $userAddress');
+                  // Get.to(MapScreen());
+                },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   width: double.infinity,

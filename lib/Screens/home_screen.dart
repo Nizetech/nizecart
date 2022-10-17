@@ -93,24 +93,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       backgroundColor: white,
       body: FutureBuilder(
           future: Future.wait([
-            ref
-                .read(productControllerProvider)
-                .searchProduct(search.text.toLowerCase()),
             ref.read(productControllerProvider).getProduct(),
+            ref.read(productControllerProvider).searchProduct(search.text),
             ref.read(authtControllerProvider).getUserDetails(),
           ]),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return shimmer(context);
             } else {
-              List searchProduct = snapshot.data[0];
-              List product = snapshot.data[1];
+              List product = snapshot.data[0];
+              List searchProduct = snapshot.data[1];
               Map user = snapshot.data[2];
               String data = user['photoUrl'];
+              List<Map> cat = product;
 
-              print('my Products: ${product}');
+              // print('my Products: ${product}');
 
-              print('my search $searchProduct');
+              // print('my search $searchProduct');
               // if(user == null){
 
               // }
@@ -195,38 +194,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               height: 49,
                               width: MediaQuery.of(context).size.width * .7,
                               child: TextField(
-                                  controller: search,
-                                  cursorColor: mainColor,
-                                  onChanged: (value) {
-                                    issearch(value);
-                                  },
-                                  decoration: InputDecoration(
-                                    hintText: 'Search for a product',
-                                    filled: true,
-                                    isDense: true,
-                                    suffixIcon: Container(
-                                      width: 50,
-                                      height: 47,
-                                      decoration: BoxDecoration(
-                                        color: mainColor.withOpacity(.7),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: const Icon(
-                                        Iconsax.search_normal,
-                                        size: 20,
-                                        color: Colors.white,
-                                      ),
+                                autofocus: false,
+                                controller: search,
+                                cursorColor: mainColor,
+                                onChanged: (value) {
+                                  issearch(value);
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'Search for a product',
+                                  filled: true,
+                                  isDense: true,
+                                  suffixIcon: Container(
+                                    width: 50,
+                                    height: 47,
+                                    decoration: BoxDecoration(
+                                      color: mainColor.withOpacity(.7),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                    fillColor: Colors.white,
-                                    prefixIconColor: mainColor,
-                                    iconColor: mainColor,
-                                    enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: BorderSide.none),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                        borderSide: BorderSide.none),
-                                  )),
+                                    child: const Icon(
+                                      Iconsax.search_normal,
+                                      size: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  fillColor: Colors.white,
+                                  prefixIconColor: mainColor,
+                                  iconColor: mainColor,
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: BorderSide.none),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: BorderSide.none),
+                                ),
+                              ),
                             ),
                             Cart(),
                           ],
@@ -235,9 +236,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   isSearch
-                      ?
-                      // print(snapshot.data);
-                      searchProduct.isEmpty
+                      ? search.text !=
+                              cat.where(
+                                  (element) => element['title'] == search.text)
+                          // ?
+                          // print(snapshot.data);
+                          // searchProduct.isEmpty
                           ? const Padding(
                               padding: EdgeInsets.all(20),
                               child: Text(
@@ -248,7 +252,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             )
                           : Expanded(
                               child: GridView.builder(
-                                itemCount: searchProduct.length,
+                                itemCount: cat.length,
                                 padding: EdgeInsets.symmetric(
                                     vertical: 20, horizontal: 10),
                                 shrinkWrap: true,

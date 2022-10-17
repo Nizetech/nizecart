@@ -33,11 +33,13 @@ class ChatController {
 
   Future<void> sendMessage({
     String text,
-    // String receiver,
-    // String receiverToken,
+    String username,
+    String photoUrl,
   }) {
     return chatRepository.sendMessage(
       text: text,
+      username: username,
+      photoUrl: photoUrl,
     );
   }
 }

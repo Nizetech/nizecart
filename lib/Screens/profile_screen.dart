@@ -100,7 +100,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: BackButton(color: Colors.white),
+        // leading: SizedBox(),
         backgroundColor: Colors.transparent,
       ),
       backgroundColor: white,

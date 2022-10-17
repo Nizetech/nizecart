@@ -34,6 +34,7 @@ dependencies:
   timeago: ^3.2.2
   persistent_bottom_nav_bar_v2: ^4.2.5
   flutterwave_standard: ^1.0.4
+  uuid: ^3.0.6
   # paystack_manager: 
   # flutter_paystack:
   #  git:

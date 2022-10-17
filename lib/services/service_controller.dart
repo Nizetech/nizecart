@@ -10,4 +10,8 @@ class ServiceController {
   final ServiceRepository serviceRepository;
   final ProviderRef ref;
   ServiceController({this.serviceRepository, this.ref});
+
+  Future<String> getUserAddress() {
+    return serviceRepository.getUserAddress();
+  }
 }

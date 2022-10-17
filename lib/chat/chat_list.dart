@@ -28,6 +28,7 @@ class _ChatListState extends ConsumerState<ChatList> {
   Widget build(BuildContext context) {
     bool isMe =
         widget.messageData['sender'] == FirebaseAuth.instance.currentUser.uid;
+
     return isMe
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -71,7 +72,9 @@ class _ChatListState extends ConsumerState<ChatList> {
               //                 .add_H()
               //                 .format(messageData.timeSent);
               Text(
-                time(widget.messageData['date']),
+                widget.messageData != null
+                    ? time(widget.messageData['date'])
+                    : SizedBox(),
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 10,
@@ -102,8 +105,10 @@ class _ChatListState extends ConsumerState<ChatList> {
                   child: Column(
                     children: [
                       Text(
-                        widget.messageData['text'],
-                        style: TextStyle(
+                        widget.messageData != null
+                            ? widget.messageData['text']
+                            : SizedBox(),
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -118,7 +123,9 @@ class _ChatListState extends ConsumerState<ChatList> {
               //                 .add_H()
               //                 .format(messageData.timeSent);
               Text(
-                format(widget.messageData['date']),
+                widget.messageData != null
+                    ? format(widget.messageData['date'])
+                    : SizedBox(),
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 10,

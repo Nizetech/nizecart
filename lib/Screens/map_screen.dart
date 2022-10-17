@@ -8,6 +8,7 @@ import 'package:nizecart/Widget/component.dart';
 import 'place.dart';
 
 class MapScreen extends StatefulWidget {
+  final String location;
   final bool isSelecting;
   static const DefaultZoom = 18.4;
   static const MyLocation = LatLng(
@@ -20,6 +21,7 @@ class MapScreen extends StatefulWidget {
   LatLng value;
 
   MapScreen({
+    this.location,
     this.initZoom = DefaultZoom,
     this.initCoordinates = MyLocation,
     this.isSelecting = false,
@@ -31,6 +33,12 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   TextEditingController address = TextEditingController();
+  @override
+  void initState() {
+    address.text = widget.location;
+    super.initState();
+  }
+
   LatLng pickedLocation;
 
   final Completer<GoogleMapController> mapController = Completer();
@@ -77,10 +85,10 @@ class _MapScreenState extends State<MapScreen> {
 
   static const CameraPosition initialLocation = CameraPosition(
     target: LatLng(
-      6.3344143,
-      5.5998271,
+      6.334281960962532,
+      5.599237717688084,
     ),
-    zoom: 20,
+    zoom: 18,
   );
 
   @override
@@ -128,8 +136,9 @@ class _MapScreenState extends State<MapScreen> {
                   // mapType: MapType.hybrid,
                   onMapCreated: onMapCreated,
                   onCameraMove: (CameraPosition newPosition) {
-                    print(newPosition.target.toJson());
-                    widget.value = newPosition.target;
+                    // print(newPosition.target.toJson());
+                    // widget.value = newPosition.target;
+                    _determinePosition();
                   },
                   myLocationEnabled: true,
                   indoorViewEnabled: true,
@@ -186,6 +195,7 @@ class _MapScreenState extends State<MapScreen> {
               CustomTextField(
                 controller: address,
                 hint: 'Address',
+                enable: false,
               ),
               SizedBox(height: 20),
               Padding(

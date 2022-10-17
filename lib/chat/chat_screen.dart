@@ -28,7 +28,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   TextEditingController message = TextEditingController();
-  // final ScrollController messageController = ScrollController();
+  final ScrollController messageController = ScrollController();
 
   static var box = Hive.box('name');
   String name = box.get('displayName');
@@ -47,10 +47,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   // String get uid => null;
   void sendTextMessage() {
-    ref.read(chatControllerProvider).sendMessage(
-          text: message.text.trim(),
-        );
-    message.clear();
+    if (message.text != '') {
+      ref.read(chatControllerProvider).sendMessage(
+            text: message.text.trim(),
+            username: name,
+            photoUrl: widget.user['photoUrl'],
+          );
+      message.clear();
+    } else {
+      return;
+    }
   }
 
   // String userId = FirebaseAuth.instance.currentUser.uid;
@@ -97,12 +103,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 2),
-                const Text("Online",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: mainColor,
-                    ))
+                const Text(
+                  "Online",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: mainColor,
+                  ),
+                ),
               ],
             )
           ],
@@ -129,7 +137,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   //     messageController.position.maxScrollExtent,
                   //   );
                   // });
-                  return messages.isEmpty
+                  return messages.isEmpty || messages == null
                       ? const Center(
                           child: Text(
                             'No Messages Yet',
@@ -141,13 +149,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         )
                       : ListView.builder(
                           padding: EdgeInsets.symmetric(vertical: 10),
-                          // controller: messageController,
+                          controller: messageController,
                           // separatorBuilder: (ctx, i) => SizedBox(height: 10),
                           shrinkWrap: true,
                           // scrollDirection: Axis.vertical,
                           itemCount: messages.length,
                           itemBuilder: (ctx, i) {
-                            return ChatList(messageData: messages[i]);
+                            Map data = messages[i];
+                            return ChatList(messageData: data);
                           },
                         );
                 }
@@ -162,7 +171,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   color: Colors.white,
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(blurRadius: 3, color: Colors.grey),
                   ],
                 ),
@@ -199,7 +208,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               radius: 25,
               child: GestureDetector(
                 onTap: sendTextMessage,
-                child: Icon(
+                child: const Icon(
                   Icons.send,
                   color: Colors.white,
                 ),
