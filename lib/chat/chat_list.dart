@@ -36,7 +36,7 @@ class _ChatListState extends ConsumerState<ChatList> {
               Align(
                 alignment: Alignment.centerRight,
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                  padding: EdgeInsets.all(15),
                   constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * .7),
                   decoration: BoxDecoration(
@@ -50,64 +50,8 @@ class _ChatListState extends ConsumerState<ChatList> {
                   ),
                   child: Column(
                     children: [
-                      // Text(
-                      //   userName,
-                      //   style: TextStyle(
-                      //       fontWeight: FontWeight.bold, color: Colors.white),
-                      // ),
                       Text(
                         widget.messageData['text'],
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 5),
-              // DateFormat()
-              //                 .add_H()
-              //                 .format(messageData.timeSent);
-              Text(
-                widget.messageData != null
-                    ? time(widget.messageData['date'])
-                    : SizedBox(),
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 10),
-            ],
-          )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  padding: EdgeInsets.all(15),
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * .7),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(2),
-                      topRight: Radius.circular(27),
-                      bottomLeft: Radius.circular(27),
-                      bottomRight: Radius.circular(27),
-                    ),
-                    color: mainColor.withOpacity(.3),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        widget.messageData != null
-                            ? widget.messageData['text']
-                            : SizedBox(),
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
@@ -118,7 +62,57 @@ class _ChatListState extends ConsumerState<ChatList> {
                   ),
                 ),
               ),
-              SizedBox(height: 13),
+              SizedBox(height: 5),
+              Text(
+                widget.messageData != null
+                    ? time(widget.messageData['date'])
+                    : '',
+                style: const TextStyle(
+                  color: Colors.black54,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 10),
+            ],
+          )
+          ///
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * .7),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(2),
+                      topRight: Radius.circular(5),
+                      bottomLeft: Radius.circular(5),
+                      bottomRight: Radius.circular(5),
+                    ),
+                    color: mainColor.withOpacity(.3),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.messageData != null
+                            ? time(widget.messageData['date'])
+                            : '',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
               // DateFormat()
               //                 .add_H()
               //                 .format(messageData.timeSent);

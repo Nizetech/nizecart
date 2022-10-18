@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +14,7 @@ import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Models/user_model.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
 import 'package:nizecart/Screens/delivery_screen.dart';
+import 'package:nizecart/services/service_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import '../Widget/component.dart';
 
@@ -48,8 +51,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     for (var element in cartItems) {
       totalAmount += element['price'] * element['qty'];
       // print(totalAmount);
-      print('runt time ${element['price'].runtimeType}');
-      print('runt time ${element['qty'].runtimeType}');
+      // print('runt time ${element['price'].runtimeType}');
+      // print('runt time ${element['qty'].runtimeType}');
     }
     return totalAmount;
   }
@@ -65,15 +68,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   Map user;
+  Map locUser = box.get('user');
+  int locAmount = box.get('locAmount');
 
   @override
   Widget build(BuildContext context) {
-    // Map data = cartItems[0];
-    // print(cartItems);
-    // print('Total Amount: $totalAmount');
-    // print('Total Cart: ${cartItems}');
-    // print('TotalQuantity $totalQuantity');
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -118,9 +117,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               : FutureBuilder(
                   future: ref.read(authtControllerProvider).getUserDetails(),
                   builder: (context, snapshot) {
-                    print('my data ${snapshot.data}');
                     // UserModel
                     user = snapshot.data;
+                    log('my data ${user}');
                     return Column(
                       children: [
                         Container(
@@ -399,13 +398,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                   ),
                                                   GestureDetector(
                                                     onTap: () async {
-                                                      // cartItems.elementAt(i)['quantity'] == 0
-                                                      //     ? null
-                                                      //      :
-
-                                                      // await _deleteCacheDir();
-
-                                                      // box.deleteAt(cartItems[i]);
                                                       cartItems.removeAt(i);
                                                       box.put(
                                                           'cart', cartItems);
@@ -453,13 +445,20 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           onPressed: cartItems.isEmpty
               ? null
               : () {
-                  return Get.to(
+                  // Map locUser = user;
+                  log('tapped $user');
+                  box.put('locAmount', totalAmount);
+                  Get.to(
                     // CheckOutScreen(totalAmount: totalAmount),
                     DeliveryScreen(
                       totalAmount: totalAmount,
                       user: user,
+                      // location: userAddress,
                     ),
                   );
+                  print('my amount: $locAmount');
+                  print('my user: $locUser');
+                  print('my user: $user');
                 },
         ),
       ),

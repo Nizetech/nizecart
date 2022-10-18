@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hive_flutter/adapters.dart';
 
 final serviceRepositoryProvider =
     Provider((ref) => ServiceRepository(ref: ref));
@@ -42,14 +43,17 @@ class ServiceRepository {
   Future<String> getUserAddress() async {
     try {
       Position position = await determinePosition();
-
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
+      Hive.box('name').put('lat', position.latitude);
+      Hive.box('name').put('lng', position.longitude);
+      print('my latitutde ${position.latitude}');
+      print('my longitude ${position.longitude}');
 
       Placemark place = placemarks[0];
 
       final address =
-          '${place.subLocality}, ${place.locality},${place.name},${place.subThoroughfare}, ${place.street}, ${place.administrativeArea}, ${place.country}';
+          ' ${place.street},${place.subLocality}, ${place.locality}, ${place.administrativeArea}, ${place.country}';
       return address;
     } catch (e) {
       debugPrint(e.toString());
