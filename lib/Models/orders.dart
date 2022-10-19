@@ -8,8 +8,8 @@ class OrderModel {
   final String title;
   final int quantity;
   final String address;
-  final String country;
-  final String city;
+  final String state;
+  final String lga;
   final String email;
   final String postCode;
   final String status;
@@ -29,8 +29,8 @@ class OrderModel {
     this.totalAmount,
     this.address,
     this.status,
-    this.city,
-    this.country,
+    this.lga,
+    this.state,
     this.trackNumber,
     this.email,
     this.postCode,
@@ -46,8 +46,8 @@ class OrderModel {
       'quantity': quantity,
       'phoneNumber': phoneNumber,
       'address': address,
-      'city': city,
-      'country': country,
+      'lga': lga,
+      'state': state,
       'email': email,
       'status': status,
       'postCode': postCode,
@@ -68,8 +68,8 @@ class OrderModel {
       phoneNumber: map['phoneNumber'],
       address: map['address'],
       status: map['status'],
-      city: map['city'],
-      country: map['country'],
+      lga: map['lga'],
+      state: map['state'],
       email: map['email'],
       postCode: map['postCode'],
       totalAmount: map['totalAmount'],

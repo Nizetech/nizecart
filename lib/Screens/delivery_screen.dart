@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 // import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Models/user_model.dart';
 import 'package:nizecart/Screens/checkout_screen.dart';
@@ -35,9 +36,9 @@ class DeliveryScreen extends ConsumerStatefulWidget {
 
 class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
   TextEditingController name = TextEditingController();
-  TextEditingController country = TextEditingController();
+  // TextEditingController state = TextEditingController();
   TextEditingController address = TextEditingController();
-  TextEditingController city = TextEditingController();
+  // TextEditingController lga = TextEditingController();
   TextEditingController post = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -49,12 +50,15 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
   User user;
   Position currentPosition;
   String currentAddress;
-  String countryName = 'United State';
+  // String countryName = 'United State';
   String userAddress = '';
 
   // static var box = Hive.box('name');
   // String location = box.get('location', defaultValue: '');
   bool isLocation = false;
+  String stateValue = '';
+  String lgaValue = '';
+  List<String> stateLga = [];
 
   @override
   void initState() {
@@ -71,11 +75,15 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
     address.text = widget.location ?? widget.user['address'];
     email.text = user.email;
     name.text = user.displayName;
-    country.text = widget.user['country'] ?? countryName;
-    city.text = widget.user['city'];
     post.text = widget.user['postCode'];
     phone.text = widget.user['phoneNumber'];
-    log('my userAddress: ${user.email}');
+    stateValue = widget.user['state'];
+    if (widget.user['state'] != null) {
+      stateLga.addAll(NigerianStatesAndLGA.getStateLGAs(widget.user['state']));
+    }
+
+    lgaValue = widget.user['lga'];
+    // log('my userAddress: ${user.email}');
 
     super.initState();
   }
@@ -90,9 +98,7 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
       'phoneNumber': widget.user['phoneNumber'],
       'city': widget.user['city'],
       'country': widget.user['country'],
-    }
-        // widget.user['phoneNumber'],
-        );
+    });
     box.put('userData', userData);
 
     return Scaffold(
@@ -148,45 +154,93 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                 enable: false,
               ),
               SizedBox(height: 20),
-              CustomTextField(
-                controller: country,
-                label: 'Country',
-
-                icon: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Text(
-                        widget.user['country'] != ''
-                            ? countryName
-                            : country.text,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
+              Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        hintText: 'State',
+                        filled: true,
+                        isDense: true,
+                        prefixIconColor: mainColor,
+                        fillColor: white,
+                        iconColor: mainColor,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey),
                         ),
+                        disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey)),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        showCountryPicker(
-                            context: context,
-                            showPhoneCode: true,
-                            onSelect: (Country country) {
-                              setState(() {
-                                countryName = country.displayNameNoCountryCode;
-                              });
-                            });
+                      items: NigerianStatesAndLGA.allStates
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              ))
+                          .toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          stateValue = val;
+                          stateLga.clear();
+                          lgaValue = null;
+                          stateLga
+                              .addAll(NigerianStatesAndLGA.getStateLGAs(val));
+                        });
                       },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: Colors.black,
-                        size: 25,
-                      ),
+                      value: stateValue,
                     ),
-                  ],
-                ),
-                // enable: false,
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    flex: 4,
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        // hintText: 'Local Govt Area',
+                        filled: true,
+                        isDense: true,
+                        prefixIconColor: mainColor,
+                        fillColor: white,
+                        iconColor: mainColor,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        disabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey)),
+                      ),
+                      items: stateLga
+                          .map(
+                            (state) => DropdownMenuItem(
+                              value: state,
+                              child: Text(state),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          lgaValue = val;
+                        });
+                      },
+                      value: lgaValue,
+                      hint: Text('Local Govt Area',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 13,
+                              color: Colors.black)),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 20),
               CustomTextField(
@@ -196,13 +250,13 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
               SizedBox(height: 20),
               Row(
                 children: [
-                  Expanded(
-                    child: CustomTextField(
-                      controller: city,
-                      label: 'Town/city',
-                    ),
-                  ),
-                  SizedBox(width: 10),
+                  // Expanded(
+                  //   child: CustomTextField(
+                  //     controller: lga,
+                  //     label: 'Town/city',
+                  //   ),
+                  // ),
+                  // SizedBox(width: 10),
                   Expanded(
                     child: CustomTextField(
                       controller: post,
@@ -220,9 +274,9 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
               SizedBox(height: 20),
               CustomButton(
                 onPressed: () async {
-                  if (country.text.trim().isEmpty ||
+                  if (stateValue.isEmpty ||
                       address.text.trim().isEmpty ||
-                      city.text.trim().isEmpty ||
+                      lgaValue.isEmpty ||
                       phone.text.trim().isEmpty ||
                       post.text.trim().isEmpty) {
                     toast('Please fill all fields');
@@ -230,10 +284,10 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
                   } else {
                     loader();
                     await ref.read(authtControllerProvider).updateDelivery(
-                          country: country.text.trim(),
+                          state: stateValue,
                           post: post.text.trim(),
                           address: address.text.trim(),
-                          city: city.text.trim(),
+                          lga: lgaValue,
                           phone: phone.text.trim(),
                         );
                     Get.to(

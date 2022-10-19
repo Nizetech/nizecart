@@ -97,21 +97,21 @@ class ProductController {
     int totalAmount,
     String phoneNumber,
     String address,
-    String city,
+    String lga,
     String email,
     String postCode,
-    String country,
+    String state,
     List productDetails,
   }) {
     return productRepository.orders(
       username: username,
-      city: city,
+      lga: lga,
       quantity: quantity,
       totalAmount: totalAmount,
       phoneNumber: phoneNumber,
       address: address,
       postCode: postCode,
-      country: country,
+      state: state,
       productDetails: productDetails,
     );
   }
@@ -136,10 +136,10 @@ class ProductController {
     int totalAmount,
     String phoneNumber,
     String address,
-    String city,
+    String lga,
     String email,
     String postCode,
-    String country,
+    String state,
     List productDetails,
     BuildContext context,
   }) {
@@ -150,10 +150,10 @@ class ProductController {
       totalAmount: totalAmount,
       phoneNumber: phoneNumber,
       address: address,
-      city: city,
+      lga: lga,
       email: email,
       postCode: postCode,
-      country: country,
+      state: state,
       productDetails: productDetails,
     );
   }

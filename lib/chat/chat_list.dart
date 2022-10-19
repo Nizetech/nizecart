@@ -36,7 +36,7 @@ class _ChatListState extends ConsumerState<ChatList> {
               Align(
                 alignment: Alignment.centerRight,
                 child: Container(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.symmetric(vertical: 7, horizontal: 8),
                   constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * .7),
                   decoration: BoxDecoration(
@@ -76,15 +76,15 @@ class _ChatListState extends ConsumerState<ChatList> {
               SizedBox(height: 10),
             ],
           )
-          ///
+
+        ///
         : Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Align(
-                alignment: Alignment.centerRight,
+                alignment: Alignment.centerLeft,
                 child: Container(
-                  padding: EdgeInsets.all(15),
-                  
+                  padding: EdgeInsets.symmetric(vertical: 7, horizontal: 8),
                   constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * .7),
                   decoration: BoxDecoration(
@@ -99,9 +99,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                   child: Column(
                     children: [
                       Text(
-                        widget.messageData != null
-                            ? time(widget.messageData['date'])
-                            : '',
+                        widget.messageData['text'],
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 15,
@@ -112,14 +110,11 @@ class _ChatListState extends ConsumerState<ChatList> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
-              // DateFormat()
-              //                 .add_H()
-              //                 .format(messageData.timeSent);
+              SizedBox(height: 5),
               Text(
                 widget.messageData != null
-                    ? format(widget.messageData['date'])
-                    : SizedBox(),
+                    ? time(widget.messageData['date'])
+                    : '',
                 style: TextStyle(
                   color: Colors.black54,
                   fontSize: 10,

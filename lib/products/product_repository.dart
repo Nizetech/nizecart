@@ -223,10 +223,10 @@ class ProductRepository {
     int totalAmount,
     String phoneNumber,
     String address,
-    String city,
+    String lga,
     String email,
     String postCode,
-    String country,
+    String state,
     List productDetails,
   }) async {
     final orderId = '${DateTime.now().microsecondsSinceEpoch}';
@@ -245,9 +245,9 @@ class ProductRepository {
         address: address,
         postCode: postCode,
         trackNumber: track,
-        city: city,
+        lga: lga,
         email: email,
-        country: country,
+        state: state,
         productDetails: productDetails,
       );
       await orderCredential.doc(orderId).set(orderData.toMap());
@@ -292,10 +292,10 @@ class ProductRepository {
     int totalAmount,
     String phoneNumber,
     String address,
-    String city,
+    String lga,
     String email,
     String postCode,
-    String country,
+    String state,
     List productDetails,
     BuildContext context,
   }) async {
@@ -346,10 +346,10 @@ class ProductRepository {
           totalAmount: totalAmount,
           phoneNumber: phoneNumber,
           address: address,
-          city: city,
+          lga: lga,
           email: email,
           postCode: postCode,
-          country: country,
+          state: state,
           productDetails: productDetails,
         );
         cartItems.clear();

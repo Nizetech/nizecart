@@ -330,7 +330,7 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
                                       SizedBox(height: 3),
                                       RichText(
                                           text: TextSpan(
-                                        text: '${widget.data['city']}, ',
+                                        text: '${widget.data['lga']}, ',
                                         style: const TextStyle(
                                           fontFamily: 'Poppins',
                                           color: Colors.black,
@@ -338,7 +338,8 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
                                         ),
                                         children: [
                                           TextSpan(
-                                            text: widget.data['country'],
+                                            text:
+                                                '${widget.data['state']} State, Nigeria.',
                                             style: const TextStyle(
                                               color: Colors.black,
                                             ),

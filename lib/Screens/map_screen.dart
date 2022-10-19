@@ -53,12 +53,6 @@ class _MapScreenState extends State<MapScreen> {
 
   // GoogleMapController mapController;
 
-// Used to translate address to longitude AND latitude
-// List<Location> locations = await locationFromAddress("Gronausestraat 710, Enschede");
-
-// Used longitude AND latitude into address
-// List<Placemark> placemarks = await placemarkFromCoordinates(52.2165157, 6.9437819);
-
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     Position currentPosition;
@@ -332,23 +326,48 @@ class _MapScreenState extends State<MapScreen> {
               CustomTextField(
                 controller: address,
                 hint: 'Address',
-                enable: false,
+                // enable: false,
               ),
               SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: CustomButton(
-                    text: 'Submit',
-                    onPressed: () {
-                      print('my amount: $locAmount');
-                      // print('my user: $locUser');
-                      Get.to(DeliveryScreen(
-                        user: userData,
-                        totalAmount: locAmount,
-                        location: address.text,
-                      ));
-                    }),
-              )
+                child: address.text != ''
+                    ? CustomButton(
+                        text: 'Submit',
+                        onPressed: () {
+                          print('my amount: $locAmount');
+
+                          // print('my user: $locUser');
+                          Get.to(DeliveryScreen(
+                            user: userData,
+                            totalAmount: locAmount,
+                            location: address.text,
+                          ));
+                        })
+                    : SizedBox(
+                        height: 44,
+                        width: double.infinity,
+                        child: TextButton(
+                          onPressed: null,
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.grey),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            )),
+                          ),
+                          child: Transform.scale(
+                            scale: .7,
+                            child: CircularProgressIndicator(
+                              color: white,
+                            ),
+                          ),
+                        ),
+                      ),
+                // );
+                //           ),
+              ),
             ],
           ),
         ));

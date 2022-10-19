@@ -292,9 +292,9 @@ class AuthRepository {
   // Update Address
   Future<bool> updateDelivery(
       {String address,
-      String country,
+      String state,
       String post,
-      String city,
+      String lga,
       String phone}) async {
     CollectionReference collectionReference = firestore.collection('Users');
     try {
@@ -302,8 +302,8 @@ class AuthRepository {
         {
           'address': address,
           'postCode': post,
-          'city': city,
-          'country': country,
+          'lga': lga,
+          'state': state,
           'phoneNumber': phone,
         },
       );

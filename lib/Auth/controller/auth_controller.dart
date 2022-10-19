@@ -80,15 +80,11 @@ class AuthController {
 
   // Change Address
   Future<bool> updateDelivery(
-      {String address,
-      String country,
-      String post,
-      String city,
-      String phone}) {
+      {String address, String state, String post, String lga, String phone}) {
     return authRepository.updateDelivery(
       address: address,
-      country: country,
-      city: city,
+      state: state,
+      lga: lga,
       post: post,
       phone: phone,
     );

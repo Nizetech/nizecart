@@ -611,6 +611,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  nigerian_states_and_lga:
+    dependency: "direct main"
+    description:
+      name: nigerian_states_and_lga
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   octo_image:
     dependency: transitive
     description:
