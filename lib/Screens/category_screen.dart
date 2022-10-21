@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -15,6 +17,7 @@ class CategoryScreen extends ConsumerStatefulWidget {
 }
 
 class _CategoryScreenState extends ConsumerState<CategoryScreen> {
+  List<Map> cat;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,25 +38,35 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
             return loader();
           } else {
             List<Map> product = snapshot.data;
-            List<Map> cat = product;
-            print("Category: $product");
+            cat = product;
+            // print("Category: $cat");
             return ListView.separated(
               itemCount: categories.length,
               separatorBuilder: (ctx, i) => Divider(),
               itemBuilder: (ctx, i) {
                 return ListTile(
                   onTap: () {
-                    setState(() {
-                      cat = product
-                          .where((element) => element['tag'] == categories[i])
-                          .toList();
-                      Get.to(
-                        ProductList(
-                          data: cat,
-                          productName: categories[i],
-                        ),
-                      );
-                    });
+                    setState(
+                      () {
+                        if (categories[i] == 'All Products') {
+                          cat = product;
+                          // print('All product $cat');
+                          // print('Tapped');
+                        } else {
+                          cat = product
+                              .where(
+                                  (element) => element['tag'] == categories[i])
+                              .toList();
+                        }
+                        Get.to(
+                          ProductList(
+                            data: cat,
+                            productName: categories[i],
+                          ),
+                        );
+                        // print('Tapped again');
+                      },
+                    );
                   },
                   contentPadding: EdgeInsets.only(left: 10, right: 10),
                   title: Text(

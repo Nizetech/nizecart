@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nizecart/Models/data.dart';
@@ -35,7 +37,7 @@ class _ProductListState extends ConsumerState<ProductList> {
   Widget build(BuildContext context) {
     List<Map> product = widget.data;
     List<Map> cat = product;
-    List<Map> category;
+    List<Map> category = [];
     // print('Category cat $cat');
     return Scaffold(
       appBar: AppBar(
@@ -53,8 +55,9 @@ class _ProductListState extends ConsumerState<ProductList> {
               } else {
                 List<Map> snap = snapshot.data;
                 category = snap;
+                // log('my product $snap');
+                // log('my product oo $category');
                 // print('Snap Category cat $category');
-
                 return Column(
                   children: [
                     SizedBox(
@@ -68,30 +71,10 @@ class _ProductListState extends ConsumerState<ProductList> {
                             SizedBox(width: 10),
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selected = index;
-                                // });
-                                if (selected == 0 ||
-                                    categories[index] == 'All') {
-                                  // setState(() {
-                                  category = snap;
-                                  // });
-                                } else {
-                                  // setState(() {
-
-                                  category = snap
-                                      .where((element) =>
-                                          element['tag'] == categories[index])
-                                      .toList();
-                                }
-                                print('Category cat $category');
-                              });
-                            },
                             child: Container(
                               height: 40,
                               // width: categories.elementAt(index) == 'All' ? 60 : 44,
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 color: selected == index
                                     ? mainColor.withOpacity(.5)
@@ -106,12 +89,41 @@ class _ProductListState extends ConsumerState<ProductList> {
                               child: Text(
                                 categories.elementAt(index),
                                 style: TextStyle(
-                                    color: selected == index
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontWeight: FontWeight.w500),
+                                  color: selected == index
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
+                            onTap: () {
+                              // setState(() {
+                              //   selected = index;
+                              //   if (gallery[index] == 'All') {
+                              //     images = fullImages;
+                              //   } else {
+                              //     images = fullImages
+                              //         .where(
+                              //             (element) => element['type'] == gallery[index])
+                              //         .toList();
+                              //   }
+                              // });
+                              setState(() {
+                                // category = snap;
+                                selected = index;
+                                if (categories[index] == 'All Products') {
+                                  category = snap;
+                                  // showToast('done');
+                                  // print('Category cat $category');
+                                } else {
+                                  category = snap
+                                      .where((element) =>
+                                          element['tag'] == categories[index])
+                                      .toList();
+                                  // showErrorToast('Faled to change');
+                                }
+                              });
+                            },
                           );
                         },
                       ),
@@ -131,8 +143,10 @@ class _ProductListState extends ConsumerState<ProductList> {
                           crossAxisCount: 2,
                         ),
                         itemBuilder: (ctx, i) {
+                          print(' Wrong cat ${category}');
                           return MainView(
-                              data: widget.data != null ? cat[i] : category[i]);
+                            data: widget.data != null ? cat[i] : category[i],
+                          );
                         },
                       ),
                     ),

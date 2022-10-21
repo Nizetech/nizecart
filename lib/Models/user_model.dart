@@ -10,6 +10,7 @@ class UserModel {
   final String address;
   final String postCode;
   final String uid;
+  final String token;
   UserModel({
     this.email,
     this.pwd,
@@ -22,6 +23,7 @@ class UserModel {
     this.city,
     this.postCode,
     this.uid,
+    this.token,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,7 @@ class UserModel {
       'last_name': lastName,
       'phoneNumber': phoneNumber,
       'photoUrl': photoUrl,
+      'token': token,
       'address': address,
       'country': country ?? '',
       'city': city ?? '',
@@ -47,6 +50,7 @@ class UserModel {
       phoneNumber: map['phoneNumber'],
       photoUrl: map['PhotoUrl'] ?? '',
       address: map['address'] ?? '',
+      token: map['token'] ?? '',
       postCode: map['postCode'] ?? '',
       country: map['country'] ?? '',
       city: map['city'] ?? '',

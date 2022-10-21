@@ -14,4 +14,12 @@ class ServiceController {
   Future<String> getUserAddress() {
     return serviceRepository.getUserAddress();
   }
+
+  void saveToken(String token) {
+    return serviceRepository.saveToken(token);
+  }
+
+  void sendMessage({String token, Map<String, dynamic> message}) {
+    return serviceRepository.sendMessage(token: token, message: message);
+  }
 }

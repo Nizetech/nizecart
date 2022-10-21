@@ -116,7 +116,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Map user = snapshot.data;
 
               // print('My user ${user['photoUrl']}');
-              String data = user['photoUrl'];
+              String data = user == null ? '' : user['photoUrl'];
 
               return CustomScrollView(
                 slivers: [
@@ -194,16 +194,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: CachedNetworkImage(
-                                              imageUrl: data,
-                                              height: 230,
-                                              width: double.infinity,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                                          data == '' || data == null
+                                              ? Icon(
+                                                  Iconsax.user,
+                                                  size: 70,
+                                                  color: white,
+                                                )
+                                              : ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: data,
+                                                    height: 230,
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
                                         ],
                                       ),
                                     ),
@@ -212,7 +218,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     CircleAvatar(
                                       radius: 55,
                                       backgroundColor: Colors.grey[200],
-                                      child: data == null
+                                      child: data == '' || data == null
                                           ? const Icon(
                                               Iconsax.user,
                                               size: 70,

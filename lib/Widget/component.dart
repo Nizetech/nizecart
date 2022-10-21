@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Screens/product_details.dart';
 import 'package:nizecart/products/product_controller.dart';
+import 'package:nizecart/services/service_controller.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intl;
 
@@ -226,7 +230,7 @@ class _MainViewState extends ConsumerState<MainView> {
   // final Map data;
   List cartItems = box.get('cart', defaultValue: []);
 
-  int quantity = 0;
+  int quantity = 1;
   static var box = Hive.box('name');
 
   @override
@@ -379,19 +383,28 @@ class _MainViewState extends ConsumerState<MainView> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      quantity++;
-                    });
-                    Map productValue = {
-                      'qty': quantity,
-                      'price': widget.data['price'],
-                      'title': widget.data['title'],
-                      'imageUrl': widget.data['imageUrl'],
-                    };
-                    cartItems.add(productValue);
-                    box.put('cart', cartItems);
-                    // print('Here are my :$products');
-                    isLoggedIn ? Get.to(CartScreen()) : Get.to(SignInScreen());
+                    if (cartItems.contains(widget.data['productID'])) {
+                      showErrorToast('Product already in cart');
+                      return;
+                    } else {
+                      // setState(() {
+                      //   quantity++;
+                      // });
+
+                      Map productValue = {
+                        'qty': quantity,
+                        'price': widget.data['price'],
+                        'title': widget.data['title'],
+                        'imageUrl': widget.data['imageUrl'],
+                        'productID': widget.data['productID'],
+                      };
+                      cartItems.add(productValue);
+                      box.put('cart', cartItems);
+                      // print('Here are my :$products');
+                      isLoggedIn
+                          ? Get.to(CartScreen())
+                          : Get.to(SignInScreen());
+                    }
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),

@@ -445,20 +445,33 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           onPressed: cartItems.isEmpty
               ? null
               : () {
-                  // Map locUser = user;
-                  log('tapped $user');
-                  box.put('locAmount', totalAmount);
-                  Get.to(
-                    // CheckOutScreen(totalAmount: totalAmount),
-                    DeliveryScreen(
-                      totalAmount: totalAmount,
-                      user: user,
-                      // location: userAddress,
-                    ),
+                  ref.read(serviceControllerProvider).sendMessage(
+                    token: user['token'],
+                    message: {
+                      'title': 'YTesting Notification',
+                      'body': 'You just Ordered  ${user['fname']}',
+                      // 'id': widget.data['uid'],
+                      // 'type': 'TRANSACTION',
+                      // 'uid': widget.data['uid'],
+                      // 'date': FieldValue.serverTimestamp(),
+                    },
                   );
-                  print('my amount: $locAmount');
-                  print('my user: $locUser');
-                  print('my user: $user');
+                  log('just sent');
+                  log('my token ${user['token']}');
+                  // // Map locUser = user;
+                  // log('tapped $user');
+                  // box.put('locAmount', totalAmount);
+                  // Get.to(
+                  //   // CheckOutScreen(totalAmount: totalAmount),
+                  //   DeliveryScreen(
+                  //     totalAmount: totalAmount,
+                  //     user: user,
+                  //     // location: userAddress,
+                  //   ),
+                  // );
+                  // print('my amount: $locAmount');
+                  // print('my user: $locUser');
+                  // print('my user: $user');
                 },
         ),
       ),

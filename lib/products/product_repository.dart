@@ -129,7 +129,7 @@ class ProductRepository {
     CollectionReference products = firestore.collection('Products');
     try {
       QuerySnapshot snaps = await products
-          .where('title'.toLowerCase(), isEqualTo: query.toLowerCase())
+          .where('title'.toLowerCase().contains(query.toLowerCase()))
           .get();
 
       return snaps.docs.map((e) => e.data() as Map).toList();
@@ -185,6 +185,7 @@ class ProductRepository {
         'description': description, // A fruit
         'price': price, // 1.99
       });
+      // sendMessage()
       successToast('Product updated successfully');
     } catch (e) {
       print(e.toString());

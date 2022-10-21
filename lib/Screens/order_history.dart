@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
@@ -6,11 +8,14 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/products_list.dart';
+import 'package:nizecart/Screens/profile_screen.dart';
 import 'package:nizecart/chat/chat_screen.dart';
 import 'package:nizecart/keys/keys.dart';
 import 'package:nizecart/products/product_controller.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:share_plus/share_plus.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../Widget/component.dart';
 
@@ -22,20 +27,70 @@ class OrderHistory extends ConsumerStatefulWidget {
   ConsumerState<OrderHistory> createState() => _OrderHistoryState();
 }
 
+String value;
+
 class _OrderHistoryState extends ConsumerState<OrderHistory> {
   final formatter = intl.NumberFormat.decimalPattern();
+
+  final file = File('example.pdf');
+  final pdf = pw.Document();
+  Future<void> cretePDF(Widget text) async {
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          child:
+          pw.Text('Hello World!');
+        },
+      ),
+    );
+    await file.writeAsBytes(await pdf.save());
+  }
+
   @override
   Widget build(BuildContext context) {
     print("my data: ${widget.data}");
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: Colors.white,
-        centerTitle: true,
-        title: Text(
-          'Order History',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-      ),
+          foregroundColor: Colors.white,
+          centerTitle: true,
+          title: const Text(
+            'Order History',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          actions: [
+            PopupMenuButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                onSelected: (val) {
+                  if (val == 'Share') {
+                    setState(() {
+                      Share.share('www.google.com');
+                      // Get.to(ProfileScreen());
+                    });
+                  } else {
+                    setState(() {
+                      Get.back();
+                    });
+                  }
+                },
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem(
+                      child: Text('Share',
+                          style: TextStyle(
+                            fontFamily: 'poppins',
+                            fontWeight: FontWeight.w500,
+                          )),
+                      value: 'Share',
+                    ),
+                    // PopupMenuItem(
+                    //   child: const Text('Download'),
+                    //   value: 'Download',
+                    // )
+                  ];
+                })
+          ]),
       backgroundColor: white,
       body: FutureBuilder(
           future: Future.wait([

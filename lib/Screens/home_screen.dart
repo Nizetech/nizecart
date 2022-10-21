@@ -104,7 +104,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               List product = snapshot.data[0];
               List searchProduct = snapshot.data[1];
               Map user = snapshot.data[2];
-              String data = user['photoUrl'];
+              String data = user == null ? '' : user['photoUrl'];
               List<Map> cat = product;
 
               // print('my Products: ${product}');
@@ -236,12 +236,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   isSearch
-                      ? search.text !=
-                              cat.where(
-                                  (element) => element['title'] == search.text)
-                          // ?
-                          // print(snapshot.data);
-                          // searchProduct.isEmpty
+                      // ? search.text !=
+                      //         cat.where(
+                      //             (element) => element['title'] == search.text)
+                      ?
+                      // print(snapshot.data);
+                      searchProduct.isEmpty
                           ? const Padding(
                               padding: EdgeInsets.all(20),
                               child: Text(
@@ -414,7 +414,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     SizedBox(height: 20),
                                     Container(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 10),
+                                        horizontal: 15,
+                                      ),
                                       color: mainColor.withOpacity(.2),
                                       child: Align(
                                         alignment: Alignment.bottomLeft,
@@ -431,9 +432,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               ),
                                             ),
                                             Spacer(),
-                                            GestureDetector(
-                                              onTap: () =>
-                                                  Get.to(ProductList()),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Get.to(ProductList(
+                                                      // data: product,
+                                                      )),
                                               child: const Text(
                                                 "SEE ALL",
                                                 style: TextStyle(

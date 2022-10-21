@@ -82,6 +82,8 @@ class AuthRepository {
         await collectionReference
             .doc(userCredential.user.uid)
             .set(userData.toMap());
+        await auth.currentUser.sendEmailVerification();
+
         // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
 
         //Update display name
@@ -169,6 +171,7 @@ class AuthRepository {
           'phone': userCredential.user.phoneNumber,
           'email': userCredential.user.email,
           'address': '',
+          'token': '',
           'photoUrl': userCredential.user.photoURL,
           'uid': userCredential.user.uid,
           'date_created': Timestamp.now(),
@@ -177,6 +180,7 @@ class AuthRepository {
         await userCredential.user.updateDisplayName(
           userCredential.user.displayName,
         );
+        await auth.currentUser.sendEmailVerification();
         Hive.box('name').put('displayName', userCredential.user.displayName);
         Hive.box('name').put('email', userCredential.user.email);
         Hive.box('name').put('isLoggedIn', true);
@@ -335,6 +339,7 @@ class AuthRepository {
           });
         });
       });
+      await auth.currentUser.updatePhotoURL(photoUrl);
       print(photoUrl);
       return photoUrl;
     } catch (e) {
@@ -357,12 +362,17 @@ class AuthRepository {
 //Delete Account
   void deleteAccount() async {
     CollectionReference collectionReference = firestore.collection('Users');
-    await collectionReference.doc(getUser().uid).delete();
-    await auth.currentUser.delete();
-    box.put('isLoggedIn', false);
-    await Hive.box('name').clear();
-    loader();
-    return Get.offAll(SignInScreen());
+    try {
+      loader();
+      await collectionReference.doc(getUser().uid).delete();
+      await auth.currentUser.delete();
+      // box.put('isLoggedIn', false);
+      await Hive.box('name').clear();
+      showToast('Account deleted');
+      return Get.offAll(SignInScreen());
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
 // Get user details
