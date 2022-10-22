@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +12,7 @@ import 'package:nizecart/Models/payment.dart';
 import 'package:nizecart/Screens/success_screen.dart';
 import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/products/product_controller.dart';
+import 'package:nizecart/services/service_controller.dart';
 import '../Widget/component.dart';
 import '../keys/keys.dart';
 // import 'package:flutterwave/flutterwave.dart';
@@ -433,6 +436,21 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                               postCode: widget.data['postCode'],
                               productDetails: cartItems,
                             );
+                    ref.read(serviceControllerProvider).sendMessage(
+                      token: widget.data['token'],
+                      message: {
+                        'title': 'You Order has been placed on Nizecart',
+                        'body': 'Your Order have been placed pending shipping',
+                        'id': widget.data['productID'],
+                        'type': 'Order',
+                        'name': user.displayName,
+                        // 'uid': widget.data['uid'],
+                        'date': FieldValue.serverTimestamp(),
+                      },
+                    );
+                    log('just sent');
+                    log('my token ${widget.data['token']}');
+                    Get.to(SuccessPage());
                   },
                 ),
               ],

@@ -146,24 +146,24 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
         margin: EdgeInsets.all(0.0),
         popActionScreens: PopActionScreensType.all,
         bottomScreenMargin: 0.0,
-        onWillPop: (context) async {
-          await showDialog(
-            context: context,
-            useSafeArea: true,
-            builder: (context) => Container(
-              height: 50.0,
-              width: 50.0,
-              color: Colors.white,
-              child: ElevatedButton(
-                child: Text("Close"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          );
-          return false;
-        },
+        // onWillPop: (context) async {
+        //   await showDialog(
+        //     context: context,
+        //     useSafeArea: true,
+        //     builder: (context) => Container(
+        //       height: 50.0,
+        //       width: 50.0,
+        //       color: Colors.white,
+        //       child: ElevatedButton(
+        //         child: Text("Close"),
+        //         onPressed: () {
+        //           Navigator.pop(context);
+        //         },
+        //       ),
+        //     ),
+        //   );
+        //   return false;
+        // },
         hideNavigationBar: _hideNavBar,
         decoration: NavBarDecoration(
             colorBehindNavBar: Colors.indigo,

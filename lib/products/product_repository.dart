@@ -255,7 +255,8 @@ class ProductRepository {
       // successToast('Order placed successfully');
       cartItems.clear();
       box.put('cart', cartItems);
-      Get.to(SuccessPage());
+
+      // Get.to(SuccessPage());
       return true;
     } catch (e) {
       print(e.toString());
@@ -360,7 +361,7 @@ class ProductRepository {
         var responseData = response.toJson();
 
         responseData['date'] = FieldValue.serverTimestamp();
-
+        // Get.to(SuccessPage());
         return responseData;
       } else {
         toast('Failed');

@@ -119,7 +119,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   builder: (context, snapshot) {
                     // UserModel
                     user = snapshot.data;
-                    log('my data ${user}');
+                    // log('my data ${user}');
                     return Column(
                       children: [
                         Container(
@@ -445,30 +445,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           onPressed: cartItems.isEmpty
               ? null
               : () {
-                  ref.read(serviceControllerProvider).sendMessage(
-                    token: user['token'],
-                    message: {
-                      'title': 'YTesting Notification',
-                      'body': 'You just Ordered  ${user['fname']}',
-                      // 'id': widget.data['uid'],
-                      // 'type': 'TRANSACTION',
-                      // 'uid': widget.data['uid'],
-                      // 'date': FieldValue.serverTimestamp(),
-                    },
-                  );
-                  log('just sent');
-                  log('my token ${user['token']}');
                   // // Map locUser = user;
                   // log('tapped $user');
-                  // box.put('locAmount', totalAmount);
-                  // Get.to(
-                  //   // CheckOutScreen(totalAmount: totalAmount),
-                  //   DeliveryScreen(
-                  //     totalAmount: totalAmount,
-                  //     user: user,
-                  //     // location: userAddress,
-                  //   ),
-                  // );
+                  box.put('locAmount', totalAmount);
+                  Get.to(
+                    // CheckOutScreen(totalAmount: totalAmount),
+                    DeliveryScreen(
+                      totalAmount: totalAmount,
+                      user: user,
+                      // location: userAddress,
+                    ),
+                  );
                   // print('my amount: $locAmount');
                   // print('my user: $locUser');
                   // print('my user: $user');

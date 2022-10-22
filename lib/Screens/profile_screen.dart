@@ -637,7 +637,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         ),
                         !isLoggedIn
                             ? const SizedBox(height: 30)
-                            : const SizedBox(height: 70),
+                            : const SizedBox(height: 90),
                       ],
                     ),
                   ),

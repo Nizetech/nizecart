@@ -250,13 +250,6 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
               SizedBox(height: 20),
               Row(
                 children: [
-                  // Expanded(
-                  //   child: CustomTextField(
-                  //     controller: lga,
-                  //     label: 'Town/city',
-                  //   ),
-                  // ),
-                  // SizedBox(width: 10),
                   Expanded(
                     child: CustomTextField(
                       controller: post,
@@ -270,15 +263,17 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
               CustomTextField(
                 controller: phone,
                 label: 'Phone Number',
+                keyboard: TextInputType.phone,
               ),
               SizedBox(height: 20),
               CustomButton(
                 onPressed: () async {
-                  if (stateValue.isEmpty ||
-                      address.text.trim().isEmpty ||
+                  if (address.text.trim().isEmpty ||
                       lgaValue.isEmpty ||
                       phone.text.trim().isEmpty ||
+                      stateValue.isEmpty ||
                       post.text.trim().isEmpty) {
+                    showErrorToast('Please fill all fields');
                     toast('Please fill all fields');
                     return;
                   } else {

@@ -39,6 +39,7 @@ dependencies:
   http: ^0.13.5
   flutter_local_notifications:
   uuid: ^3.0.6
+  google_sign_in: ^5.1.0
   # paystack_manager: 
   # flutter_paystack:
   #  git:
@@ -50,7 +51,6 @@ dependencies:
   firebase_storage: ^10.2.16
   firebase_core: ^1.20.0
   cloud_firestore: ^2.5.3
-  google_sign_in: ^5.1.0
   firebase_messaging:
 
 
