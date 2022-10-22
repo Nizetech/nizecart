@@ -68,7 +68,7 @@ class AuthRepository {
       //create user on firebase auth
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: email, password: pwd);
-      if (userCredential.user != null) {
+      if (userCredential.user != null && !auth.currentUser.emailVerified) {
         userCredential.user.sendEmailVerification();
         var userData = UserModel(
           uid: userCredential.user.uid,
@@ -86,6 +86,9 @@ class AuthRepository {
 
         // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
 
+        // Verify email
+        await auth.currentUser.sendEmailVerification();
+        successToast("Verification email sent");
         //Update display name
         await userCredential.user.updateDisplayName(
           fname + ' ' + lname,
@@ -176,11 +179,13 @@ class AuthRepository {
           'uid': userCredential.user.uid,
           'date_created': Timestamp.now(),
         });
+        // await auth.currentUser.sendEmailVerification();
+        // successToast("Verification email sent");
         //Update display name
         await userCredential.user.updateDisplayName(
           userCredential.user.displayName,
         );
-        await auth.currentUser.sendEmailVerification();
+
         Hive.box('name').put('displayName', userCredential.user.displayName);
         Hive.box('name').put('email', userCredential.user.email);
         Hive.box('name').put('isLoggedIn', true);
@@ -418,12 +423,6 @@ class AuthRepository {
   //     return null;
   //   }
   // }
-
-// Send Email Verification
-  void sendVerificationEmail() async {
-    await auth.currentUser.sendEmailVerification();
-    successToast("Verification email sent");
-  }
 }
 
 
