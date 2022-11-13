@@ -104,6 +104,22 @@ class ProductRepository {
     }
   }
 
+  Future<List<Product>> getproductModel() async {
+    try {
+      var userData =
+          await firestore.collection('Users').doc(auth.currentUser.uid).get();
+      List<Product> data;
+      if (userData.data() != null) {
+        data = Product.fromJson(userData.data()) as List<Product>;
+      }
+      print('User ${data}');
+      return data;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   // Get productCategory
   Future<List> productCategory(String tag) async {
     CollectionReference products = firestore.collection('Products');
@@ -129,7 +145,9 @@ class ProductRepository {
     CollectionReference products = firestore.collection('Products');
     try {
       QuerySnapshot snaps = await products
-          .where('title'.toLowerCase().contains(query.toLowerCase()))
+          .where('title', isEqualTo: query.toLowerCase()
+              // .contains(query.toLowerCase())
+              )
           .get();
 
       return snaps.docs.map((e) => e.data() as Map).toList();
@@ -339,6 +357,27 @@ class ProductRepository {
           ),
         ),
       );
+
+      // Stream Order
+      // Stream<QuerySnapshot<Object>> streamOrder() {
+      //   CollectionReference order = firestore.collection('Orders');
+      //   try {
+      //     return order.snapshots();
+      //   } catch (e) {
+      //     print(e.toString());
+      //     return null;
+      //   }
+      // }
+
+      Stream<QuerySnapshot<Object>> streamOrder() {
+        CollectionReference order = firestore.collection('Orders');
+        try {
+          return order.snapshots();
+        } catch (e) {
+          print(e.toString);
+          return null;
+        }
+      }
 
       ChargeResponse response = await flutterwave.charge();
       if (response.success) {

@@ -34,9 +34,9 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
 
     FlutterLocalNotificationsPlugin plugin = FlutterLocalNotificationsPlugin();
 
-    final fcmToken = FirebaseMessaging.instance
-        .getToken()
-        .then((value) => log('Fcm Token: $value'));
+    // final fcmToken = FirebaseMessaging.instance
+    //     .getToken()
+    //     .then((value) => log('Fcm Token: $value'));
 
     AndroidNotificationChannel channel = const AndroidNotificationChannel(
       'high_importance_channel', //id
@@ -80,7 +80,9 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
       handleMessage(message);
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      handleMessage(message);
+    });
 
     FirebaseMessaging.instance.onTokenRefresh
         .listen(ref.read(serviceControllerProvider).saveToken);
@@ -120,7 +122,7 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Iconsax.user),
+        icon: const Icon(Iconsax.user),
         title: "Account",
         activeColorPrimary: mainColor,
         inactiveColorPrimary: Colors.grey,

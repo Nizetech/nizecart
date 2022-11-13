@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
@@ -115,6 +116,11 @@ class ProductController {
       productDetails: productDetails,
     );
   }
+
+// Get Order
+  // Stream<QuerySnapshot<Object>> streamOrder() {
+  //   return productRepository.streamOrder();
+  // }
 
 //Get Order
   Future<List> getOrder() {

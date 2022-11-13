@@ -27,6 +27,7 @@ class BottomNav extends ConsumerStatefulWidget {
 class _BottomNavState extends ConsumerState<BottomNav> {
   // static Box box = Hive.box('name');
   // bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
+  
   int index = 0;
   int currentIndex = 0;
   List<Widget> body = [

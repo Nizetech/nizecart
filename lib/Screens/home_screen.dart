@@ -1,11 +1,13 @@
 // import 'dart:async';
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:intl/intl.dart' as intl;
-
+import '../Models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -14,6 +16,7 @@ import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/product_details.dart';
 import 'package:nizecart/Screens/products_list.dart';
 import 'package:nizecart/Screens/profile_screen.dart';
+import 'package:nizecart/Screens/search_product.dart';
 import 'package:nizecart/products/product_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -58,19 +61,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     setState(() {});
   }
 
-  bool isSearch = false;
+  bool isSearching = false;
 
-  void issearch(String value) {
-    if (value.isNotEmpty) {
-      setState(() {
-        isSearch = true;
-      });
-    } else {
-      setState(() {
-        isSearch = false;
-      });
-    }
-  }
+  // void issearch(String value) {
+  //   if (value.isNotEmpty) {
+  //     setState(() {
+  //       isSearch = true;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       isSearch = false;
+  //     });
+  //   }
+  // }
 
   String name = HomeScreen.box.get('displayName');
   // static FirebaseAuth auth = FirebaseAuth.instance;
@@ -79,13 +82,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   int quantity = 0;
 
   // static box = Hive.box('name');
+  // final Future<List> product =  ref.read(productControllerProvider).getProduct();
 
+  Future<List> productSnap;
   User users;
   @override
   void initState() {
     users = FirebaseAuth.instance.currentUser;
+    productSnap = ref.read(productControllerProvider).getProduct();
     super.initState();
   }
+
+  List<String> matchQuery;
+  List product;
+  List searchProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -93,26 +103,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       backgroundColor: white,
       body: FutureBuilder(
           future: Future.wait([
-            ref.read(productControllerProvider).getProduct(),
-            ref.read(productControllerProvider).searchProduct(search.text),
+            productSnap,
             ref.read(authtControllerProvider).getUserDetails(),
           ]),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return shimmer(context);
             } else {
-              List product = snapshot.data[0];
-              List searchProduct = snapshot.data[1];
-              Map user = snapshot.data[2];
+              if (!isSearching) {
+                product = snapshot.data[0];
+              }
+              Map user = snapshot.data[1];
               String data = user == null ? '' : user['photoUrl'];
-              List<Map> cat = product;
 
-              // print('my Products: ${product}');
-
-              // print('my search $searchProduct');
-              // if(user == null){
-
-              // }
+              log('my Products: ${product}');
               return Column(
                 children: [
                   Container(
@@ -130,7 +134,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        SizedBox(height: 25),
+                        const SizedBox(height: 25),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -198,7 +202,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 controller: search,
                                 cursorColor: mainColor,
                                 onChanged: (value) {
-                                  issearch(value);
+                                  // Get.to(SearchProduct(query: search.text));
+                                  setState(() {
+                                    if (value.trim().isEmpty) {
+                                      isSearching = false;
+                                      // product = product;
+                                      print('search Product $product');
+                                    } else {
+                                      isSearching = true;
+                                      product = snapshot.data[0].where((data) {
+                                        return data
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(value.toLowerCase());
+                                      }).toList();
+                                      print('tapped search Product $product');
+                                    }
+                                  });
                                 },
                                 decoration: InputDecoration(
                                   hintText: 'Search for a product',
@@ -235,44 +255,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ],
                     ),
                   ),
-                  isSearch
-                      // ? search.text !=
-                      //         cat.where(
-                      //             (element) => element['title'] == search.text)
-                      ?
-                      // print(snapshot.data);
-                      searchProduct.isEmpty
-                          ? const Padding(
-                              padding: EdgeInsets.all(20),
-                              child: Text(
-                                'Search not found',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                            )
-                          : Expanded(
-                              child: GridView.builder(
-                                itemCount: cat.length,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 10),
-                                shrinkWrap: true,
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 0.54,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 20,
-                                  crossAxisCount: 2,
-                                ),
-                                itemBuilder: (ctx, i) {
-                                  Map data = searchProduct[i];
+                  product.isEmpty
+                      ? const Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Text(
+                            'Search not found',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      :
+                      //      Expanded(
+                      //         child: GridView.builder(
+                      //           itemCount: searchProduct.length,
+                      //           padding: EdgeInsets.symmetric(
+                      //               vertical: 20, horizontal: 10),
+                      //           shrinkWrap: true,
+                      //           gridDelegate:
+                      //               const SliverGridDelegateWithFixedCrossAxisCount(
+                      //             childAspectRatio: 0.54,
+                      //             crossAxisSpacing: 10,
+                      //             mainAxisSpacing: 20,
+                      //             crossAxisCount: 2,
+                      //           ),
+                      //           itemBuilder: (ctx, i) {
+                      //             Map data = searchProduct[i];
 
-                                  return MainView(
-                                    data: data,
-                                  );
-                                },
-                              ),
-                            )
-                      : Expanded(
+                      //             return MainView(
+                      //               data: data,
+                      //             );
+                      //           },
+                      //         ),
+                      //       )
+                      // :
+                      Expanded(
                           child: Container(
                             child: RefreshIndicator(
                               onRefresh: refresh,
@@ -491,6 +507,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               // }
               // }
               // );
+
             }
           }),
     );
