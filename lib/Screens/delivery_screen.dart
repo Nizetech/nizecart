@@ -269,11 +269,11 @@ class _DeliveryScreenState extends ConsumerState<DeliveryScreen> {
               CustomButton(
                 onPressed: () async {
                   if (address.text.trim().isEmpty ||
-                      lgaValue.isEmpty ||
+                      lgaValue == null ||
                       phone.text.trim().isEmpty ||
-                      stateValue.isEmpty ||
+                      stateValue == null ||
                       post.text.trim().isEmpty) {
-                    showErrorToast('Please fill all fields');
+                    // showErrorToast('Please fill all fields');
                     toast('Please fill all fields');
                     return;
                   } else {

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:nizecart/Screens/order_history.dart';
+import 'package:nizecart/Screens/profile/order_history.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:nizecart/keys/keys.dart';
 import 'package:nizecart/products/product_controller.dart';

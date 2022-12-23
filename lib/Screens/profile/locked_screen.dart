@@ -7,7 +7,7 @@ import 'package:local_auth/local_auth.dart';
 import 'package:nizecart/custom_nav_bar.dart';
 // import 'package:nizecart/botton_nav.dart';
 
-import '../Widget/component.dart';
+import '../../Widget/component.dart';
 
 class LockScreen extends StatefulWidget {
   LockScreen({Key key}) : super(key: key);

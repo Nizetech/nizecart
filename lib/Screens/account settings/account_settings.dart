@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
-import 'package:nizecart/Screens/change_password_screen.dart';
+import 'package:nizecart/Screens/account%20settings/change_display_name.dart';
+import 'package:nizecart/Screens/account%20settings/change_password_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 
 class AccountSettings extends ConsumerStatefulWidget {
-  const AccountSettings({Key key}) : super(key: key);
+  final Map user;
+  const AccountSettings({Key key, this.user}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -30,6 +32,22 @@ class _AccountSettingsState extends ConsumerState<AccountSettings> {
       body: Column(children: [
         SizedBox(height: 20),
         AccountListTile(
+          text: 'Change Display Name',
+          icon: Icon(
+            Iconsax.lock,
+            color: mainColor,
+          ),
+          onTap: () => Get.to(ChangeDisplayName()),
+        ),
+        const AccountListTile(
+          text: 'Change Phone Number',
+          icon: Icon(
+            Iconsax.lock,
+            color: mainColor,
+          ),
+          // onTap: () => Get.to(ChangePassword()),
+        ),
+        AccountListTile(
           text: 'Change password',
           icon: Icon(
             Iconsax.lock,
@@ -39,7 +57,7 @@ class _AccountSettingsState extends ConsumerState<AccountSettings> {
         ),
         AccountListTile(
             text: 'Delete Account',
-            icon: Icon(
+            icon: const Icon(
               Iconsax.profile_delete,
               color: mainColor,
             ),

@@ -11,17 +11,16 @@ import 'package:iconsax/iconsax.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Auth/screens/signInScreen.dart';
-import 'package:nizecart/Screens/account_screen.dart';
-import 'package:nizecart/Screens/account_settings.dart';
-import 'package:nizecart/Screens/order_history.dart';
+import 'package:nizecart/Screens/profile/account_screen.dart';
+import 'package:nizecart/Screens/account%20settings/account_settings.dart';
+import 'package:nizecart/Screens/profile/order_history.dart';
 import 'package:nizecart/Screens/order_screen.dart';
-import 'package:nizecart/Screens/privacy_policy.dart';
+import 'package:nizecart/Screens/profile/privacy_policy.dart';
+import 'package:nizecart/Widget/component.dart';
 import 'package:nizecart/chat/chat_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
-import '../Auth/controller/auth_controller.dart';
-import '../Widget/component.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   ProfileScreen({Key key}) : super(key: key);
@@ -424,7 +423,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                         ),
                                         trailing:
                                             Icon(Icons.navigate_next_sharp),
-                                        onTap: () => Get.to(AccountSettings()),
+                                        onTap: () => Get.to(AccountSettings(
+                                          user: user,
+                                        )),
                                       ),
                                       const Divider(),
                                       ListTile(
@@ -456,7 +457,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           color: mainColor,
                                         ),
                                         title: const Text(
-                                          'Biomertrics',
+                                          'Biometrics',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,

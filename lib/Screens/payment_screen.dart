@@ -241,7 +241,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                 onChanged: (val) {
                   setState(() {
                     enable = val;
-                    enable = 0;
+                    // enable = 0;
                   });
                 },
               ),
@@ -345,7 +345,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                   children: [
                     // enable == 0
                     isShipping
-                        ? Text(
+                        ? const Text(
                             'Shipping',
                             style: TextStyle(fontSize: 16),
                           )
@@ -354,7 +354,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                         ? Text(
                             '₦ ${widget.data['shippingFee']}',
                             // formatter.format(shippingFee),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontFamily: 'Roboto',
                             ),
@@ -405,7 +405,6 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                     // ? () {}
                     // :
                     enable == 0
-                        // ? () {}
                         ? ref
                             .read(productControllerProvider)
                             .payWithFlutterWave(
@@ -450,7 +449,7 @@ class _PaymentMethodState extends ConsumerState<PaymentMethod> {
                     );
                     log('just sent');
                     log('my token ${widget.data['token']}');
-                    Get.to(SuccessPage());
+                    // Get.to(SuccessPage());
                   },
                 ),
               ],

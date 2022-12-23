@@ -8,14 +8,14 @@ import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Auth/screens/signUp_screen.dart';
 import 'package:nizecart/Screens/product_details.dart';
+import 'package:nizecart/Screens/profile/profile_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:nizecart/services/service_controller.dart';
-import 'Screens/account_screen.dart';
+import 'Screens/profile/account_screen.dart';
 import 'Screens/category_screen.dart';
 import 'Screens/favourite_screen.dart';
 import 'Screens/home_screen.dart';
-import 'Screens/profile_screen.dart';
 
 class BottomNav extends ConsumerStatefulWidget {
   BottomNav({Key key}) : super(key: key);
@@ -27,7 +27,7 @@ class BottomNav extends ConsumerStatefulWidget {
 class _BottomNavState extends ConsumerState<BottomNav> {
   // static Box box = Hive.box('name');
   // bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
-  
+
   int index = 0;
   int currentIndex = 0;
   List<Widget> body = [

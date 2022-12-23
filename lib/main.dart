@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/home_screen.dart';
-import 'package:nizecart/Screens/locked_screen.dart';
+import 'package:nizecart/Screens/profile/locked_screen.dart';
 import 'package:nizecart/Screens/product_details.dart';
 import 'package:nizecart/Screens/product_overview_screen.dart';
 // import 'package:nizecart/botton_nav.dart';

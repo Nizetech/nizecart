@@ -67,54 +67,56 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return Scaffold(
       body: Scaffold(
         appBar: AppBar(
+            leadingWidth: 30,
             title:
                 // DocumentSnapshot data = snapshot.data;
                 // print(data['photoUrl']);
                 Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            widget.user['photoUrl'] == null
-                ? CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.grey[200],
-                    child: const Icon(
-                      Iconsax.user,
-                      size: 25,
-                      color: Colors.black,
-                    ),
-                  )
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(25),
-                    child: CachedNetworkImage(
-                      imageUrl: image,
-                      height: 50,
-                      width: 50,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-            SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  // widget.user['firstName'],
-                  users.displayName,
-                  // '',
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 2),
-                const Text(
-                  "Online",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: mainColor,
+                // widget.user['photoUrl'] == null
+                //     ?
+                CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Colors.grey[200],
+                  child: Image.asset(
+                    'assets/user-png.png',
+                    height: 45,
+                    width: 45,
                   ),
                 ),
+                // : ClipRRect(
+                //     borderRadius: BorderRadius.circular(25),
+                //     child: CachedNetworkImage(
+                //       imageUrl: image,
+                //       height: 50,
+                //       width: 50,
+                //       fit: BoxFit.cover,
+                //     ),
+                //   ),
+                SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      // widget.user['firstName'],
+                      users.displayName,
+                      // '',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 2),
+                    const Text(
+                      "Online",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                )
               ],
             )
-          ],
-        )
             // }
 
             ),
@@ -176,7 +178,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   ],
                 ),
                 child: TextField(
+                  textInputAction: TextInputAction.unspecified,
+                  textCapitalization: TextCapitalization.sentences,
                   controller: message,
+                  maxLines: null,
+                  minLines: null,
+                  keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     fillColor: Color(0xffF5F5F5),
                     hintText: 'Type a Message',

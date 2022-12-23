@@ -273,6 +273,7 @@ class ProductRepository {
       // successToast('Order placed successfully');
       cartItems.clear();
       box.put('cart', cartItems);
+      Get.to(SuccessPage());
 
       // Get.to(SuccessPage());
       return true;
@@ -340,6 +341,10 @@ class ProductRepository {
         customization: Customization(title: "Add Money"),
         isTestMode: true,
         style: FlutterwaveStyle(
+          appBarIcon: Icon(
+            Icons.arrow_back_rounded,
+            color: white,
+          ),
           appBarText: 'Payment',
           appBarTitleTextStyle: const TextStyle(
             color: white,
@@ -369,16 +374,6 @@ class ProductRepository {
       //   }
       // }
 
-      Stream<QuerySnapshot<Object>> streamOrder() {
-        CollectionReference order = firestore.collection('Orders');
-        try {
-          return order.snapshots();
-        } catch (e) {
-          print(e.toString);
-          return null;
-        }
-      }
-
       ChargeResponse response = await flutterwave.charge();
       if (response.success) {
         await orders(
@@ -396,6 +391,7 @@ class ProductRepository {
         cartItems.clear();
         box.put('cart', cartItems);
         successToast('Successful');
+        Get.to(SuccessPage());
         // Verify transaction
         var responseData = response.toJson();
 
@@ -409,6 +405,16 @@ class ProductRepository {
     } catch (e) {
       print(e);
       return {};
+    }
+  }
+
+  Stream<QuerySnapshot<Object>> streamOrder() {
+    CollectionReference order = firestore.collection('Orders');
+    try {
+      return order.snapshots();
+    } catch (e) {
+      print(e.toString);
+      return null;
     }
   }
 

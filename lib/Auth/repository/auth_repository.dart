@@ -261,7 +261,45 @@ class AuthRepository {
   Future<bool> changePassword(String newPassword) async {
     try {
       await auth.currentUser.updatePassword(newPassword);
-      successToast('Password changed successfully');
+      // successToast('Password changed successfully');
+      print('Email sent successfully');
+      return true;
+    } on FirebaseAuthException catch (e) {
+      print(e.toString());
+      return false;
+    } catch (e) {
+      print(
+        {e.toString()},
+      );
+      return false;
+    }
+  }
+
+  // Change Password
+  Future<bool> changeDisplayName(String newName) async {
+    try {
+      await auth.currentUser.updateDisplayName(newName);
+      // successToast('Password changed successfully');
+      print('Email sent successfully');
+      return true;
+    } on FirebaseAuthException catch (e) {
+      print(e.toString());
+      return false;
+    } catch (e) {
+      print(
+        {e.toString()},
+      );
+      return false;
+    }
+  }
+
+  Future<bool> changePhoneNumber(String phone) async {
+    CollectionReference collectionReference = firestore.collection('Users');
+    try {
+      await collectionReference.doc(userId).update({
+        'phoneNumber': phone,
+      });
+      // successToast('Password changed successfully');
       print('Email sent successfully');
       return true;
     } on FirebaseAuthException catch (e) {

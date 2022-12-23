@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:nizecart/Screens/manage_product_screen.dart';
 
 import 'package:nizecart/Screens/product_overview_screen.dart';
-import 'package:nizecart/Screens/change_password_screen.dart';
-import 'package:nizecart/Screens/profile_screen.dart';
-// import 'package:nizecart/Screens/profile_screen.dart';
+import 'package:nizecart/Screens/account%20settings/change_password_screen.dart';
+import 'package:nizecart/Screens/profile/profile_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
 import 'package:nizecart/chat/chat_screen.dart';
 
-import '../Auth/controller/auth_controller.dart';
-import 'manage_product_screen.dart';
+import '../../Auth/controller/auth_controller.dart';
+import '../manage_product_screen.dart';
 
 class AccountScreen extends ConsumerWidget {
   AccountScreen({Key key}) : super(key: key);

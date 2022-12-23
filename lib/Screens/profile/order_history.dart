@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/products_list.dart';
-import 'package:nizecart/Screens/profile_screen.dart';
 import 'package:nizecart/chat/chat_screen.dart';
 import 'package:nizecart/keys/keys.dart';
 import 'package:nizecart/products/product_controller.dart';
@@ -17,7 +16,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:share_plus/share_plus.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-import '../Widget/component.dart';
+import '../../Widget/component.dart';
 
 class OrderHistory extends ConsumerStatefulWidget {
   final Map<String, dynamic> data;
