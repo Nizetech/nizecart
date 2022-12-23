@@ -53,9 +53,8 @@ class _ProductListState extends ConsumerState<ProductList> {
               if (!snapshot.hasData) {
                 return loader();
               } else {
-                List<Map> snap = snapshot.data;
-                category = snap;
-                // log('my product $snap');
+                List snap = snapshot.data;
+                log('my product $snap');
                 // log('my product oo $category');
                 // print('Snap Category cat $category');
                 return Column(
@@ -97,29 +96,20 @@ class _ProductListState extends ConsumerState<ProductList> {
                               ),
                             ),
                             onTap: () {
-                              // setState(() {
-                              //   selected = index;
-                              //   if (gallery[index] == 'All') {
-                              //     images = fullImages;
-                              //   } else {
-                              //     images = fullImages
-                              //         .where(
-                              //             (element) => element['type'] == gallery[index])
-                              //         .toList();
-                              //   }
-                              // });
                               setState(() {
                                 // category = snap;
                                 selected = index;
                                 if (categories[index] == 'All Products') {
                                   category = snap;
                                   // showToast('done');
-                                  // print('Category cat $category');
+                                  print('Category cat $category');
                                 } else {
                                   category = snap
                                       .where((element) =>
                                           element['tag'] == categories[index])
                                       .toList();
+                                  print('Category cat $category');
+
                                   // showErrorToast('Faled to change');
                                 }
                               });

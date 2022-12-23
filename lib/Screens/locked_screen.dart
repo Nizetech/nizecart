@@ -4,7 +4,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:iconsax/iconsax.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:nizecart/botton_nav.dart';
+import 'package:nizecart/custom_nav_bar.dart';
+// import 'package:nizecart/botton_nav.dart';
 
 import '../Widget/component.dart';
 
@@ -71,7 +72,7 @@ class _LockScreenState extends State<LockScreen> {
                     .then(
                   (value) {
                     if (value) {
-                      Get.offAll(BottomNav());
+                      Get.offAll(CustomNavBar());
                     }
                   },
                 );

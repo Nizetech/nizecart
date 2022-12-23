@@ -12,7 +12,7 @@ import 'package:nizecart/Screens/home_screen.dart';
 import 'package:nizecart/Screens/locked_screen.dart';
 import 'package:nizecart/Screens/product_details.dart';
 import 'package:nizecart/Screens/product_overview_screen.dart';
-import 'package:nizecart/botton_nav.dart';
+// import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:nizecart/custom_nav_bar.dart';
 import 'package:path_provider/path_provider.dart' as path;

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nizecart/Widget/component.dart';
-import 'package:nizecart/botton_nav.dart';
+// import 'package:nizecart/botton_nav.dart';
+import 'package:nizecart/custom_nav_bar.dart';
 
 class SuccessPage extends StatelessWidget {
   const SuccessPage({Key key}) : super(key: key);
@@ -24,7 +25,7 @@ class SuccessPage extends StatelessWidget {
               width: 172,
             ),
             SizedBox(height: 30),
-            Text(
+            const Text(
               'Congrats!',
               style: TextStyle(
                 fontSize: 30,
@@ -33,7 +34,7 @@ class SuccessPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Text(
+            const Text(
               'You have succesfully placed your order!',
               style: TextStyle(
                 fontSize: 18,
@@ -47,7 +48,7 @@ class SuccessPage extends StatelessWidget {
               child: CustomButton(
                 text: 'Done',
                 onPressed: () => Get.to(
-                  BottomNav(),
+                  CustomNavBar(),
                 ),
               ),
             ),

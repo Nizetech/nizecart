@@ -264,31 +264,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                         )
-                      :
-                      //      Expanded(
-                      //         child: GridView.builder(
-                      //           itemCount: searchProduct.length,
-                      //           padding: EdgeInsets.symmetric(
-                      //               vertical: 20, horizontal: 10),
-                      //           shrinkWrap: true,
-                      //           gridDelegate:
-                      //               const SliverGridDelegateWithFixedCrossAxisCount(
-                      //             childAspectRatio: 0.54,
-                      //             crossAxisSpacing: 10,
-                      //             mainAxisSpacing: 20,
-                      //             crossAxisCount: 2,
-                      //           ),
-                      //           itemBuilder: (ctx, i) {
-                      //             Map data = searchProduct[i];
-
-                      //             return MainView(
-                      //               data: data,
-                      //             );
-                      //           },
-                      //         ),
-                      //       )
-                      // :
-                      Expanded(
+                      : Expanded(
                           child: Container(
                             child: RefreshIndicator(
                               onRefresh: refresh,

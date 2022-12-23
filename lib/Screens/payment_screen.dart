@@ -10,7 +10,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:nizecart/Models/payment.dart';
 import 'package:nizecart/Screens/success_screen.dart';
-import 'package:nizecart/botton_nav.dart';
+// import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/products/product_controller.dart';
 import 'package:nizecart/services/service_controller.dart';
 import '../Widget/component.dart';

@@ -17,7 +17,7 @@ import 'package:nizecart/Models/orders.dart';
 import 'package:nizecart/Models/product_model.dart';
 import 'package:nizecart/Screens/image_input.dart';
 import 'package:nizecart/Screens/success_screen.dart';
-import 'package:nizecart/botton_nav.dart';
+// import 'package:nizecart/botton_nav.dart';
 import 'package:nizecart/keys/keys.dart';
 // import 'package:paystack_manager/models/transaction.dart';
 // import 'package:paystack_manager/paystack_pay_manager.dart';
