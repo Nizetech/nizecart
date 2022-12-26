@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../Auth/controller/auth_controller.dart';
-import '../../Widget/component.dart';
+import '../../../Auth/controller/auth_controller.dart';
+import '../../../Widget/component.dart';
+
 
 class ChangePassword extends ConsumerWidget {
   ChangePassword({Key key}) : super(key: key);

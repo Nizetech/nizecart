@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
-import 'package:nizecart/Screens/account%20settings/change_display_name.dart';
 
 import '../../Models/user_model.dart';
 

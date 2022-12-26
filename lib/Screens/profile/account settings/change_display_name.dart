@@ -3,18 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../Auth/controller/auth_controller.dart';
-import '../../Widget/component.dart';
+import '../../../Auth/controller/auth_controller.dart';
+import '../../../Widget/component.dart';
 
-class ChangePhoneNumber extends ConsumerWidget {
-  final Map user;
-  ChangePhoneNumber({Key key, this.user}) : super(key: key);
-  TextEditingController phone = TextEditingController();
 
-  void updatePhoneNumber(WidgetRef ref, BuildContext context) {
-    if (phone.text != null) {
-      ref.read(authtControllerProvider).changePhoneNumber(phone.text);
+class ChangeDisplayName extends ConsumerWidget {
+  ChangeDisplayName({Key key}) : super(key: key);
+  TextEditingController name = TextEditingController();
 
+  String init = '';
+  void updateDisplayName(WidgetRef ref, BuildContext context) {
+    if (name.text != null) {
+      ref.read(authtControllerProvider).ChangeDisplayName(name.text);
+      name.text = init;
       Navigator.of(context).pop();
       showToast('Password changed successfully');
     } else {
@@ -42,7 +43,7 @@ class ChangePhoneNumber extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextField(
-                controller: phone,
+                controller: name,
                 obscureText: false,
                 cursorColor: mainColor,
                 decoration: InputDecoration(
@@ -68,7 +69,7 @@ class ChangePhoneNumber extends ConsumerWidget {
             CustomButton(
                 text: "Change Display Name",
                 onPressed: () {
-                  updatePhoneNumber(ref, context);
+                  updateDisplayName(ref, context);
                 }),
           ],
         ),

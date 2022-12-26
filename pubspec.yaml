@@ -74,6 +74,7 @@ dependencies:
 dependency_overrides:
   intl: ^0.17.0  
   http_parser: 
+  firebase_core_platform_interface: 4.5.1
 
 
 

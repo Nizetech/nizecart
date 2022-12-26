@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
     bool isLocked = box.get('isLocked', defaultValue: false);
+    bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
 
     if (Platform.isIOS) {
       FirebaseMessaging.instance.requestPermission(
@@ -71,6 +72,10 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
           backgroundColor: white,
         ),
-        home: isLocked ? LockScreen() : CustomNavBar());
+        home: isLoggedIn
+            ? SignInScreen()
+            : isLocked
+                ? LockScreen()
+                : CustomNavBar());
   }
 }

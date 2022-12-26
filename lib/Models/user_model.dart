@@ -11,6 +11,7 @@ class UserModel {
   final String postCode;
   final String uid;
   final String token;
+  final String displayName;
   UserModel({
     this.email,
     this.pwd,
@@ -24,6 +25,7 @@ class UserModel {
     this.postCode,
     this.uid,
     this.token,
+    this.displayName,
   });
 
   Map<String, dynamic> toMap() {
@@ -38,6 +40,7 @@ class UserModel {
       'country': country ?? '',
       'city': city ?? '',
       'postCode': postCode ?? '',
+      'postCode': displayName ?? '',
       'uid': uid,
     };
   }
@@ -54,6 +57,7 @@ class UserModel {
       postCode: map['postCode'] ?? '',
       country: map['country'] ?? '',
       city: map['city'] ?? '',
+      displayName: map['displayName'] ?? '',
       uid: map['uid'],
     );
   }

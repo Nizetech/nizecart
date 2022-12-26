@@ -8,6 +8,7 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:nizecart/Screens/profile/profile_screen.dart';
+import '../Auth/screens/signInScreen.dart';
 import '../Models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -140,7 +141,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Get.to(ProfileScreen());
+                                user == null || users == null
+                                    ? Get.to(SignInScreen())
+                                    : Get.to(ProfileScreen());
                               },
                               child: Container(
                                 height: 50,

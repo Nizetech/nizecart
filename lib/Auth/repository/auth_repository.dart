@@ -173,6 +173,7 @@ class AuthRepository {
           'email': userCredential.user.email,
           'address': '',
           'token': '',
+          'displayName': '',
           'photoUrl': userCredential.user.photoURL,
           'uid': userCredential.user.uid,
           'date_created': Timestamp.now(),
@@ -221,6 +222,7 @@ class AuthRepository {
           'phone': userCredential.user.phoneNumber,
           'email': userCredential.user.email,
           'address': '',
+          'displayName': '',
           'photoUrl': userCredential.user.photoURL,
           'uid': userCredential.user.uid,
           'date_created': Timestamp.now(),
@@ -277,8 +279,11 @@ class AuthRepository {
 
   // Change Password
   Future<bool> changeDisplayName(String newName) async {
+    CollectionReference collectionReference = firestore.collection('Users');
     try {
-      await auth.currentUser.updateDisplayName(newName);
+      await collectionReference.doc(getUser().uid).update({
+        'displayName': newName,
+      });
       // successToast('Password changed successfully');
       print('Email sent successfully');
       return true;

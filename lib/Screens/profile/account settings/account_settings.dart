@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
-import 'package:nizecart/Screens/account%20settings/change_display_name.dart';
-import 'package:nizecart/Screens/account%20settings/change_password_screen.dart';
+import 'package:nizecart/Screens/profile/account%20settings/change_display_name.dart';
+import 'package:nizecart/Screens/profile/account%20settings/change_password_screen.dart';
 import 'package:nizecart/Widget/component.dart';
 
 class AccountSettings extends ConsumerStatefulWidget {
@@ -71,7 +71,7 @@ class _AccountSettingsState extends ConsumerState<AccountSettings> {
                       onPressed: () {
                         ref.read(authtControllerProvider).deleteAccount();
                         setState(() {});
-                        Navigator.of(context).pop();
+                        // Navigator.of(context).pop();
                       },
                       child: const Text(
                         'yes',

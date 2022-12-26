@@ -1,10 +1,12 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/profile/account_screen.dart';
 import 'package:nizecart/Screens/category_screen.dart';
 import 'package:nizecart/Screens/favourite_screen.dart';
@@ -25,9 +27,15 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
   PersistentTabController _controller;
   bool _hideNavBar;
 
+  User users;
+
   @override
   void initState() {
     super.initState();
+    users = users = FirebaseAuth.instance.currentUser;
+    if (users == null) {
+      print('User is null');
+    }
 
     _controller = PersistentTabController(initialIndex: 0);
     _hideNavBar = false;
@@ -94,6 +102,9 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
       CategoryScreen(),
       FavouriteScreen(),
       // AccountScreen(),
+      // if (users == null) SignInScreen() else ProfileScreen(),
+
+      // SignInScreen(),
       ProfileScreen(),
     ];
   }

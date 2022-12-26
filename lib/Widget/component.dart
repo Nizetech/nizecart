@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -430,7 +431,7 @@ class _MainViewState extends ConsumerState<MainView> {
   }
 }
 
-class Cart extends ConsumerWidget {
+class Cart extends ConsumerStatefulWidget {
   Cart({Key key, this.items}) : super(key: key);
   List<Map<String, dynamic>> items;
 
@@ -440,14 +441,27 @@ class Cart extends ConsumerWidget {
 
 // class _CartState extends State<Cart> {
   static var box = Hive.box('name');
-  // List selectedItems = box.get('cart');
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Cart> createState() => _CartState();
+}
+
+class _CartState extends ConsumerState<Cart> {
+  User users;
+  initState() {
+    super.initState();
+    users = FirebaseAuth.instance.currentUser;
+  }
+
+  // List selectedItems = box.get('cart');
+  @override
+  Widget build(BuildContext context) {
     // print('Total quantity: ${selectedItems.length}');
     return GestureDetector(
       onTap: () {
-        isLoggedIn ? Get.to(CartScreen()) : Get.to(SignInScreen());
+        users != null && isLoggedIn
+            ? Get.to(CartScreen())
+            : Get.to(SignInScreen());
       },
       child: Stack(
         children: [
