@@ -419,6 +419,27 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         ),
                       ]),
                 ),
+                SizedBox(height: 20),
+                RichText(
+                  text: TextSpan(
+                      text: 'Sign In as',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black,
+                      ),
+                      children: [
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => Get.to(CustomNavBar()),
+                          text: ' Guest',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ]),
+                ),
               ],
             ),
           ),

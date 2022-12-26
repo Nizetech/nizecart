@@ -27,15 +27,10 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
   PersistentTabController _controller;
   bool _hideNavBar;
 
-  User users;
-
+  bool currentUser = box.get('isLoggedIn', defaultValue: false);
   @override
   void initState() {
     super.initState();
-    users = users = FirebaseAuth.instance.currentUser;
-    if (users == null) {
-      print('User is null');
-    }
 
     _controller = PersistentTabController(initialIndex: 0);
     _hideNavBar = false;
@@ -102,10 +97,15 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
       CategoryScreen(),
       FavouriteScreen(),
       // AccountScreen(),
-      // if (users == null) SignInScreen() else ProfileScreen(),
+      // if (
+      currentUser
+          ?
+          // )
+          SignInScreen()
+          : ProfileScreen(),
 
       // SignInScreen(),
-      ProfileScreen(),
+      // ProfileScreen(),
     ];
   }
 

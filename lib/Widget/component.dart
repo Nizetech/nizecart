@@ -447,11 +447,7 @@ class Cart extends ConsumerStatefulWidget {
 }
 
 class _CartState extends ConsumerState<Cart> {
-  User users;
-  initState() {
-    super.initState();
-    users = FirebaseAuth.instance.currentUser;
-  }
+  bool currentUser = box.get('isLoggedIn', defaultValue: false);
 
   // List selectedItems = box.get('cart');
   @override
@@ -459,7 +455,7 @@ class _CartState extends ConsumerState<Cart> {
     // print('Total quantity: ${selectedItems.length}');
     return GestureDetector(
       onTap: () {
-        users != null && isLoggedIn
+        !currentUser && isLoggedIn != null
             ? Get.to(CartScreen())
             : Get.to(SignInScreen());
       },
