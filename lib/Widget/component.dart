@@ -455,7 +455,8 @@ class _CartState extends ConsumerState<Cart> {
     // print('Total quantity: ${selectedItems.length}');
     return GestureDetector(
       onTap: () {
-        !currentUser && isLoggedIn != null
+        currentUser
+            // && !isLoggedIn != null
             ? Get.to(CartScreen())
             : Get.to(SignInScreen());
       },

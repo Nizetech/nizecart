@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
           backgroundColor: white,
         ),
-        home: isLoggedIn
+        home: !isLoggedIn
             ? SignInScreen()
             : isLocked
                 ? LockScreen()

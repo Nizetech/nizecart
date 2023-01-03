@@ -178,6 +178,7 @@ class AuthRepository {
           'uid': userCredential.user.uid,
           'date_created': Timestamp.now(),
         });
+        Hive.box('name').put('isLoggedIn', true);
         // await auth.currentUser.sendEmailVerification();
         // successToast("Verification email sent");
         //Update display name
@@ -187,7 +188,6 @@ class AuthRepository {
 
         Hive.box('name').put('displayName', userCredential.user.displayName);
         Hive.box('name').put('email', userCredential.user.email);
-        Hive.box('name').put('isLoggedIn', true);
         return true;
       } else {
         toast('Google sign in failed');

@@ -64,6 +64,7 @@ class _AccountSettingsState extends ConsumerState<AccountSettings> {
             onTap: () {
               Get.dialog(
                 AlertDialog(
+                  title: const Text('Delete Account'),
                   content:
                       Text('Are you sure you want  to delete you account?'),
                   actions: [

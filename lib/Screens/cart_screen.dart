@@ -368,24 +368,24 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                                         SizedBox(width: 5),
                                                         GestureDetector(
                                                           onTap: () {
-                                                            if (cartItems[i]
-                                                                    ['qty'] <
-                                                                10) {
-                                                              setState(
-                                                                () {
-                                                                  cartItems[i]
-                                                                      ['qty']++;
-                                                                  box.put(
-                                                                      'cartItem',
-                                                                      cartItems);
-                                                                  // showToast(
-                                                                  //     'Added to cart');
-                                                                },
-                                                              );
-                                                            } else {
-                                                              showErrorToast(
-                                                                  'Max quantity reached');
-                                                            }
+                                                            // if (cartItems[i]
+                                                            //         ['qty'] <
+                                                            //     10) {
+                                                            setState(
+                                                              () {
+                                                                cartItems[i]
+                                                                    ['qty']++;
+                                                                box.put(
+                                                                    'cartItem',
+                                                                    cartItems);
+                                                                // showToast(
+                                                                //     'Added to cart');
+                                                              },
+                                                            );
+                                                            // } else {
+                                                            //   showErrorToast(
+                                                            //       'Max quantity reached');
+                                                            // }
                                                           },
                                                           child: const Icon(
                                                             Icons.add,

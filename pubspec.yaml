@@ -41,6 +41,8 @@ dependencies:
   flutter_local_notifications:
   uuid: ^3.0.6
   google_sign_in: ^5.1.0
+  flutter_native_splash:
+  flutter_launcher_icons: ^0.11.0
   # paystack_manager: 
   # flutter_paystack:
   #  git:
@@ -81,6 +83,20 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  
+flutter_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/logo.png"
+
+
+flutter_native_splash:  
+  background_image: "assets/splash.png"
+  android: true
+  ios: true
+
   
  
   flutter_lints: ^1.0.0

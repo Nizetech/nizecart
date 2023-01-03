@@ -37,12 +37,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     user = FirebaseAuth.instance.currentUser;
   }
 
-  bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
   static var box = Hive.box('name');
+
+  bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
   bool isLocked = box.get('isLocked', defaultValue: false);
+  String lName = box.get('lname');
+
   final String email = box.get('email');
   final String displayName = box.get('displayName');
-  String lName = box.get('lname');
 
   // void updateImage(ImageSource source) async {
   //   ImagePicker picker = ImagePicker();

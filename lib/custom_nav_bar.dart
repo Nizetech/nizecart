@@ -101,8 +101,8 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
       currentUser
           ?
           // )
-          SignInScreen()
-          : ProfileScreen(),
+          ProfileScreen()
+          : SignInScreen(),
 
       // SignInScreen(),
       // ProfileScreen(),

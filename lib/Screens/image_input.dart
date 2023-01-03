@@ -23,7 +23,8 @@ class ImageInput {
         source: ImageSource.camera,
         maxWidth: 500,
         maxHeight: 500,
-        imageQuality: 40);
+        imageQuality: 40,
+        );
 
     if (imageFile == null) {
       return;

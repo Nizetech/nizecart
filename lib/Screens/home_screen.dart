@@ -77,6 +77,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   // }
 
   String name = HomeScreen.box.get('displayName');
+  bool isLoggedIn = box.get('isLoggedIn', defaultValue: false);
   // static FirebaseAuth auth = FirebaseAuth.instance;
   // User user = auth.currentUser;
   final formatter = intl.NumberFormat.decimalPattern();
@@ -106,6 +107,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           future: Future.wait([
             productSnap,
             ref.read(authtControllerProvider).getUserDetails(),
+            // ref.read(authtControllerProvider).getUserDetails(),
           ]),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -115,9 +117,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 product = snapshot.data[0];
               }
               Map user = snapshot.data[1];
-              String data = user == null ? '' : user['photoUrl'];
+              String data = users == null ? '' : user['photoUrl'];
 
-              log('my Products: ${product}');
+              log('my data======: ${data}');
+              log('my user======: ${user}');
               return Column(
                 children: [
                   Container(
@@ -154,7 +157,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   color:
                                       const Color.fromARGB(255, 221, 213, 213),
                                 ),
-                                child: user == null || users == null
+                                child: data == null ||
+                                        // users == null
+                                        !isLoggedIn
                                     ? const Icon(
                                         Iconsax.user,
                                         size: 30,
@@ -173,21 +178,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                             SizedBox(width: 15),
                             Expanded(
-                              child: user == null || users == null
-                                  ? Text(
-                                      'Good ${greeting()}🙂',
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20),
-                                    )
-                                  : Text(
-                                      'Good ${greeting()} ${users.displayName.split(' ').first}!',
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20),
-                                    ),
+                              child:
+                                  // user == null ||
+                                  users == null
+                                      ? Text(
+                                          'Good ${greeting()}🙂',
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 20),
+                                        )
+                                      : Text(
+                                          'Good ${greeting()} ${users.displayName.split(' ').first}!',
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 20),
+                                        ),
                             ),
                           ],
                         ),

@@ -6,7 +6,6 @@ import 'package:iconsax/iconsax.dart';
 import '../../../Auth/controller/auth_controller.dart';
 import '../../../Widget/component.dart';
 
-
 class ChangeDisplayName extends ConsumerWidget {
   ChangeDisplayName({Key key}) : super(key: key);
   TextEditingController name = TextEditingController();
