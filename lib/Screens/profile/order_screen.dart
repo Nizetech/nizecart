@@ -41,6 +41,7 @@ class OrderScreen extends ConsumerWidget {
               if (isLoggedIn && order.isNotEmpty) {
                 return ListView.separated(
                   itemCount: order.length,
+                  reverse: true,
                   separatorBuilder: (BuildContext context, int index) =>
                       SizedBox(height: 10),
                   padding: EdgeInsets.symmetric(vertical: 20),
@@ -103,11 +104,16 @@ class OrderScreen extends ConsumerWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 3),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Colors.amber,
-                                    ),
-                                    child: const Text(
-                                      'Pending',
+                                        borderRadius: BorderRadius.circular(5),
+                                        color:
+                                            order[index]['status'] == 'Pending'
+                                                ? mainColor.withOpacity(.8)
+                                                : order[index]['status'] ==
+                                                        'Delivered'
+                                                    ? Colors.green
+                                                    : Colors.amber),
+                                    child: Text(
+                                      order[index]['status'],
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,

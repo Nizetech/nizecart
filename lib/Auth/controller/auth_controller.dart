@@ -75,7 +75,7 @@ class AuthController {
 
   // Change Password
   Future<bool> ChangeDisplayName(String newName) {
-    return authRepository.changePassword(newName);
+    return authRepository.changeDisplayName(newName);
   }
 
   // Change Password

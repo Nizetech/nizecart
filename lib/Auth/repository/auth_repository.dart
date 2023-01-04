@@ -285,7 +285,7 @@ class AuthRepository {
         'displayName': newName,
       });
       // successToast('Password changed successfully');
-      print('Email sent successfully');
+      print('Name Changed successfully');
       return true;
     } on FirebaseAuthException catch (e) {
       print(e.toString());
@@ -302,7 +302,7 @@ class AuthRepository {
     CollectionReference collectionReference = firestore.collection('Users');
     try {
       await collectionReference.doc(userId).update({
-        'phoneNumber': phone,
+        'phone': phone,
       });
       // successToast('Password changed successfully');
       print('Email sent successfully');
@@ -354,7 +354,7 @@ class AuthRepository {
           'postCode': post,
           'lga': lga,
           'state': state,
-          'phoneNumber': phone,
+          'phone': phone,
         },
       );
       // successToast('Address changed successfully');

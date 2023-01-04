@@ -169,7 +169,9 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
                                     children: [
                                       CircleAvatar(
                                         backgroundColor:
-                                            mainColor.withOpacity(.8),
+                                            widget.data['status'] == 'Pending'
+                                                ? mainColor.withOpacity(.8)
+                                                : Colors.grey,
                                         radius: 15,
                                         child: Icon(Icons.pending_actions,
                                             color: white, size: 20),
@@ -187,13 +189,18 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
                                       child: Transform.translate(
                                     offset: Offset(0, -6),
                                     child: Divider(
-                                      color: Colors.grey,
+                                      color: widget.data['status'] == 'Shipping'
+                                          ? Colors.amber
+                                          : Colors.grey,
                                     ),
                                   )),
                                   Column(
-                                    children: const [
+                                    children: [
                                       CircleAvatar(
-                                        backgroundColor: Colors.amber,
+                                        backgroundColor:
+                                            widget.data['status'] == 'Shipping'
+                                                ? Colors.amber
+                                                : Colors.grey,
                                         radius: 15,
                                         child: Icon(Icons.flight_takeoff,
                                             color: white, size: 20),
@@ -210,14 +217,20 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
                                   Expanded(
                                       child: Transform.translate(
                                     offset: Offset(0, -6),
-                                    child: const Divider(
-                                      color: Colors.grey,
+                                    child: Divider(
+                                      color:
+                                          widget.data['status'] == 'Delivered'
+                                              ? Colors.green
+                                              : Colors.grey,
                                     ),
                                   )),
                                   Column(
-                                    children: const [
+                                    children: [
                                       CircleAvatar(
-                                        backgroundColor: Colors.green,
+                                        backgroundColor:
+                                            widget.data['status'] == 'Delivered'
+                                                ? Colors.green
+                                                : Colors.grey,
                                         radius: 15,
                                         child: Icon(Icons.check,
                                             color: white, size: 20),

@@ -16,7 +16,7 @@ import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/profile/account%20settings/account_settings.dart';
 import 'package:nizecart/Screens/profile/account_screen.dart';
 import 'package:nizecart/Screens/profile/order_history.dart';
-import 'package:nizecart/Screens/order_screen.dart';
+import 'package:nizecart/Screens/profile/order_screen.dart';
 import 'package:nizecart/Screens/profile/privacy_policy.dart';
 import 'package:nizecart/Widget/component.dart';
 import 'package:nizecart/chat/chat_screen.dart';
@@ -376,7 +376,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       data == null
                                           ? SizedBox()
                                           : Text(
-                                              '$displayName',
+                                              user['displayName'] == ''
+                                                  ? '$displayName'
+                                                  : user['displayName'],
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 color: Colors.blue[800],

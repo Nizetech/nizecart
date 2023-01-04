@@ -6,31 +6,41 @@ import 'package:iconsax/iconsax.dart';
 import '../../../Auth/controller/auth_controller.dart';
 import '../../../Widget/component.dart';
 
-class ChangePhoneNumber extends ConsumerWidget {
+class ChangePhoneNumber extends ConsumerStatefulWidget {
   final Map user;
   ChangePhoneNumber({Key key, this.user}) : super(key: key);
+
+  @override
+  ConsumerState<ChangePhoneNumber> createState() => _ChangePhoneNumberState();
+}
+
+class _ChangePhoneNumberState extends ConsumerState<ChangePhoneNumber> {
   TextEditingController phone = TextEditingController();
+  @override
+  void initState() {
+    phone.text = widget.user['phone'];
+    super.initState();
+  }
 
   void updatePhoneNumber(WidgetRef ref, BuildContext context) {
     if (phone.text != null) {
       ref.read(authtControllerProvider).changePhoneNumber(phone.text);
 
       Navigator.of(context).pop();
-      showToast('Password changed successfully');
+      showToast('Phone Number changed successfully');
     } else {
-      showErrorToast('Password does not match');
-      // Navigator.of(context).pop();
+      showErrorToast('Error occurred!!');
       Navigator.of(context).pop();
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          'Change Display Name',
+          'Change Phone Number',
           style: TextStyle(fontSize: 20),
         ),
       ),
@@ -46,7 +56,7 @@ class ChangePhoneNumber extends ConsumerWidget {
                 obscureText: false,
                 cursorColor: mainColor,
                 decoration: InputDecoration(
-                  hintText: 'Enter New Dispaly Name',
+                  hintText: 'Enter New Phone Number',
                   // labelStyle: TextStyle(fontSize: 18),
                   filled: true,
                   isDense: true,
@@ -66,7 +76,7 @@ class ChangePhoneNumber extends ConsumerWidget {
               height: 20,
             ),
             CustomButton(
-                text: "Change Display Name",
+                text: "Change Phone Number",
                 onPressed: () {
                   updatePhoneNumber(ref, context);
                 }),

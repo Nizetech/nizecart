@@ -6,6 +6,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Screens/profile/account%20settings/change_display_name.dart';
 import 'package:nizecart/Screens/profile/account%20settings/change_password_screen.dart';
+import 'package:nizecart/Screens/profile/account%20settings/change_phone_number.dart';
 import 'package:nizecart/Widget/component.dart';
 
 class AccountSettings extends ConsumerStatefulWidget {
@@ -34,18 +35,22 @@ class _AccountSettingsState extends ConsumerState<AccountSettings> {
         AccountListTile(
           text: 'Change Display Name',
           icon: Icon(
-            Iconsax.lock,
+            Iconsax.user,
             color: mainColor,
           ),
-          onTap: () => Get.to(ChangeDisplayName()),
+          onTap: () => Get.to(ChangeDisplayName(
+            user: widget.user,
+          )),
         ),
-        const AccountListTile(
+        AccountListTile(
           text: 'Change Phone Number',
           icon: Icon(
-            Iconsax.lock,
+            Iconsax.call,
             color: mainColor,
           ),
-          // onTap: () => Get.to(ChangePassword()),
+          onTap: () => Get.to(ChangePhoneNumber(
+            user: widget.user,
+          )),
         ),
         AccountListTile(
           text: 'Change password',

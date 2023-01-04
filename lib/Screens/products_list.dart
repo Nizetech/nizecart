@@ -36,8 +36,8 @@ class _ProductListState extends ConsumerState<ProductList> {
   @override
   Widget build(BuildContext context) {
     List<Map> product = widget.data;
-    List<Map> cat = product;
-    List<Map> category = [];
+    // List<Map> category = product;
+    List<Map> categoryItem = [];
     // print('Category cat $cat');
     return Scaffold(
       appBar: AppBar(
@@ -54,7 +54,7 @@ class _ProductListState extends ConsumerState<ProductList> {
                 return loader();
               } else {
                 List snap = snapshot.data;
-                log('my product $snap');
+                // log('my product $snap');
                 // log('my product oo $category');
                 // print('Snap Category cat $category');
                 return Column(
@@ -99,19 +99,19 @@ class _ProductListState extends ConsumerState<ProductList> {
                               setState(() {
                                 // category = snap;
                                 selected = index;
-                                if (categories[index] == 'All Products') {
-                                  category = snap;
-                                  // showToast('done');
-                                  print('Category cat $category');
-                                } else {
-                                  category = snap
-                                      .where((element) =>
-                                          element['tag'] == categories[index])
-                                      .toList();
-                                  print('Category cat $category');
+                                // if (categories[index] == 'All Products') {
+                                //   categoryItem = snap;
+                                //   // showToast('done');
+                                //   print('Category cat $categoryItem');
+                                // } else {
+                                categoryItem = snap
+                                    .where((element) =>
+                                        element['tag'] == categories[index])
+                                    .toList();
+                                print('Category cat $categoryItem');
 
-                                  // showErrorToast('Faled to change');
-                                }
+                                // showErrorToast('Faled to change');
+                                // }
                               });
                             },
                           );
@@ -121,7 +121,7 @@ class _ProductListState extends ConsumerState<ProductList> {
                     Expanded(
                       child: GridView.builder(
                         itemCount:
-                            widget.data != null ? cat.length : category.length,
+                            widget.data != null ? product.length : snap.length,
                         padding:
                             EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                         shrinkWrap: true,
@@ -133,9 +133,9 @@ class _ProductListState extends ConsumerState<ProductList> {
                           crossAxisCount: 2,
                         ),
                         itemBuilder: (ctx, i) {
-                          print(' Wrong cat ${category}');
+                          print(' Wrong cat ${categoryItem}');
                           return MainView(
-                            data: widget.data != null ? cat[i] : category[i],
+                            data: widget.data != null ? product[i] : snap[i],
                           );
                         },
                       ),

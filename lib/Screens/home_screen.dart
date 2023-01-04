@@ -8,6 +8,7 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:nizecart/Screens/profile/profile_screen.dart';
+import 'package:nizecart/Screens/seaching_screen.dart';
 import '../Auth/screens/signInScreen.dart';
 import '../Models/product_model.dart';
 import 'package:flutter/material.dart';
@@ -121,6 +122,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
               log('my data======: ${data}');
               log('my user======: ${user}');
+              // Map items;
+
               return Column(
                 children: [
                   Container(
@@ -188,13 +191,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                               fontWeight: FontWeight.w500,
                                               fontSize: 20),
                                         )
-                                      : Text(
-                                          'Good ${greeting()} ${users.displayName.split(' ').first}!',
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 20),
-                                        ),
+                                      : user['displayName'] == ''
+                                          ? Text(
+                                              'Good ${greeting()} ${users.displayName.split(' ').first}!',
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20),
+                                            )
+                                          : Text(
+                                              'Good ${greeting()} ${user['displayName']}!',
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 20),
+                                            ),
                             ),
                           ],
                         ),
@@ -227,6 +238,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             .contains(value.toLowerCase());
                                       }).toList();
                                       print('tapped search Product $product');
+                                      // items = product.asMap();
+                                      // log('tapped search items==== $items');
                                     }
                                   });
                                 },
@@ -265,6 +278,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ],
                     ),
                   ),
+                  // print('tapped search items==== $items');
                   product.isEmpty
                       ? const Padding(
                           padding: EdgeInsets.all(20),
@@ -274,6 +288,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                         )
+                      // : isSearching == true
+                      //     ? SearchingScreen(
+                      //         product: product.asMap(),
+                      //       )
                       : Expanded(
                           child: Container(
                             child: RefreshIndicator(

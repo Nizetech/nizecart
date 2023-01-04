@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -6,15 +8,30 @@ import 'package:iconsax/iconsax.dart';
 import '../../../Auth/controller/auth_controller.dart';
 import '../../../Widget/component.dart';
 
-class ChangeDisplayName extends ConsumerWidget {
-  ChangeDisplayName({Key key}) : super(key: key);
+class ChangeDisplayName extends ConsumerStatefulWidget {
+  Map user;
+  ChangeDisplayName({Key key, this.user}) : super(key: key);
+
+  @override
+  ConsumerState<ChangeDisplayName> createState() => _ChangeDisplayNameState();
+}
+
+class _ChangeDisplayNameState extends ConsumerState<ChangeDisplayName> {
   TextEditingController name = TextEditingController();
 
+  @override
+  void initState() {
+    name.text = widget.user['displayName'];
+    super.initState();
+  }
+
   String init = '';
+
+// @override
   void updateDisplayName(WidgetRef ref, BuildContext context) {
     if (name.text != null) {
       ref.read(authtControllerProvider).ChangeDisplayName(name.text);
-      name.text = init;
+      print('name changed===${name.text}');
       Navigator.of(context).pop();
       showToast('Password changed successfully');
     } else {
@@ -25,7 +42,8 @@ class ChangeDisplayName extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    log('displayName===${name.text}');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
