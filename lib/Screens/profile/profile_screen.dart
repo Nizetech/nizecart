@@ -91,6 +91,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       }
     }
     setState(() {});
+    user.reload();
     Get.back();
     setState(() {});
   }

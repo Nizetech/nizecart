@@ -441,7 +441,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           right: 20,
         ),
         child: CustomButton(
-          text: 'Checkout  (₦${formatter.format(totalAmount).toString()})',
+          color: cartItems.isEmpty ? Colors.grey : mainColor,
+          text: cartItems.isEmpty
+              ? 'Checkout'
+              : 'Checkout  (₦${formatter.format(totalAmount).toString()})',
           onPressed: cartItems.isEmpty
               ? null
               : () {

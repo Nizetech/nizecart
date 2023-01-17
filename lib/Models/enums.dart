@@ -53,3 +53,40 @@ class AuthExceptionHandler {
     return errorMessage;
   }
 }
+
+enum MessageType {
+  text,
+  image,
+}
+
+class MessageEnum {
+  // static String getMessageType(MessageType messageType) {
+  //   String type;
+  //   switch (messageType) {
+  //     case MessageType.text:
+  //       type = "text";
+  //       break;
+  //     case MessageType.image:
+  //       type = "image";
+  //       break;
+  //     default:
+  //       type = "text";
+  //   }
+  //   return type;
+  // }
+
+  static MessageType getMessageTypeEnum(String messageType) {
+    MessageType type;
+    switch (messageType) {
+      case "text":
+        type = MessageType.text;
+        break;
+      case "image":
+        type = MessageType.image;
+        break;
+      default:
+        type = MessageType.text;
+    }
+    return type;
+  }
+}

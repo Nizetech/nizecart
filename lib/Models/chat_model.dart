@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nizecart/Models/enums.dart';
 
 class Chat {
   final String name;
@@ -6,12 +7,15 @@ class Chat {
   final String chatId;
   final DateTime timeSent;
   final String lastMessages;
-  Chat(
-      {this.name,
-      this.profilePic,
-      this.chatId,
-      this.timeSent,
-      this.lastMessages});
+  final MessageType messageType;
+  Chat({
+    this.name,
+    this.profilePic,
+    this.chatId,
+    this.timeSent,
+    this.lastMessages,
+    this.messageType,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -20,6 +24,7 @@ class Chat {
       'chatId': chatId,
       'timeSent': FieldValue.serverTimestamp(),
       'lastMessages': lastMessages,
+      'messageType': MessageType,
     };
   }
 
@@ -28,6 +33,7 @@ class Chat {
       name: data['name'],
       profilePic: data['profilePic'],
       chatId: data['contactId'],
+      messageType: data['messageType'],
       timeSent: data[FieldValue.serverTimestamp()],
       lastMessages: data['lastMessages'] ?? '',
     );

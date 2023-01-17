@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +9,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:nizecart/Models/chat_model.dart';
+import 'package:nizecart/Models/enums.dart';
 import 'package:nizecart/chat/chat_list.dart';
 import 'package:nizecart/chat/controller/controller.dart';
 
@@ -33,6 +38,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   static var box = Hive.box('name');
   String name = box.get('displayName');
   User users;
+
+  File storedImage;
+  MessageType type;
   @override
   void initState() {
     users = FirebaseAuth.instance.currentUser;
@@ -46,17 +54,58 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   // }
 
   // String get uid => null;
-  void sendTextMessage() {
+  void sendTextMessage() async {
+    // String imageUrl =
+    //     await ref.read(chatControllerProvider).uploadChatImage(storedImage);
     if (message.text != '') {
+      type = MessageType.text;
       ref.read(chatControllerProvider).sendMessage(
             text: message.text.trim(),
             username: name,
-            photoUrl: widget.user['photoUrl'],
+            // messageType: type,
           );
+      print('my message is ${message.text}');
+      // print('my message is ${photo}');
       message.clear();
     } else {
       return;
     }
+  }
+
+  String photoUrl;
+
+  void chatImage(
+      // ImageSource source,
+      ) async {
+    XFile pickedFile = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, imageQuality: 40);
+
+    if (pickedFile != null) {
+      type = MessageType.image;
+      setState(() {
+        storedImage = File(pickedFile.path);
+      });
+
+      photoUrl = await ref
+          .read(chatControllerProvider)
+          .uploadChatImage(File(pickedFile.path));
+
+      ref.read(chatControllerProvider).sendImage(
+            imageUrl: photoUrl,
+            username: name,
+            messageType: MessageType.image,
+            chatImage: photoUrl,
+            // messageType: type,
+          );
+
+      print('This is photo===== ${photoUrl}');
+    } else {
+      return null;
+    }
+    // }
+    // setState(() {});
+    // Get.back();
+    // setState(() {});
   }
 
   // String userId = FirebaseAuth.instance.currentUser.uid;
@@ -129,16 +178,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 if (!snapshot.hasData) {
                   return Center(child: loader());
                 } else {
+                  // print('my message ${snapshot.data}');
                   List<dynamic> messages = snapshot.data.docs.map((doc) {
                     return doc.data() as Map;
                   }).toList();
+                  print('my message ${messages}');
                   // List messages = snapshot.data;
                   // print('messages: $messages');
-                  // SchedulerBinding.instance.addPersistentFrameCallback((_) {
+
+                  // WidgetsBinding.instance.addPostFrameCallback((_) {
                   //   messageController.jumpTo(
                   //     messageController.position.maxScrollExtent,
                   //   );
                   // });
+                  // messageController.animateTo(
+                  //   messageController.position.maxScrollExtent,
+                  //   duration: Duration(milliseconds: 100),
+                  //   curve: Curves.easeOut,
+                  // );
                   return messages.isEmpty || messages == null
                       ? const Center(
                           child: Text(
@@ -151,14 +208,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         )
                       : ListView.builder(
                           padding: EdgeInsets.symmetric(vertical: 10),
-                          controller: messageController,
-                          // separatorBuilder: (ctx, i) => SizedBox(height: 10),
+                          // controller: messageController,
+
                           shrinkWrap: true,
-                          // scrollDirection: Axis.vertical,
+
                           itemCount: messages.length,
                           itemBuilder: (ctx, i) {
-                            Map data = messages[i];
-                            return ChatList(messageData: data);
+                            Map<String, dynamic> data = messages[i];
+                            // data.addAll({
+                            //   // 'messageType': type,
+                            //   'image': photoUrl,
+                            // });
+                            // print('my photo is ${photoUrl}');
+                            print('my chart data is ${data}');
+                            return ChatList(
+                              messageData: data,
+                              messageType: type,
+                              imageFile: storedImage,
+                            );
                           },
                         );
                 }
@@ -187,9 +254,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   decoration: InputDecoration(
                     fillColor: Color(0xffF5F5F5),
                     hintText: 'Type a Message',
-                    suffixIcon: const Icon(
-                      Iconsax.camera,
-                      color: secColor,
+                    suffixIcon: IconButton(
+                      onPressed: (() {
+                        chatImage();
+                      }),
+                      icon: const Icon(
+                        Iconsax.camera,
+                        color: secColor,
+                      ),
                     ),
                     hintStyle: const TextStyle(
                       color: Color(0xffb7b7b7),

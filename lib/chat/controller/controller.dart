@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
 import 'package:nizecart/Auth/repository/auth_repository.dart';
+import 'package:nizecart/Models/enums.dart';
 
 import '../../Models/chat_model.dart';
 import '../../Models/messages.dart';
@@ -31,15 +34,38 @@ class ChatController {
     return chatRepository.adminDetails();
   }
 
+  //chat Image
+  Future<String> uploadChatImage(File image) {
+    return chatRepository.uploadChatImage(image);
+  }
+
+// Send message
   Future<void> sendMessage({
     String text,
     String username,
-    String photoUrl,
+    String chatImage,
+    // MessageType messageType,
   }) {
     return chatRepository.sendMessage(
       text: text,
       username: username,
-      photoUrl: photoUrl,
+
+      // messageType: messageType,
+    );
+  }
+
+// Send Image
+  Future<void> sendImage({
+    String imageUrl,
+    String username,
+    String chatImage,
+    MessageType messageType,
+  }) {
+    return chatRepository.sendImage(
+      imageUrl: imageUrl,
+      username: username,
+      // chatImage: chatImage,
+      messageType: messageType,
     );
   }
 }
