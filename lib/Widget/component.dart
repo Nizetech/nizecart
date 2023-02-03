@@ -29,7 +29,8 @@ class CustomButton extends StatelessWidget {
   final String text;
   final Function onPressed;
   final Color color;
-  const CustomButton({Key key, this.text, this.onPressed, this.color}) : super(key: key);
+  const CustomButton({Key key, this.text, this.onPressed, this.color})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +40,7 @@ class CustomButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all( color ??
-            mainColor),
+          backgroundColor: MaterialStateProperty.all(color ?? mainColor),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           )),
@@ -276,7 +276,7 @@ class _MainViewState extends ConsumerState<MainView> {
                           ref
                               .read(productControllerProvider)
                               .addFavorite(widget.data);
-                          showErrorToast('Removed from favorite');
+                          // showErrorToast('Removed from favorite');
                         } else {
                           ref
                               .read(productControllerProvider)

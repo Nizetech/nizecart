@@ -62,6 +62,7 @@ class _ChangeDisplayNameState extends ConsumerState<ChangeDisplayName> {
             TextField(
                 controller: name,
                 obscureText: false,
+                textCapitalization: TextCapitalization.words,
                 cursorColor: mainColor,
                 decoration: InputDecoration(
                   hintText: 'Enter New Dispaly Name',

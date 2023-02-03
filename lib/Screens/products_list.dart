@@ -35,21 +35,28 @@ class _ProductListState extends ConsumerState<ProductList> {
   @override
   void initState() {
     productSnap = ref.read(productControllerProvider).getProduct();
+    product = widget.data;
     super.initState();
   }
 
+  List<Map> product = [];
   List cat = [];
   int selected = 0;
   List<Map> categoryItem = [];
 
   @override
   Widget build(BuildContext context) {
-    List<Map> product = widget.data;
     // print('Category cat $cat');
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.productName ?? 'Products'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.filter_list_outlined),
+            onPressed: () {},
+          )
+        ],
       ),
       backgroundColor: white,
       body: RefreshIndicator(
@@ -61,6 +68,9 @@ class _ProductListState extends ConsumerState<ProductList> {
                 return loader();
               } else {
                 List<Map> cat = snapshot.data;
+                if (categoryItem.isEmpty) {
+                  categoryItem = cat;
+                }
                 // categoryItem = cat;
 
                 // log('my product== $cat');
@@ -71,7 +81,9 @@ class _ProductListState extends ConsumerState<ProductList> {
                     SizedBox(
                       height: 50,
                       child: ListView.separated(
-                        itemCount: categories.length,
+                        itemCount: widget.data != null
+                            ? product.length
+                            : categories.length,
                         scrollDirection: Axis.horizontal,
                         padding:
                             const EdgeInsets.only(left: 20, top: 10, right: 20),
@@ -84,22 +96,38 @@ class _ProductListState extends ConsumerState<ProductList> {
                               // width: categories.elementAt(index) == 'All' ? 60 : 44,
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: selected == index
-                                    ? mainColor.withOpacity(.5)
-                                    : Colors.white,
+                                color: widget.data != null
+                                    ? product[index]['tag'] == categories[index]
+                                        ? Colors.white
+                                        : mainColor.withOpacity(.5)
+                                    : selected == index
+                                        ? mainColor.withOpacity(.5)
+                                        : Colors.white,
                                 border: Border.all(
-                                  color: selected == index
-                                      ? Colors.transparent
-                                      : mainColor,
+                                  color: widget.data != null
+                                      ? product[index]['tag'] ==
+                                              categories[index]
+                                          ? mainColor
+                                          : Colors.transparent
+                                      : selected == index
+                                          ? Colors.transparent
+                                          : mainColor,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(
-                                categories.elementAt(index),
+                                widget.data != null
+                                    ? product[index]['tag']
+                                    : categories.elementAt(index),
                                 style: TextStyle(
-                                  color: selected == index
-                                      ? Colors.white
-                                      : Colors.black,
+                                  color: widget.data != null
+                                      ? product[index]['tag'] ==
+                                              categories[index]
+                                          ? Colors.black
+                                          : Colors.white
+                                      : selected == index
+                                          ? Colors.white
+                                          : Colors.black,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -114,6 +142,12 @@ class _ProductListState extends ConsumerState<ProductList> {
 
                                   print('Category all == $categoryItem');
                                 } else {
+                                  // widget.data != null
+                                  //     ? product = product
+                                  //         .where((element) =>
+                                  //             element['tag'] == product[index])
+                                  //         .toList()
+                                  //     :
                                   categoryItem = cat
                                       .where((element) =>
                                           element['tag'] == categories[index])

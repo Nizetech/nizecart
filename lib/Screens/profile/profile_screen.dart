@@ -116,7 +116,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               // print(snapshot.data['photoUrl']);
 
               Map user = snapshot.data;
-
+              print('profile user${user}');
               // print('My user ${user['photoUrl']}');
               String data = user == null ? '' : user['photoUrl'];
 
@@ -374,27 +374,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 Center(
                                   child: Column(
                                     children: [
-                                      data == null
-                                          ? SizedBox()
-                                          : Text(
-                                              user['displayName'] == ''
-                                                  ? '$displayName'
-                                                  : user['displayName'],
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.blue[800],
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                      data == null
-                                          ? SizedBox()
-                                          : Text(
-                                              '$email',
-                                              style: const TextStyle(
-                                                color: mainColor,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
+                                      Text(
+                                        user['displayName'] == ''
+                                            ? user['fname']
+                                            : user['displayName'],
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.blue[800],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        // email != null
+                                        //     ? '$email'
+                                        //     : user['email'] == ''
+                                        //         ? '$email'
+                                        // :
+                                        user['email'],
+                                        style: const TextStyle(
+                                          color: mainColor,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
