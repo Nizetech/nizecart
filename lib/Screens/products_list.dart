@@ -31,13 +31,20 @@ class _ProductListState extends ConsumerState<ProductList> {
     setState(() {});
   }
 
+  Future<List> productSnap;
+  @override
+  void initState() {
+    productSnap = ref.read(productControllerProvider).getProduct();
+    super.initState();
+  }
+
   List cat = [];
   int selected = 0;
+  List<Map> categoryItem = [];
+
   @override
   Widget build(BuildContext context) {
     List<Map> product = widget.data;
-    // List<Map> category = product;
-    List<Map> categoryItem = [];
     // print('Category cat $cat');
     return Scaffold(
       appBar: AppBar(
@@ -48,13 +55,15 @@ class _ProductListState extends ConsumerState<ProductList> {
       body: RefreshIndicator(
         onRefresh: refresh,
         child: FutureBuilder<Object>(
-            future: ref.read(productControllerProvider).getProduct(),
+            future: productSnap,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return loader();
               } else {
-                List snap = snapshot.data;
-                // log('my product $snap');
+                List<Map> cat = snapshot.data;
+                // categoryItem = cat;
+
+                // log('my product== $cat');
                 // log('my product oo $category');
                 // print('Snap Category cat $category');
                 return Column(
@@ -97,21 +106,23 @@ class _ProductListState extends ConsumerState<ProductList> {
                             ),
                             onTap: () {
                               setState(() {
-                                // category = snap;
+                                print('tapped===');
                                 selected = index;
-                                // if (categories[index] == 'All Products') {
-                                //   categoryItem = snap;
-                                //   // showToast('done');
-                                //   print('Category cat $categoryItem');
-                                // } else {
-                                categoryItem = snap
-                                    .where((element) =>
-                                        element['tag'] == categories[index])
-                                    .toList();
-                                print('Category cat $categoryItem');
+                                // category = snap;
+                                if (categories[index] == 'All Products') {
+                                  categoryItem = cat;
 
-                                // showErrorToast('Faled to change');
-                                // }
+                                  print('Category all == $categoryItem');
+                                } else {
+                                  categoryItem = cat
+                                      .where((element) =>
+                                          element['tag'] == categories[index])
+                                      .toList();
+                                  print(
+                                      'Category filter== ${categories[index]}');
+                                  print('Category filter== $categoryItem');
+                                  // showErrorToast('Faled to change');
+                                }
                               });
                             },
                           );
@@ -120,8 +131,9 @@ class _ProductListState extends ConsumerState<ProductList> {
                     ),
                     Expanded(
                       child: GridView.builder(
-                        itemCount:
-                            widget.data != null ? product.length : snap.length,
+                        itemCount: widget.data != null
+                            ? product.length
+                            : categoryItem.length,
                         padding:
                             EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                         shrinkWrap: true,
@@ -133,9 +145,14 @@ class _ProductListState extends ConsumerState<ProductList> {
                           crossAxisCount: 2,
                         ),
                         itemBuilder: (ctx, i) {
-                          print(' Wrong cat ${categoryItem}');
+                          // categoryItem = cat;
+                          // print(' how cat ${cat.length}');
+                          // print(' Wrong cat ${cat}');
+
                           return MainView(
-                            data: widget.data != null ? product[i] : snap[i],
+                            data: widget.data != null
+                                ? product[i]
+                                : categoryItem[i],
                           );
                         },
                       ),

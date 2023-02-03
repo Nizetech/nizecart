@@ -208,10 +208,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         )
                       : ListView.builder(
                           padding: EdgeInsets.symmetric(vertical: 10),
-                          // controller: messageController,
-
+                          controller: messageController,
                           shrinkWrap: true,
-
                           itemCount: messages.length,
                           itemBuilder: (ctx, i) {
                             Map<String, dynamic> data = messages[i];

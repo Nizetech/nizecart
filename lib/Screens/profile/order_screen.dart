@@ -42,6 +42,7 @@ class OrderScreen extends ConsumerWidget {
                 return ListView.separated(
                   itemCount: order.length,
                   reverse: true,
+                  shrinkWrap: true,
                   separatorBuilder: (BuildContext context, int index) =>
                       SizedBox(height: 10),
                   padding: EdgeInsets.symmetric(vertical: 20),

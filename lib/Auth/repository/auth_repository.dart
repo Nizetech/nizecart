@@ -181,7 +181,7 @@ class AuthRepository {
         Hive.box('name').put('isLoggedIn', true);
         // await auth.currentUser.sendEmailVerification();
         // successToast("Verification email sent");
-        //Update display name
+        // Update display name
         await userCredential.user.updateDisplayName(
           userCredential.user.displayName,
         );
