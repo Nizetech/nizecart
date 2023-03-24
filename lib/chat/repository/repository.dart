@@ -37,6 +37,13 @@ class ChatRepository {
     return auth.currentUser.uid;
   }
 
+  // Future<String> get adminId async {
+
+  //   QuerySnapshot<Object> data = await admins.get();
+  //   // data.docs.first.get('uid');
+  //   return data.docs.first.get('uid');
+  // }
+
   User user;
 
   // Chat Id
@@ -57,17 +64,18 @@ class ChatRepository {
 //         : peerID + '_' + userID;
 //   }
 
+  // String userTest = 'z8IxwlkJrPQjwlFw3cVGd2MrH8Z2z8IxwlkJrPQjwlFw3cVGd2MrH8Z2';
+
   // Get admin id
-  Future<List> adminDetails() async {
+  Stream<QuerySnapshot<Object>> adminDetails() {
     CollectionReference adminCollection = firestore.collection('Admin');
     try {
-      QuerySnapshot shot = await adminCollection.get();
-
+      Stream<QuerySnapshot<Object>> shot = adminCollection.snapshots();
       print('Admin details ${shot}');
-      return shot.docs;
+      return shot;
     } catch (e) {
       print(e.toString());
-      return [];
+      return null;
     }
   }
 
@@ -86,15 +94,27 @@ class ChatRepository {
   // }
 
 // Stream current User chat
-  Stream<QuerySnapshot<Object>> getChats() {
-    String receiver = 'peYLb9DBDSWZIYuvVT83BGKi3Xq2';
+  Stream<QuerySnapshot<Object>> getChats(String adminId) {
+    // String receiver = admins.doc().id;
 
-    String chatID = getChatID(userId, receiver);
-    return chatsCollection
-        .doc(chatID)
-        .collection('Messages')
-        .where('users', arrayContains: userId)
-        .snapshots();
+    String id =
+        // '6Z4DLOW6pu0bFonyU7oa-Nize-z8IxwlkJrPQjwlFw3cVGd2MrH8Z2z8IxwlkJrPQjwlFw3cVGd2MrH8Z2';
+        'MNoM1gwcz9WEHqKjuT0E-Nize-z8IxwlkJrPQjwlFw3cVGd2MrH8Z2z8IxwlkJrPQjwlFw3cVGd2MrH8Z2';
+    // jkaPCZnOLuECgihMwI3j-Nize-z8IxwlkJrPQjwlFw3cVGd2MrH8Z2z8IxwlkJrPQjwlFw3cVGd2MrH8Z2
+    // sMZxqgQUUfUEaFKvP8RB-Nize-z8IxwlkJrPQjwlFw3cVGd2MrH8Z2z8IxwlkJrPQjwlFw3cVGd2MrH8Z2
+    // uJIamqeQWcLTFQiH5voR-Nize-z8IxwlkJrPQjwlFw3cVGd2MrH8Z2z8IxwlkJrPQjwlFw3cVGd2MrH8Z2
+    // 6Z4DLOW6pu0bFonyU7oa-Nize-z8IxwlkJrPQjwlFw3cVGd2MrH8Z2z8IxwlkJrPQjwlFw3cVGd2MrH8Z2
+
+    String chatID = getChatID(userId, adminId);
+    try {
+      return chatsCollection
+          .doc(chatID)
+          .collection('Messages')
+          // .where('users', arrayContains: adminId)
+          .snapshots();
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   // String adminId;
@@ -105,160 +125,94 @@ class ChatRepository {
   // }
 
   // Stream chatMessages
-  Stream<QuerySnapshot> getChatMessages(String uid) {
-    // String senderId = userId;
-    String chatID = getChatID(userId, uid);
-    return chatsCollection.doc(chatID).collection('Messages').snapshots();
-  }
-
-  // Send Image
-  Future<String> uploadChatImage(File image) async {
-    // Reference storageReference = firebaseStorage.ref('chatImages');
-    // CollectionReference collectionReference = firestore.collection('Users');
-    final imageId = '${DateTime.now().millisecondsSinceEpoch}';
-    try {
-      //Upload image to firebase storage
-      // UploadTask uploadTask = storageReference.child(userId).putFile((image));
-      // Get url of image
-      String imageUrl;
-      var ref =
-          FirebaseStorage.instance.ref().child('chatImages').child(imageId);
-      await ref.putFile(image);
-      imageUrl = await ref.getDownloadURL();
-
-      // uploadTask.then((value) {
-      //   value.ref.getDownloadURL().then((url) {
-      //     imageUrl = url;
-      //     collectionReference.doc(userId).set({
-      //       'chatImage': imageUrl,
-      //       // 'imageUploaded': true,
-      //     });
-      // });
-
-      // });
-      // await auth.currentUser.updateimageUrl(imageUrl);
-      print(imageUrl);
-      return imageUrl;
-    } catch (e) {
-      print(e.toString());
-      // toast(e.toString());
-      return '';
-    }
-  }
-
-  // // upload product image
-  // Future<String> uploadFile(
-  //   File file,
-  // ) async {
-  //   Reference storageReference = firebaseStorage.ref('chatImages');
-  //   final chatID = '${DateTime.now().millisecondsSinceEpoch}';
-  //   // await storageReference.delete();
-  //   var ref =
-  //       FirebaseStorage.instance.ref().child('chatImages').child(chatID);
-  //   await ref.putFile(file);
-  //   var url = await ref.getDownloadURL();
-  //   print(url);
-  //   return url;
+  // Stream<QuerySnapshot> getChatMessages(String uid) {
+  //   // String senderId = userId;
+  //   String chatID = getChatID(userId, uid);
+  //   return chatsCollection.doc(chatID).collection('Messages').snapshots();
   // }
 
-  //  setState(() {
-  //         storedImage = File(croppedFile.path);
-  //       });
+  // Send Image
+  // Future<String> uploadChatImage(File image) async {
+
+  //   final imageId = '${DateTime.now().millisecondsSinceEpoch}';
+  //   try {
+  //     //Upload image to firebase storage
+  //     // UploadTask uploadTask = storageReference.child(userId).putFile((image));
+  //     // Get url of image
+  //     String imageUrl;
+  //     var ref =
+  //         FirebaseStorage.instance.ref().child('chatImages').child(imageId);
+  //     await ref.putFile(image);
+  //     imageUrl = await ref.getDownloadURL();
+
+  //     print(imageUrl);
+  //     return imageUrl;
+  //   } catch (e) {
+  //     print(e.toString());
+  //     // toast(e.toString());
+  //     return '';
+  //   }
+  // }
 
   // Send massage
-  Future<void> sendMessage({
+  Future<void> sendTextMessage({
     String text,
     String username,
-
+    String adminId,
     // MessageType messageType,
-    // String receiverToken,
+    String receiverToken,
+    File image,
   }) async {
     try {
+      String chatImage = '';
       // String senderId = userId;
-      String receiver = 'peYLb9DBDSWZIYuvVT83BGKi3Xq2';
-      String chatID = getChatID(userId, receiver);
+      // String receiver = admins.doc().id;
+      String chatID = getChatID(userId, adminId);
       String messageId = DateTime.now().millisecondsSinceEpoch.toString();
 
       Map<String, dynamic> data = {};
+      // Upload image;
+      if (image != null) {
+        chatImage = await uploadImage(image: image);
+      }
 
       data['id'] = messageId;
       data['date'] = FieldValue.serverTimestamp();
       data['sender'] = userId;
-      data['admin_receiver'] = receiver;
+      data['admin_adminId'] = adminId;
       data['text'] = text;
 
       // data['messageType'] = messageType;
 
       data['username'] = username;
-      data['users'] = [userId, receiver];
+      data['users'] = [userId, adminId];
       data['chatID'] = chatID;
+      data['chatImage'] = chatImage ?? '';
 
       await chatsCollection
           .doc(chatID)
           .collection('Messages')
           .doc(messageId)
           .set(data);
-
+      print('(========>)');
+      print(adminId);
+      print('(========>)');
       //Save last message
       await chatsCollection.doc(chatID).set(
         {
           'lastMessage': text,
-          // 'messageType': messageType,
-          // 'chatImage': chatImage,
+          'chatImage': chatImage ?? '',
+          'token': receiverToken,
           'username': username,
+
           'lastMessageDate': FieldValue.serverTimestamp(),
-          'users': [userId, receiver],
+          'users': [userId, adminId],
           // 'unreadMessages': {
           //   receiver: FieldValue.increment(1),
           // },
         },
 
-        //  SetOptions(merge: true)
-      );
-      // print('message Sent: $data');
-      //  NotifService().sendMessageNotif(token: receiverToken, message: text);
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  // Send massage
-  Future<void> sendImage({
-    String imageUrl,
-    String username,
-    MessageType messageType,
-    // String receiverToken,
-  }) async {
-    try {
-      // String senderId = userId;
-      String receiver = 'peYLb9DBDSWZIYuvVT83BGKi3Xq2';
-      String chatID = getChatID(userId, receiver);
-      String messageId = DateTime.now().millisecondsSinceEpoch.toString();
-      Map<String, dynamic> data = {};
-
-      data['id'] = messageId;
-      data['date'] = FieldValue.serverTimestamp();
-      data['sender'] = userId;
-      data['admin_receiver'] = receiver;
-      data['image'] = imageUrl;
-      data['username'] = username;
-      data['users'] = [userId, receiver];
-      data['chatID'] = chatID;
-
-      await chatsCollection
-          .doc(chatID)
-          .collection('Messages')
-          .doc(messageId)
-          .set(data);
-
-      //Save last message
-      await chatsCollection.doc(chatID).set(
-        {
-          'lastMessage': '📷 Photo',
-          'username': username,
-          'lastMessageDate': FieldValue.serverTimestamp(),
-          'users': [userId, receiver],
-        },
+        // await sendMessage();
 
         //  SetOptions(merge: true)
       );
@@ -268,6 +222,72 @@ class ChatRepository {
       log(e.toString());
     }
   }
+
+  // // Send massage
+  // Future<void> sendImage({
+  //   String chatImage,
+  //   String username,
+  //   // MessageType messageType,
+  //   String receiverToken,
+  //   String adminId,
+  //   File image,
+  // }) async {
+  //   try {
+
+  //     // String receiver = 'peYLb9DBDSWZIYuvVT83BGKi3Xq2';
+  //     String chatID = getChatID(userId, adminId);
+
+  //     String messageId = DateTime.now().millisecondsSinceEpoch.toString();
+  //     Map<String, dynamic> data = {};
+
+  //     data['id'] = messageId;
+  //     data['date'] = FieldValue.serverTimestamp();
+  //     data['sender'] = userId;
+  //     data['admin_receiver'] = adminId;
+  //     data['image'] = imageUrl;
+  //     data['username'] = username;
+  //     data['users'] = [userId, adminId];
+  //     data['chatID'] = chatID;
+
+  //     await chatsCollection
+  //         .doc(chatID)
+  //         .collection('Messages')
+  //         .doc(messageId)
+  //         .set(data);
+
+  //     //Save last message
+  //     await chatsCollection.doc(chatID).set(
+  //       {
+  //         'lastMessage': '📷 Photo',
+  //         'username': username,
+  //         'lastMessageDate': FieldValue.serverTimestamp(),
+  //         'users': [userId, adminId],
+  //         'photoUrl': imageUrl ?? '',
+  //         'token': receiverToken,
+  //       },
+
+  //       //  SetOptions(merge: true)
+  //     );
+  //     // print('message Sent: $data');
+  //     //  NotifService().sendMessageNotif(token: receiverToken, message: text);
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
 
   String uid = Uuid().v1();
+
+  Future<String> uploadImage({File image}) async {
+    try {
+      String imageID = '${DateTime.now().millisecondsSinceEpoch}';
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('chatImages/$imageID');
+      UploadTask uploadTask = storageReference.putFile(image);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String imageUrl = await taskSnapshot.ref.getDownloadURL();
+      return imageUrl;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nizecart/Auth/controller/auth_controller.dart';
+import 'package:nizecart/Auth/repository/auth_repository.dart';
+import 'package:nizecart/Auth/screens/otp_screen.dart';
 import 'package:nizecart/Screens/cart_screen.dart';
 import 'package:nizecart/custom_nav_bar.dart';
 import '../../Widget/component.dart';
@@ -37,6 +39,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
     });
   }
 
+  static Box box = Hive.box('name');
+
   void signUp() {
     if (fname.text.isNotEmpty &&
         lname.text.isNotEmpty &&
@@ -51,58 +55,68 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen>
                 // showToast('Signed In Successful');
               } else {
                 showErrorToast('phone number is not valid');
-                Navigator.of(context).pop();
                 return;
               }
             } else {
               showErrorToast('email is not valid');
-              Navigator.of(context).pop();
-
               return;
             }
           } else {
             showErrorToast('email is not valid');
-            Navigator.of(context).pop();
-
             return;
           }
         } else {
           showErrorToast('you must agree with the terms and conditions');
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
           return;
         }
-        ref
-            .read(authtControllerProvider)
-            .signUp(
-              email.text,
-              pwd.text,
-              fname.text,
-              lname.text,
-              phone.text,
-            )
-            .then((value) {
-          print(email.text);
-          if (value) {
-            showToast('loggedIn in successfully');
-            Hive.box('name').put("isLoggedIn", true);
-            Get.to(CustomNavBar());
-          } else {
-            Navigator.of(context).pop();
-            // Navigator.of(context).pop();
-          }
-        });
       } else {
         // Get.to(BottomNav());
-        Navigator.of(context).pop();
         showErrorToast('password must be at least 6 characters');
+        return;
       }
     } else {
       // Get.to(BottomNav());
-      Navigator.of(context).pop();
       showErrorToast('Please fill all the fields');
+      return;
       // }
+
     }
+    Map userData = {
+      'email': email.text,
+      'password': pwd.text,
+      'firstName': fname.text,
+      'lastName': lname.text,
+      'phoneNumber': phone.text,
+    };
+    box.put('userData', userData);
+    // print('userDta==> ${userData}');
+    String phoneNumber = phone.text;
+    print(phoneNumber);
+    ref
+        .read(authtControllerProvider)
+        .verifyPhoneNumber(phoneNumber: phoneNumber);
+
+    // ref
+    //     .read(authtControllerProvider)
+    //     .signUp(
+    //       email.text,
+    //       pwd.text,
+    //       fname.text,
+    //       lname.text,
+    //       phone.text,
+    //     )
+    //     .then((value) {
+    //   print(email.text);
+
+    //   if (value) {
+    //     showToast('loggedIn in successfully');
+    //     Hive.box('name').put("isLoggedIn", true);
+    //     Get.to(CustomNavBar());
+    //   } else {
+    //     Navigator.of(context).pop();
+
+    //   }
+    // });
   }
 
   void enable() {

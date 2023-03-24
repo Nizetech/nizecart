@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/profile/account_screen.dart';
@@ -13,6 +14,7 @@ import 'package:nizecart/Screens/favourite_screen.dart';
 import 'package:nizecart/Screens/home_screen.dart';
 import 'package:nizecart/Screens/profile/profile_screen.dart';
 import 'package:nizecart/Widget/component.dart';
+import 'package:nizecart/chat/chat_screen.dart';
 import 'package:nizecart/services/service_controller.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
@@ -65,9 +67,11 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
+              // sound: RawResourceAndroidNotificationSound('default'),
+              importance: Importance.high,
               channelDescription: channel.description,
               enableVibration: true,
-              icon: '@mipmap/ic_launcher',
+              icon: 'drawable/logo',
             ),
           ),
         );
@@ -80,11 +84,19 @@ class _CustomNavBarState extends ConsumerState<CustomNavBar> {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground! $message');
       handleMessage(message);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      handleMessage(message);
+      print('A new onMessageOpenedApp event was published! $message');
+
+      message.messageType == 'chat' ? Get.to(ChatScreen()) : log('Order');
+    });
+
+    FirebaseMessaging.onBackgroundMessage((message) {
+      print('A new onBackgroundMessage event was published! $message');
+      message.messageType == 'chat' ? Get.to(ChatScreen()) : log('Order');
     });
 
     FirebaseMessaging.instance.onTokenRefresh

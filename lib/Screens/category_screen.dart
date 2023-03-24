@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:nizecart/Auth/screens/signInScreen.dart';
 import 'package:nizecart/Screens/product_details.dart';
 import 'package:nizecart/Screens/products_list.dart';
 import 'package:nizecart/products/product_controller.dart';
@@ -23,6 +24,10 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: SizedBox(),
+        // IconButton(
+        // onPressed: () => Get.to(SignInScreen()),
+        // icon: Icon(Icons.arrow_back),
+        // ),
         title: const Text(
           'Category',
           style: TextStyle(fontSize: 20),

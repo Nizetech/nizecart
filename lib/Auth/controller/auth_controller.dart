@@ -110,6 +110,19 @@ class AuthController {
     return authRepository.getUserDetails();
   }
 
+  //Verify PhoneNumber
+  void verifyPhoneNumber({String phoneNumber}) {
+    return authRepository.verifyPhoneNumber();
+  }
+
+  // Verify OTP
+  void verifyOTP({
+    String verificationId,
+    String userOtp,
+  }) {
+    return authRepository.verifyOTP();
+  }
+
   // Get UserData
   // Future<UserModel> getUserCurrentUserData() async {
   //   UserModel user = await authRepository.getUserCurrentUserData();

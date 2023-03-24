@@ -92,8 +92,12 @@ class ServiceRepository {
           'notification': {
             'title': message['title'],
             'body': message['body'],
+            // 'title': message['title'],
+            // 'body': message['body'],
           },
-          'date': {'id': message['id']},
+          'data': {'id': message['id'],
+          'type': message['type'],
+          },
         }),
       );
       await saveNotif(

@@ -884,6 +884,7 @@ class CustomTextField extends StatelessWidget {
   final Widget icon;
   final bool enable;
   final TextInputType keyboard;
+
   const CustomTextField({
     Key key,
     this.controller,
@@ -893,7 +894,6 @@ class CustomTextField extends StatelessWidget {
     this.label,
     this.keyboard,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return TextField(

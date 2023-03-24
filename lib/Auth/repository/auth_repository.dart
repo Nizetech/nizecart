@@ -11,6 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:nizecart/Auth/screens/otp_screen.dart';
 import 'package:nizecart/Screens/image_input.dart';
 import '../../Models/user_model.dart';
 import '../../Widget/component.dart';
@@ -66,6 +67,9 @@ class AuthRepository {
       //create user on firebase auth
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
           email: email, password: pwd);
+      await auth.currentUser.sendEmailVerification();
+      // Verify email
+      successToast("Verification email sent");
       if (userCredential.user != null && !auth.currentUser.emailVerified) {
         userCredential.user.sendEmailVerification();
         var userData = UserModel(
@@ -80,13 +84,10 @@ class AuthRepository {
         await collectionReference
             .doc(userCredential.user.uid)
             .set(userData.toMap());
-        await auth.currentUser.sendEmailVerification();
 
         // QueryDocumentSnapshot shot = await firestore.collection('Admin').get();
 
-        // Verify email
-        await auth.currentUser.sendEmailVerification();
-        successToast("Verification email sent");
+        // await auth.currentUser.sendEmailVerification();
         //Update display name
         await userCredential.user.updateDisplayName(
           fname + ' ' + lname,
@@ -102,6 +103,48 @@ class AuthRepository {
       FirebaseException ext = e;
       toast(ext.message);
       return false;
+    }
+  }
+
+  // Verify phoneNumber
+  void verifyPhoneNumber({String phoneNumber}) async {
+    try {
+      await auth.verifyPhoneNumber(
+          phoneNumber: '+234$phoneNumber',
+          // 09072026425',
+          // $phoneNumber',
+          timeout: Duration(seconds: 60),
+          // multiFactorInfo: null,
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            await auth.signInWithCredential(credential);
+          },
+          verificationFailed: (e) {
+            print('eror ==>${e.toString()}');
+            throw Exception(e.toString());
+          },
+          codeSent: (String verificationId, int resendToken) async {
+            Get.to(OtpScreen(verificationId: verificationId));
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            Get.to(OtpScreen(verificationId: verificationId));
+          });
+    } on FirebaseAuthException catch (e) {
+      print('eror ==>${e.toString()}');
+      showErrorToast(e.toString());
+    }
+  }
+
+  // Verify OTP
+  void verifyOTP({
+    String verificationId,
+    String userOtp,
+  }) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: userOtp);
+      await auth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      showErrorToast(e.toString());
     }
   }
 
@@ -427,6 +470,19 @@ class AuthRepository {
     try {
       DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
       print('User details ${shot}');
+
+      return shot.data();
+    } catch (e) {
+      print(e.toString());
+      return {};
+    }
+  }
+
+   Future<Map> getAdminDetails() async {
+    CollectionReference userCredential = firestore.collection('Admin');
+    try {
+      DocumentSnapshot shot = await userCredential.doc(getUser().uid).get();
+      print('Admin details ${shot}');
 
       return shot.data();
     } catch (e) {

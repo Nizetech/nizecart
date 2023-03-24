@@ -29,7 +29,7 @@ dependencies:
   shimmer: ^2.0.0
   geolocator: ^8.0.1
   geocoding: ^2.0.4
-  flutter_riverpod: ^1.0.4
+  flutter_riverpod: ^1.0.4 
   local_auth: ^2.1.2
   url_launcher: ^6.1.5
   share_plus: ^4.4.0
@@ -40,6 +40,7 @@ dependencies:
   flutterwave_standard: ^1.0.4
   nigerian_states_and_lga: ^1.0.0
   http: ^0.13.5
+  pin_code_fields: ^7.4.0
   flutter_local_notifications:
   uuid: ^3.0.6
   google_sign_in: ^5.1.0

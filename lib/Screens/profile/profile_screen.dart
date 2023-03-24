@@ -118,7 +118,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Map user = snapshot.data;
               print('profile user${user}');
               // print('My user ${user['photoUrl']}');
-              String data = user == null ? '' : user['photoUrl'];
+              String image = user == null ? '' : user['photoUrl'];
 
               return CustomScrollView(
                 slivers: [
@@ -196,7 +196,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          data == '' || data == null
+                                          image == '' || image == null
                                               ? Icon(
                                                   Iconsax.user,
                                                   size: 70,
@@ -206,7 +206,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                   child: CachedNetworkImage(
-                                                    imageUrl: data,
+                                                    imageUrl: image,
                                                     height: 230,
                                                     width: double.infinity,
                                                     fit: BoxFit.cover,
@@ -220,7 +220,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     CircleAvatar(
                                       radius: 55,
                                       backgroundColor: Colors.grey[200],
-                                      child: data == '' || data == null
+                                      child: image == '' || image == null
                                           ? const Icon(
                                               Iconsax.user,
                                               size: 70,
@@ -230,7 +230,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(70),
                                               child: CachedNetworkImage(
-                                                imageUrl: data,
+                                                imageUrl: image,
                                                 height: 140,
                                                 width: 140,
                                                 fit: BoxFit.cover,

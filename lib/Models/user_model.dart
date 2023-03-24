@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
+  final DateTime dateCreated;
   final String email;
   final String pwd;
   final String firstName;
@@ -14,6 +17,7 @@ class UserModel {
   final String token;
 
   UserModel({
+    this.dateCreated,
     this.email,
     this.pwd,
     this.firstName,
@@ -31,6 +35,7 @@ class UserModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'date_created': Timestamp.now(),
       'email': email,
       'firstName': firstName,
       'last_name': lastName,
@@ -48,6 +53,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
+      dateCreated: map['date_created'],
       email: map['email'],
       firstName: map['firstName'],
       lastName: map['last_name'],

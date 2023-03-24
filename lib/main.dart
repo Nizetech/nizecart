@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
     }
     final fcmToken = FirebaseMessaging.instance
         .getToken()
-        .then((value) => log('Firebase Toke: $value'));
+        .then((value) => log('Firebase Token main: $value'));
 
     // FirebaseMessag,
     SystemChrome.setPreferredOrientations([

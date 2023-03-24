@@ -21,51 +21,54 @@ class ChatController {
   final ProviderRef ref;
   ChatController({this.chatRepository, this.ref});
 
-  Stream<QuerySnapshot> getChatMessages(String uid) {
-    return chatRepository.getChatMessages(uid);
-  }
+  // Stream<QuerySnapshot> getChatMessages(String uid) {
+  //   return chatRepository.getChatMessages(uid);
+  // }
 
-  Stream<QuerySnapshot<Object>> getChats() {
-    return chatRepository.getChats();
+  Stream<QuerySnapshot<Object>> getChats(String adminId) {
+    return chatRepository.getChats(adminId);
   }
 
 // admin details
-  Future<List> adminDetails() {
+  Stream<QuerySnapshot<Object>> adminDetails() {
     return chatRepository.adminDetails();
   }
 
   //chat Image
-  Future<String> uploadChatImage(File image) {
-    return chatRepository.uploadChatImage(image);
-  }
+  // Future<String> uploadChatImage(File image) {
+  //   return chatRepository.uploadChatImage(image);
+  // }
 
 // Send message
   Future<void> sendMessage({
     String text,
     String username,
-    String chatImage,
+    String adminId,
+    File image,
     // MessageType messageType,
   }) {
-    return chatRepository.sendMessage(
+    return chatRepository.sendTextMessage(
       text: text,
       username: username,
+      image: image,
+      adminId: adminId,
 
       // messageType: messageType,
     );
   }
 
-// Send Image
-  Future<void> sendImage({
-    String imageUrl,
-    String username,
-    String chatImage,
-    MessageType messageType,
-  }) {
-    return chatRepository.sendImage(
-      imageUrl: imageUrl,
-      username: username,
-      // chatImage: chatImage,
-      messageType: messageType,
-    );
-  }
+// // Send Image
+//   Future<void> sendImage({
+//     String imageUrl,
+//     String username,
+//     String chatImage,
+//     MessageType messageType,
+//   }) {
+//     return chatRepository.sendImage(
+//       imageUrl: imageUrl,
+//       username: username,
+//       // chatImage: chatImage,
+//       // messageType: messageType,
+//     );
+//   }
 }

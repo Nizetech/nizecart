@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,6 +20,7 @@ import 'package:nizecart/chat/controller/controller.dart';
 import '../Auth/controller/auth_controller.dart';
 import '../Models/user_model.dart';
 import '../Widget/component.dart';
+import '../services/service_controller.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   Map user;
@@ -41,9 +43,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   File storedImage;
   MessageType type;
+
+  Stream<QuerySnapshot<Object>> admin;
   @override
   void initState() {
     users = FirebaseAuth.instance.currentUser;
+    admin = ref.read(chatControllerProvider).adminDetails();
+    print(users);
     super.initState();
   }
 
@@ -53,60 +59,71 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   //   super.dispose();
   // }
 
-  // String get uid => null;
-  void sendTextMessage() async {
-    // String imageUrl =
-    //     await ref.read(chatControllerProvider).uploadChatImage(storedImage);
+  void sendTextMessage(
+    String token,
+    String adminId,
+  ) async {
     if (message.text != '') {
-      type = MessageType.text;
-      ref.read(chatControllerProvider).sendMessage(
-            text: message.text.trim(),
-            username: name,
-            // messageType: type,
-          );
-      print('my message is ${message.text}');
-      // print('my message is ${photo}');
-      message.clear();
+      try {
+        type = MessageType.text;
+        ref.read(chatControllerProvider).sendMessage(
+              text: message.text.trim(),
+              username: name,
+              adminId: adminId,
+            );
+
+        ref.read(serviceControllerProvider).sendMessage(token: token, message: {
+          'title': 'You have a new message from $name',
+          'body': message.text.trim(),
+          'type': 'chat',
+        });
+        print('my message is ${message.text}');
+        // print('my message is ${photo}');
+        message.clear();
+      } catch (e) {
+        print(e);
+      }
     } else {
       return;
     }
   }
 
   String photoUrl;
+  String adminId;
 
-  void chatImage(
-      // ImageSource source,
-      ) async {
-    XFile pickedFile = await ImagePicker()
-        .pickImage(source: ImageSource.gallery, imageQuality: 40);
+  // void chatImage(
+  //     // ImageSource source,
+  //     ) async {
+  //   XFile pickedFile = await ImagePicker()
+  //       .pickImage(source: ImageSource.gallery, imageQuality: 40);
 
-    if (pickedFile != null) {
-      type = MessageType.image;
-      setState(() {
-        storedImage = File(pickedFile.path);
-      });
+  //   if (pickedFile != null) {
+  //     type = MessageType.image;
+  //     setState(() {
+  //       storedImage = File(pickedFile.path);
+  //     });
 
-      photoUrl = await ref
-          .read(chatControllerProvider)
-          .uploadChatImage(File(pickedFile.path));
+  //     photoUrl = await ref
+  //         .read(chatControllerProvider)
+  //         .uploadChatImage(File(pickedFile.path));
 
-      ref.read(chatControllerProvider).sendImage(
-            imageUrl: photoUrl,
-            username: name,
-            messageType: MessageType.image,
-            chatImage: photoUrl,
-            // messageType: type,
-          );
+  //     ref.read(chatControllerProvider).sendImage(
+  //           imageUrl: photoUrl,
+  //           username: name,
+  //           messageType: MessageType.image,
+  //           chatImage: photoUrl,
+  //           // messageType: type,
+  //         );
 
-      print('This is photo===== ${photoUrl}');
-    } else {
-      return null;
-    }
-    // }
-    // setState(() {});
-    // Get.back();
-    // setState(() {});
-  }
+  //     print('This is photo===== ${photoUrl}');
+  //   } else {
+  //     return null;
+  //   }
+  //   // }
+  //   // setState(() {});
+  //   // Get.back();
+  //   // setState(() {});
+  // }
 
   // String userId = FirebaseAuth.instance.currentUser.uid;
 
@@ -173,60 +190,81 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: StreamBuilder(
-              stream: ref.read(chatControllerProvider).getChats(),
+              stream: ref.read(chatControllerProvider).adminDetails(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: loader());
-                } else {
-                  // print('my message ${snapshot.data}');
-                  List<dynamic> messages = snapshot.data.docs.map((doc) {
-                    return doc.data() as Map;
-                  }).toList();
-                  print('my message ${messages}');
-                  // List messages = snapshot.data;
-                  // print('messages: $messages');
-
-                  // WidgetsBinding.instance.addPostFrameCallback((_) {
-                  //   messageController.jumpTo(
-                  //     messageController.position.maxScrollExtent,
-                  //   );
-                  // });
-                  // messageController.animateTo(
-                  //   messageController.position.maxScrollExtent,
-                  //   duration: Duration(milliseconds: 100),
-                  //   curve: Curves.easeOut,
-                  // );
-                  return messages.isEmpty || messages == null
-                      ? const Center(
-                          child: Text(
-                            'No Messages Yet',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            ),
-                          ),
-                        )
-                      : ListView.builder(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          controller: messageController,
-                          shrinkWrap: true,
-                          itemCount: messages.length,
-                          itemBuilder: (ctx, i) {
-                            Map<String, dynamic> data = messages[i];
-                            // data.addAll({
-                            //   // 'messageType': type,
-                            //   'image': photoUrl,
-                            // });
-                            // print('my photo is ${photoUrl}');
-                            print('my chart data is ${data}');
-                            return ChatList(
-                              messageData: data,
-                              messageType: type,
-                              imageFile: storedImage,
-                            );
-                          },
-                        );
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
+                final admin = snapshot.data.docs.map((doc) {
+                  return doc.data() as Map;
+                }).toList();
+                log('my admin is ====>>>${admin}');
+                log('my adminId is ====>>>${admin[0]['uid']}');
+                adminId = admin[0]['uid'];
+                log('my user token is ====>>>${widget.user['token']}');
+
+                return StreamBuilder(
+                    stream: ref.read(chatControllerProvider).getChats(
+                          admin[0]['uid'],
+                        ),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: loader());
+                      } else {
+                        // print('my message ${snapshot.data}');
+                        List<dynamic> messages = snapshot.data.docs.map((doc) {
+                          return doc.data() as Map;
+                        }).toList();
+                        print('==========>');
+                        print('my message =====>${messages}');
+                        print('==========>');
+                        // List messages = snapshot.data;
+                        // print('messages: $messages');
+
+                        // WidgetsBinding.instance.addPostFrameCallback((_) {
+                        //   messageController.jumpTo(
+                        //     messageController.position.maxScrollExtent,
+                        //   );
+                        // });
+                        // messageController.animateTo(
+                        //   messageController.position.maxScrollExtent,
+                        //   duration: Duration(milliseconds: 100),
+                        //   curve: Curves.easeOut,
+                        // );
+                        return messages.isEmpty || messages == null
+                            ? const Center(
+                                child: Text(
+                                  'No Messages Yet',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                controller: messageController,
+                                shrinkWrap: true,
+                                itemCount: messages.length,
+                                itemBuilder: (ctx, i) {
+                                  Map<String, dynamic> data = messages[i];
+                                  // data.addAll({
+                                  //   // 'messageType': type,
+                                  //   'image': photoUrl,
+                                  // });
+                                  // print('my photo is ${photoUrl}');
+                                  print('my chart data is ${data}');
+                                  return ChatList(
+                                    messageData: data,
+                                    messageType: type,
+                                    imageFile: storedImage,
+                                  );
+                                },
+                              );
+                      }
+                    });
               }),
         ),
         bottomNavigationBar: Row(
@@ -253,8 +291,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     fillColor: Color(0xffF5F5F5),
                     hintText: 'Type a Message',
                     suffixIcon: IconButton(
-                      onPressed: (() {
-                        chatImage();
+                      onPressed: (() async {
+                        XFile pickedFile = await ImagePicker().pickImage(
+                            source: ImageSource.gallery, imageQuality: 40);
+                        if (pickedFile != null) {
+                          ref.read(chatControllerProvider).sendMessage(
+                                image: pickedFile as File,
+                              );
+                          //
+                        }
                       }),
                       icon: const Icon(
                         Iconsax.camera,
@@ -284,7 +329,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               backgroundColor: Color(0xff128c7e),
               radius: 25,
               child: GestureDetector(
-                onTap: sendTextMessage,
+                onTap: () {
+                  print('my AdminID is====> $adminId');
+                  sendTextMessage(
+                    // admin[]['token'],
+                    widget.user['token'],
+                    adminId,
+                  );
+                },
                 child: const Icon(
                   Icons.send,
                   color: Colors.white,

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -73,25 +74,128 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
   final file = File('example.pdf');
   final pdf = pw.Document();
   Future<void> createPDF() async {
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Text('Hello Worlder!');
-        },
-      ),
-    );
     final directory = await getApplicationDocumentsDirectory();
     final path = directory.path;
-    final file = File("$path/Nizecart-Reciept.pdf");
-    // List<int> bytes = await pdf.save();
-    // SaveFile.saveAndLaunchFile(bytes, 'Nizecart Reciept.pdf');
-    await file.writeAsBytes(await pdf.save());
-    OpenFile.open("path/to/save/Nizecart-Reciept.pdf");
+    try {
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Container(
+                child: pw.Column(children: [
+              // pw.Row(children: [
+              pw.Text("Thank you for shopping with Nizecart!",
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
+                  )),
+              // pw.Image(pw.MemoryImage(await rootBundle.load("'assets/white_cart.png'").then((value) => value.buffer.asUint8List()))),
+              // ]),
+              pw.SizedBox(height: 10),
+              pw.Text("Order No: 123456789",
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
+                  )),
+              pw.SizedBox(height: 20),
+
+              pw.Text("Time: 12:00 PM",
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
+                  )),
+              pw.SizedBox(height: 20),
+
+              pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text("Items",
+                        style: pw.TextStyle(
+                          fontSize: 18,
+                        )),
+                    pw.SizedBox(width: 20),
+                    pw.Text("Shipping Details",
+                        style: pw.TextStyle(
+                          fontSize: 18,
+                        )),
+                  ]),
+              pw.Divider(),
+              pw.ListView.builder(
+                  itemCount: widget.data.length,
+                  itemBuilder: (context, index) {
+                    return pw.Column(
+                      children: [
+                        pw.Text(
+                            "Title: ${widget.data['productDetails'][index]['name']}"),
+                        pw.SizedBox(height: 10),
+                        pw.Text(
+                            "₦${widget.data['productDetails'][index]['price']}"),
+                        pw.SizedBox(height: 10),
+                        pw.Text(
+                            "${widget.data['productDetails'][index]['quantity']}"),
+                        pw.SizedBox(height: 10),
+                        pw.Divider(),
+                      ],
+                    );
+                  }),
+              // ...Map<int, dynamic>.from(widget.data['products'])
+              //     .entries
+              //     .map((e) => pw.Column(
+              //           children: [
+              //             pw.Text("Title: ${e.value['name']}"),
+              //             pw.SizedBox(height: 10),
+              //             pw.Text("₦${e.value['price']}"),
+              //             pw.SizedBox(height: 10),
+              //             pw.Text("${e.value['quantity']}"),
+              //             //             // pw.Row(
+              //             //             //   mainAxisAlignment:
+              //             //             //       pw.MainAxisAlignment.spaceBetween,
+              //             //             //   children: [
+              //             //             //     pw.SizedBox(width: 20),
+              //             //             //     pw.Text("${e.value['quantity']}"),
+              //             //             //   ],
+              //             //             // ),
+              //             pw.SizedBox(height: 20),
+              //           ],
+              //         ))
+              // .toList(),
+              // map over the list of products and display them
+
+              pw.Text("Total: ₦${widget.data['totalAmount']}",
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
+                  )),
+              pw.Text("Status: ₦${widget.data['status']}",
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
+                  )),
+              pw.Text("Address: ₦${widget.data['address']}",
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
+                  )),
+            ]));
+          },
+        ),
+      );
+      final file = File("$path/Nizecart-Reciept.pdf");
+      // List<int> bytes = await pdf.save();
+      // SaveFile.saveAndLaunchFile(bytes, 'Nizecart Reciept.pdf');
+      await file.writeAsBytes(await pdf.save());
+      print("file path: ${file.path}");
+      OpenFile.open("$path/Nizecart-Reciept.pdf");
+    } catch (e) {
+      if (e == 'document has already been saved') {
+        return OpenFile.open("$path/Nizecart-Reciept.pdf");
+        // print("error: ${e.toString()}");
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("my data: ${widget.data}");
+    // print("my data: ${widget.data}");
     return Scaffold(
       appBar: AppBar(
           foregroundColor: Colors.white,
